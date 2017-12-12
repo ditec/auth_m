@@ -17,7 +17,7 @@ $ bundle install
 ```
 
 ```bash
-rails g auth_m:install
+$ rails g auth_m:install
 ```
 
 Or install it yourself as:
