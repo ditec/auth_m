@@ -1,0 +1,12 @@
+%h1 Listing managements
+%table
+  %tr
+    %th name
+  - @managements.each do |management|
+    %tr
+      %td= management.name
+      %td= link_to 'Show', management_path(management)
+      %td= link_to 'Edit', edit_management_path(management)
+      %td= link_to 'Destroy', management_path(management), method: :delete, data: { confirm: 'Are you sure?' } 
+
+= link_to 'New management', new_management_path

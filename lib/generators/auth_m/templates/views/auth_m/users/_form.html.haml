@@ -1,0 +1,51 @@
+- if @user.errors.any?
+  #error_explanation
+    %h2
+      = pluralize(@user.errors.count, "error")
+      prohibited
+      this user from being saved:
+    %ul
+      - @user.errors.full_messages.each do |msg|
+        %li= msg
+%p
+  = form.label :email
+  %br/
+  = form.email_field :email
+%p
+  = form.label :password
+  %br/
+  = form.password_field :password
+%p
+  = form.label :password_confirmation
+  %br/
+  = form.password_field :password_confirmation
+%p
+  = form.check_box "invitable"
+  invite
+%p
+  %h3 Role
+  %table
+    %tr
+      -AuthM::User.roles.each do |role|
+        =form.radio_button :roles_mask, (AuthM::User.mask_for role)
+        =role
+- if @user.has_role? :user
+  %p
+    %h3 Permissions
+    %table
+      %tr
+        %th Resources
+        %th Access
+      -current_management.resources.each do |resource|
+        =form.fields_for :policies do |form_2|
+          %tr
+            %td
+              =resource.name
+            %td
+              -AuthM::Policy::USER_ACCESS.each do |access|
+                - policy = @user.has_the_policy? resource.id
+                - unless policy.nil?
+                  =form_2.radio_button :"#{resource.id}", access, checked: (access == policy.access) 
+                - else
+                  =form_2.radio_button :"#{resource.id}", access, checked: (access == "none")
+                =access

@@ -1,0 +1,17 @@
+%h1 Edit user
+
+= form_with model: @user, method: :PUT,  local: true do |form|
+
+  = render partial: 'form', locals: {form: form}
+  %p
+    %h3 Active?
+    %table
+      %tr
+        =form.radio_button :active, 1, checked: @user.active
+        activo
+        =form.radio_button :active, 0, checked: !@user.active
+        inactivo
+  %p  
+    = form.submit
+    
+= link_to 'Back', users_path
