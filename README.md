@@ -8,12 +8,16 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'auth_m'
+gem 'auth_m', :git => "https://github.com/ditec/auth_m"
 ```
 
 And then execute:
 ```bash
-$ bundle
+$ bundle install
+```
+
+```bash
+rails g auth:install
 ```
 
 Or install it yourself as:
