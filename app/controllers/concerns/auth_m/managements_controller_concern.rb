@@ -40,7 +40,7 @@ module AuthM::ManagementsControllerConcern
    
     if @management.update(management_params)
 
-      @management.resources.destroy_all
+      destroy_resources @management
       create_resources @management
 
       redirect_to @management
@@ -71,14 +71,22 @@ module AuthM::ManagementsControllerConcern
       params.require(:management).permit(:name)
     end
 
-    def resources_params
-      params.require(:management).permit(resources:[]) 
+    def destroy_resources(management)
+      if params[:management][:resources].present?
+        resources = management.resources.collect{|s| s.name} - params[:management][:resources]
+
+        resources.each do |resource|
+          AuthM::Resource.find_by(name: resource).destroy
+        end
+      end
     end
 
     def create_resources(management)
       if params[:management][:resources].present?
-        resources_params[:resources].each do |a|
-          management.resources.create!(name: a) if !(a.empty?) && (AuthM::Resource.exists? a)
+        resources = management.resources.collect{|s| s.name} 
+
+        params[:management][:resources].each do |a|
+          management.resources.create!(name: a) if !(a.empty?) && (AuthM::Resource.exists? a) && !(resources.include? a)
         end
       end 
     end

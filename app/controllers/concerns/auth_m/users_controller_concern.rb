@@ -27,6 +27,7 @@ module AuthM::UsersControllerConcern
   def create_user
 
     invitable? ? @user = AuthM::User.invite!(user_params) : @user = AuthM::User.new(user_params.merge(active: true))
+    @user.management = current_management
 
     if @user.save
       create_policies @user if @user.has_role? :user
@@ -36,21 +37,8 @@ module AuthM::UsersControllerConcern
     end
   end
   
-  def create
-    # render plain: params[:user].inspect
-    @user = AuthM::User.new(user_params)
- 
-    if @user.save
-      redirect_to @user
-    else
-      render 'new'
-    end
-  end
-
   def update
     @user = AuthM::User.find(params[:id])
-
-    @user.invite!(@user) if invitable?
 
     if @user.update(user_params)
 
@@ -81,30 +69,22 @@ module AuthM::UsersControllerConcern
     redirect_to main_app.root_path
   end
 
+  def generate_new_password_email 
+    user = AuthM::User.find(params[:id]) 
+    user.send_reset_password_instructions 
+    flash[:notice] = "Reset password instructions have been sent to #{user.email}." 
+    render :edit
+  end
+
   private
 
     def user_params
-      if params[:user][:password].blank? && params[:user][:password_confirmation].blank?
-        params[:user].delete(:password)
-        params[:user].delete(:password_confirmation)
-      end
-
-      parameters = params.require(:user).permit(:email, :password, :password_confirmation, :management_id, :roles_mask, :active)
-      parameters[:management_id] = current_management.id
-
-      parameters[:active] = false if invitable?
-
-      parameters
-
-    end
-
-    def policies_params
-      params.require(:user).permit(policies:{}) 
+      params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active)
     end
 
     def create_policies(user)
       if params[:user][:policies].present?
-        policies_params[:policies].each do |key, value|
+        params[:user][:policies].each do |key, value|
           user.policies.create!(resource_id: key.to_i, access: value) if !(value == "none") && (user.management.has_the_resource_id? key.to_i)
         end
       end 

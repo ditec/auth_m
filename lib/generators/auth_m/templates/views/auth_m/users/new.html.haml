@@ -1,9 +1,0 @@
-%h1 New User
-
-= form_with model:@user, url: create_user_path,  local: true do |form|
-
-  = render partial: 'form', locals: {form: form}
-  %p   
-    = form.submit
-
-= link_to 'Back', users_path

@@ -8,14 +8,7 @@ module AuthM::UserConcern
 
     has_many :policies, dependent: :destroy
 
-    before_create(on: :create) do
-      if (self.management_id.nil?) && !(self.has_role? :root)
-        self.management_id = 0 
-        self.active = true
-      end
-    end
-
-    validate :is_not_root?
+    validate :is_not_root?, :on => [ :create, :update ]
 
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
