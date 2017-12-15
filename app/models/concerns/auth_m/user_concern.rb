@@ -4,7 +4,7 @@ module AuthM::UserConcern
   extend ActiveSupport::Concern
   
   included do
-    belongs_to :management, optional: true
+    belongs_to :person
 
     has_many :policies, dependent: :destroy
 
@@ -50,6 +50,10 @@ module AuthM::UserConcern
 
   def has_the_policy? resource_id
     self.policies.find_by(resource_id: resource_id)
+  end
+
+  def management
+    self.person.management unless self.person.nil?
   end
 
 end

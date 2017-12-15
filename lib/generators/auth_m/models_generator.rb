@@ -9,6 +9,7 @@ module AuthM
         copy_file "models/auth_m/policy.rb", "app/models/auth_m/policy.rb"
         copy_file "models/auth_m/resource.rb", "app/models/auth_m/resource.rb"
         copy_file "models/auth_m/user.rb", "app/models/auth_m/user.rb"
+        copy_file "models/auth_m/person.rb", "app/models/auth_m/person.rb"
       end
 
     end

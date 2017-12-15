@@ -10,13 +10,16 @@ AuthM::Engine.routes.draw do
   
   get 'change_management', to: 'managements#change'
 
-  resources :users do
-    post :impersonate, on: :member
-    post :stop_impersonating, on: :collection
-    post :generate_new_password_email, on: :member
+  resources :people do
+    resources :users, only: [:show, :new, :edit, :create, :update, :destroy] do
+      post :impersonate, on: :member
+      post :generate_new_password_email, on: :member
+    end
+    post 'create_user', to: 'users#create_user'
   end
-  
-  post 'create_user', to: 'users#create_user'
 
+  resources :users, only: [:index] do
+    post :stop_impersonating, on: :collection
+  end
 
 end

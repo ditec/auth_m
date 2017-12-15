@@ -76,7 +76,7 @@ module AuthM::ManagementsControllerConcern
         resources = management.resources.collect{|s| s.name} - params[:management][:resources]
 
         resources.each do |resource|
-          AuthM::Resource.find_by(name: resource).destroy
+          AuthM::Resource.find_by(name: resource, management_id: management.id).destroy
         end
       end
     end

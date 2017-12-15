@@ -45,7 +45,7 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
 
     def after_sign_in_path_for(resource)
       if current_user.active
-        session[:management_id] = current_user.management ? current_user.management_id : AuthM::Management.first.id
+        session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id
         main_app.root_path
       else
         sign_out resource

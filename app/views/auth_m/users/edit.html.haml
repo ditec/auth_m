@@ -1,6 +1,6 @@
 %h1 Edit user
 
-= form_with model: @user, method: :PUT,  local: true do |form|
+= form_with model: [@person,@user], method: :PUT,  local: true do |form|
 
   - if @user.errors.any?
     #error_explanation
@@ -17,7 +17,7 @@
     = form.email_field :email
 
   %p
-    = link_to "send email for reset password", generate_new_password_email_user_path, method: :post
+    = link_to "send email for reset password", generate_new_password_email_person_user_path, method: :post
   %p
     %h3 Role
     %table
@@ -56,4 +56,4 @@
   %p  
     = form.submit
     
-= link_to 'Back', users_path
+= link_to 'Back', person_path(@person)

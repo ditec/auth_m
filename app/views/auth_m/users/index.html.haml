@@ -15,11 +15,4 @@
       %td= user.last_sign_in_ip
       %td= user.role
       %td= user.active
-      %td= link_to 'Sign in', impersonate_user_path(user), method: :post
-      / %td= button_to 'Sign in', impersonate_user_path(user)
-
-      %td= link_to 'Show', user_path(user)
-      %td= link_to 'Edit', edit_user_path(user)
-      %td= link_to 'Destroy', user_path(user), method: :delete, data: { confirm: 'Are you sure?' } 
-
-= link_to 'New user', new_user_path
+      %td= link_to 'Show', person_path(user.person) unless user.person.nil?

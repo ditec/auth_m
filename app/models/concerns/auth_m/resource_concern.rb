@@ -15,7 +15,10 @@ module AuthM::ResourceConcern
       i = 0
       ::ApplicationController.descendants.each do |controller|
         controller_name = controller.to_s.chomp("Controller")
-        if !(controller_name.include? "::") && !(controller_name.include? "Devise")
+        if !(controller_name.include? "AuthM::Users") && 
+           !(controller_name.include? "AuthM::Application") && 
+           !(controller_name.include? "AuthM::Management") && 
+           !(controller_name.include? "Devise")
           array << [controller_name.singularize,controller_name.singularize]
           i += 1
         end

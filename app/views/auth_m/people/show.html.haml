@@ -1,0 +1,24 @@
+%h1 Person
+
+%p
+  %strong first_name:
+  = @person.first_name
+%p
+  %strong last_name:
+  = @person.last_name
+%p
+  %strong dni:
+  = @person.dni
+
+= link_to 'Edit person', edit_person_path(@person)
+
+-if @person.user.nil?
+  %br
+  %br
+  = link_to 'Create user', new_person_user_path(@person)
+-else
+  =render template: "auth_m/users/show", locals: {:@user => @person.user}
+
+%br
+%br
+= link_to 'Back', people_path

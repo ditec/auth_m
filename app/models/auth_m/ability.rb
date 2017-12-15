@@ -35,10 +35,12 @@ module AuthM
       end
 
       if user.has_role? :admin
-        can :manage, AuthM::User, management_id: user.management_id
+        can :manage, AuthM::User, management_id: user.management.id
+        can :manage, AuthM::People, management_id: user.management.id
+
         user.management.resources.each do |resource|
           if resource.name.constantize.reflect_on_association(:management)
-            can :manage, resource.name.constantize, management_id: user.management_id
+            can :manage, resource.name.constantize, management_id: user.management.id
           else
             can :manage, resource.name.constantize
           end
@@ -48,7 +50,7 @@ module AuthM
       if user.has_role? :user
         user.policies.each do |policy|
           if policy.resource.name.constantize.reflect_on_association(:management)
-            can :"#{policy.access}", policy.resource.name.constantize, management_id: user.management_id 
+            can :"#{policy.access}", policy.resource.name.constantize, management_id: user.management.id 
           else
             can :"#{policy.access}", policy.resource.name.constantize
           end

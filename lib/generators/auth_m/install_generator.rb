@@ -19,17 +19,7 @@ module AuthM
     end
 
     def create_migration_file
-      migration_template "migrations/create_auth_m_managements.rb", "db/migrate/create_auth_m_managements.rb"
-      sleep 1
-      migration_template "migrations/create_auth_m_resources.rb", "db/migrate/create_auth_m_resources.rb"
-      sleep 1
-      migration_template "migrations/devise_create_auth_m_users.rb", "db/migrate/devise_create_auth_m_users.rb"
-      sleep 1
-      migration_template "migrations/create_auth_m_policies.rb", "db/migrate/create_auth_m_policies.rb"
-      sleep 1
-      migration_template "migrations/devise_invitable_add_to_auth_m_users.rb", "db/migrate/devise_invitable_add_to_auth_m_users.rb"
-      sleep 1      
-      migration_template "migrations/add_management_id_to_users.rb", "db/migrate/add_management_id_to_users.rb"
+      migration_template "migrations/auth_m_create_tables.rb", "db/migrate/auth_m_create_tables.rb"
       sleep 1
     end
 

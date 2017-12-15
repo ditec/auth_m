@@ -42,5 +42,8 @@
             %td= policy.resource.name
             %td= policy.access
 
-= link_to 'Edit', edit_user_path(@user)
-= link_to 'Back', users_path
+-if can? :management, AuthM::User
+  = link_to 'Sign in', impersonate_person_user_path(person_id: @person.id, id: @user.id), method: :post
+  = link_to 'Edit user', edit_person_user_path(person_id: @person.id, id: @user.id)
+  = link_to 'Destroy user', person_user_path(person_id: @person.id, id: @user.id), method: :delete, data: { confirm: 'Are you sure?' } 
+

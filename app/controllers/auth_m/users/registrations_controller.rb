@@ -4,15 +4,20 @@ module AuthM
     # before_action :configure_account_update_params, only: [:update]
 
     # GET /resource/sign_up
-    # def new
-    #   super
-    # end
+    def new
+      @person = AuthM::Person.new
+      super
+    end
 
     # POST /resource
     def create
-      build_resource(sign_up_params)
 
-      resource.management_id = 0
+      @person = AuthM::Person.new(person_params)
+      @person.management_id = 0
+      @person.save
+
+      build_resource(sign_up_params)
+      resource.person_id = @person.id
       resource.active = true 
       
       resource.save
@@ -32,6 +37,7 @@ module AuthM
         set_minimum_password_length
         respond_with resource
       end
+
     end
 
     # GET /resource/edit
@@ -79,5 +85,9 @@ module AuthM
     # def after_inactive_sign_up_path_for(resource)
     #   super(resource)
     # end
+    private
+      def person_params
+        params.require(:person).permit(:first_name, :last_name, :dni)
+      end
   end
 end
