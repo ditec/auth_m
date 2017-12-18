@@ -8,8 +8,7 @@ module AuthM::UsersControllerConcern
   end
 
   def index
-    @users = current_management.nil? ? AuthM::User.all : current_management.users
-    @users = @users - [current_user]
+    @users = current_management.users.where.not(id: current_user.id).paginate(:page => params[:page], :per_page => 10)
   end
 
   def show

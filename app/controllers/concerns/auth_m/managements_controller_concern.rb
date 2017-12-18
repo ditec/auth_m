@@ -8,7 +8,7 @@ module AuthM::ManagementsControllerConcern
   end
 
   def index
-    @managements = AuthM::Management.all
+    @managements = AuthM::Management.all.paginate(:page => params[:page], :per_page => 10)
   end
 
   def show

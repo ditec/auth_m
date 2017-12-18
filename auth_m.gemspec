@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "haml-rails", "~> 1.0"
   s.add_dependency "devise_invitable", "~> 1.7.0"
   s.add_dependency "letter_opener", "~> 1.4"
+  s.add_dependency "will_paginate", "~> 3.1.0"
 
   s.add_development_dependency "rails", "~> 5.1.4"
   s.add_development_dependency "mysql2", "~> 0.4.9"

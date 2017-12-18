@@ -8,7 +8,7 @@ module AuthM::PeopleControllerConcern
   end
 
   def index
-    @people = current_management.nil? ? AuthM::Person.all : current_management.people
+    @people = current_management.people.joins(:user).where.not(auth_m_users:{id:current_user.id}).paginate(:page => params[:page], :per_page => 10) 
   end
 
   def show

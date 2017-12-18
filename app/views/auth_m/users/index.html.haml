@@ -16,3 +16,5 @@
       %td= user.role
       %td= user.active
       %td= link_to 'Show', person_path(user.person) unless user.person.nil?
+
+= will_paginate @users
