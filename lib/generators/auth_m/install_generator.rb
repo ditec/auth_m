@@ -23,6 +23,10 @@ module AuthM
       sleep 1
     end
 
+    def create_route
+      route "mount AuthM::Engine, at: '/auth_m' \n"
+    end
+
     def show_readme
       sleep 1
       readme "README"

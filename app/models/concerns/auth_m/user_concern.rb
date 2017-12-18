@@ -36,10 +36,6 @@ module AuthM::UserConcern
     end
   end
 
-  def is_not_root?
-    errors.add(:user, 'cannot save how root') if self.has_role? :root
-  end
-
   def default_role
     self.roles = [:user]
   end
@@ -55,5 +51,11 @@ module AuthM::UserConcern
   def management
     self.person.management unless self.person.nil?
   end
+
+  private 
+  
+    def is_not_root?
+      errors.add(:user, 'cannot save how root') if self.has_role? :root
+    end
 
 end

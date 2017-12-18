@@ -2,10 +2,9 @@ module AuthM
   class Engine < ::Rails::Engine
     isolate_namespace AuthM
 
-    initializer "auth_m", before: :load_config_initializers do |app|
-      Rails.application.routes.append do
-        mount AuthM::Engine, at: "/auth_m"
-      end
+    config.generators do |g|
+      g.test_framework :rspec
+      g.fixture_replacement :factory_bot, :dir => 'spec/factories'
     end
 
   end

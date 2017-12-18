@@ -9,20 +9,15 @@ module AuthM::ResourceConcern
   end
 
   class_methods do
+
     def list
       Rails.application.eager_load!
       array = Array.new
-      i = 0
-      ::ApplicationController.descendants.each do |controller|
-        controller_name = controller.to_s.chomp("Controller")
-        if !(controller_name.include? "AuthM::Users") && 
-           !(controller_name.include? "AuthM::Application") && 
-           !(controller_name.include? "AuthM::Management") && 
-           !(controller_name.include? "Devise")
-          array << [controller_name.singularize,controller_name.singularize]
-          i += 1
-        end
+      ::ApplicationRecord.descendants.each do |model|
+        model_name = model.to_s
+        array << [model_name.singularize,model_name.singularize]
       end
+      array << ["AuthM::Person","AuthM::Person"]
       return array
     end
 
