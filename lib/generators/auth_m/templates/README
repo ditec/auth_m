@@ -33,6 +33,8 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
 
     # before_action :authenticate_user!
 
+    require 'will_paginate/array'
+
     helper_method :current_management, :user_signed_in?
 
     rescue_from CanCan::AccessDenied do |exception|    
