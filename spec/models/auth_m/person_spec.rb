@@ -2,6 +2,22 @@ require 'rails_helper'
 
 module AuthM
   RSpec.describe Person, type: :model do
-    pending "add some examples to (or delete) #{__FILE__}"
+
+    describe "#shoulda_matchers ->" do
+      it { should belong_to(:management) }
+      it { should have_one(:user).dependent(:destroy) }
+
+      it { should validate_presence_of(:first_name) }
+      it { should validate_presence_of(:last_name) }
+
+      it { should validate_length_of(:first_name).is_at_least(4).is_at_most(250) }
+      it { should validate_length_of(:last_name).is_at_least(4).is_at_most(250) }
+      it { should validate_length_of(:dni).is_at_least(6).is_at_most(20) }
+
+      it { should validate_numericality_of(:dni).only_integer }
+
+      it { should validate_uniqueness_of(:dni) }
+    end
+    
   end
 end

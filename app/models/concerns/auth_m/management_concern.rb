@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: auth_m_managements
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      default(""), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 require 'active_support/concern'
 
 module AuthM::ManagementConcern
@@ -7,7 +17,7 @@ module AuthM::ManagementConcern
     has_many :people, dependent: :destroy
     has_many :resources, dependent: :destroy
 
-    validates :name, presence: true
+    validates :name, presence: true, length: { in: 4..250 }, uniqueness: true
   end
 
   def has_the_resource_name? resource_name

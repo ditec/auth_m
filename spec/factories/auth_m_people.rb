@@ -3,7 +3,7 @@ FactoryBot.define do
     sequence(:id){|n| n }
     sequence(:first_name){|n| "first_name_dummy#{n}" }
     sequence(:last_name){|n| "last_name_dummy#{n}" }
-    dni Random.rand  22000000..40000000
+    sequence(:dni){|n| "2343433#{n}" }
     association :management, factory: :auth_m_management
   end
 end

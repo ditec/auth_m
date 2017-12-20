@@ -3,7 +3,7 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
 
     ############################ create table managements ############################
     create_table :auth_m_managements do |t|
-      t.string :name
+      t.string :name, null: false, unique: true, default: ""
 
       t.timestamps
     end
@@ -11,8 +11,8 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
 
     ############################ create table resources ############################
     create_table :auth_m_resources do |t|
-      t.string :name
-      t.references :management
+      t.string :name, null: false, unique: true
+      t.references :management, null: false
 
       t.timestamps
     end
@@ -21,10 +21,10 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
 
     ############################ create table people ############################
     create_table :auth_m_people do |t|
-      t.string :first_name
-      t.string :last_name
-      t.string :dni
-      t.references :management
+      t.string :first_name, null: false, default: ""
+      t.string :last_name, null: false, default: ""
+      t.string :dni, unique: true
+      t.references :management, null: false, default: 0
 
       t.timestamps
     end
