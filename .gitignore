@@ -10,6 +10,13 @@ capybara-*.html
 /spec/tmp
 /spec/test_app/log
 /spec/test_app/tmp
+/spec/test_app/db/schema.rb
+/spec/test_app/config/initializers/secret_token.rb
+/spec/test_app/config/secrets.yml
+/spec/test_app/config/database.yml
+/spec/test_app/public/system
+
+
 *.orig
 rerun.txt
 pickle-email-*.html
