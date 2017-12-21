@@ -32,6 +32,12 @@ module AuthM
       it "test4" do 
         expect(AuthM::Resource.exists? "AuthM::Articles").to be_falsey
       end
+
+      it "test5" do
+        resource = FactoryBot.build(:auth_m_resource, name: "Dummy")
+        resource.save
+        expect(resource.errors.full_messages).to include("Resource is invalid")
+      end
     end
 
   end

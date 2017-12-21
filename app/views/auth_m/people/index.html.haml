@@ -11,10 +11,13 @@
       %td= person.last_name
       %td= person.dni
       %td= !(person.user.nil?)
-      %td= link_to 'Show', person_path(person)
-      %td= link_to 'Edit', edit_person_path(person)
-      %td= link_to 'Destroy', person_path(person), method: :delete, data: { confirm: 'Are you sure?' } 
+      -if can? :read, AuthM::Person
+        %td= link_to 'Show', person_path(person)
+      -if can? :write, AuthM::Person
+        %td= link_to 'Edit', edit_person_path(person)
+        %td= link_to 'Destroy', person_path(person), method: :delete, data: { confirm: 'Are you sure?' } 
 
 = will_paginate @people
 
-= link_to 'New person', new_person_path
+-if can? :write, AuthM::Person
+  = link_to 'New person', new_person_path

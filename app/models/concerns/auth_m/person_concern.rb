@@ -23,6 +23,15 @@ module AuthM::PersonConcern
 
     validates :first_name, :last_name, presence: true, length: { in: 4..250 }
     validates :dni, uniqueness: true, numericality: { only_integer: true }, length: { in: 6..20 }
+    before_save :capitalize_names
+
   end
+
+  private 
+
+    def capitalize_names
+      self.first_name = self.first_name.capitalize
+      self.last_name = self.last_name.capitalize
+    end
 
 end

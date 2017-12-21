@@ -85,8 +85,8 @@ module AuthM::ManagementsControllerConcern
       if params[:management][:resources].present?
         resources = management.resources.collect{|s| s.name} 
 
-        params[:management][:resources].each do |a|
-          management.resources.create!(name: a) if !(a.empty?) && (AuthM::Resource.exists? a) && !(resources.include? a)
+        params[:management][:resources].reject { |r| r.empty? }.each do |a|
+          management.resources.create!(name: a) unless resources.include? a
         end
       end 
     end

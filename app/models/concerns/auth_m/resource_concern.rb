@@ -19,6 +19,8 @@ module AuthM::ResourceConcern
     has_many :policies, dependent: :destroy
 
     validates :name, presence: true, length: { in: 2..250 }, format: { with: /\A[A-Z]/, :message => 'invalid format'}
+
+    validate :is_a_valid_resource?, :on => [ :create, :update ]
   end
 
   class_methods do
@@ -38,5 +40,11 @@ module AuthM::ResourceConcern
       self.list.collect{ |a| a.first}.include? resource
     end
   end
+
+  private 
+
+    def is_a_valid_resource?
+      errors.add(:resource, 'is invalid') unless AuthM::Resource.exists? self.name
+    end
 
 end

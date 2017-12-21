@@ -10,12 +10,14 @@
   %strong dni:
   = @person.dni
 
-= link_to 'Edit person', edit_person_path(@person)
+-if can? :write, AuthM::Person
+  = link_to 'Edit person', edit_person_path(@person)
 
 -if @person.user.nil?
   %br
   %br
-  = link_to 'Create user', new_person_user_path(@person)
+  -if can? :write, AuthM::User
+    = link_to 'Create user', new_person_user_path(@person)
 -else
   =render template: "auth_m/users/show", locals: {:@user => @person.user}
 

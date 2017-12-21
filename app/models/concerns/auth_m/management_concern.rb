@@ -18,6 +18,7 @@ module AuthM::ManagementConcern
     has_many :resources, dependent: :destroy
 
     validates :name, presence: true, length: { in: 4..250 }, uniqueness: true
+    before_save :capitalize_name
   end
 
   def has_the_resource_name? resource_name
@@ -31,5 +32,13 @@ module AuthM::ManagementConcern
   def users
     AuthM::User.joins(:person).where(auth_m_people: {management_id: self.id} )
   end
+
+
+  private 
+
+    def capitalize_name
+      self.name = self.name.capitalize
+    end
+
   
 end

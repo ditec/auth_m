@@ -18,6 +18,17 @@ module AuthM
 
       it { should validate_uniqueness_of(:dni) }
     end
+
+    describe "#validate_methods ->" do 
+      it "test1" do 
+        person = FactoryBot.build(:auth_m_person, first_name: "dummy")
+        expect { person.save }.to change(person, :first_name).from("dummy").to("Dummy")
+      end     
+      it "test2" do 
+        person = FactoryBot.build(:auth_m_person, last_name: "test")
+        expect { person.save }.to change(person, :last_name).from("test").to("Test")
+      end
+    end
     
   end
 end

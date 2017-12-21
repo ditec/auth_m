@@ -46,6 +46,13 @@ module AuthM
         expect(management.users).to_not include(user2)
       end
     end
+
+    describe "#validate_methods ->" do 
+      it "test1" do 
+        management = FactoryBot.build(:auth_m_management, name: "dummy")
+        expect { management.save }.to change(management, :name).from("dummy").to("Dummy")
+      end
+    end
     
   end
 end
