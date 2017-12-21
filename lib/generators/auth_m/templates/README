@@ -61,6 +61,10 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
     end
 
     def current_management
+      if session[:management_id].nil?
+        session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id 
+      end
+      
       AuthM::Management.find(session[:management_id])
     end 
 
