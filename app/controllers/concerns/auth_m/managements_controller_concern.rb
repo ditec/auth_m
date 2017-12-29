@@ -8,7 +8,7 @@ module AuthM::ManagementsControllerConcern
   end
 
   def index
-    @managements = AuthM::Management.all.paginate(:page => params[:page], :per_page => 10)
+    @managements = AuthM::Management.all.order('name').paginate(:page => params[:page], :per_page => 10)
   end
 
   def show
@@ -58,7 +58,7 @@ module AuthM::ManagementsControllerConcern
 
   def change    
     set_current_management(params[:management_selector])    
-    path = request.referer    
+    # path = request.referer    
     path = management_path(current_management) 
     if path.include? "management"    
       redirect_to path  

@@ -2,7 +2,7 @@
   <%= link_to("#{current_user.email}", auth_m.edit_user_registration_path) %>
   <%= link_to('Logout', auth_m.destroy_user_session_path, :method => :delete) %> 
   <% if (current_user.has_role? :root) && (current_management) %>
-    <%= form_tag auth_m.change_management_path(current_management), method: :get do%>
+    <%= form_tag auth_m.change_management_path(current_management) do%>
       <%= select_tag "management_selector", options_for_select(AuthM::Management.all.collect{ |m| [m.name, m.id] }, current_management.id) %>
       <%= submit_tag "send" %>
     <% end %>

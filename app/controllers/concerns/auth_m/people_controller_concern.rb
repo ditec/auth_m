@@ -9,7 +9,7 @@ module AuthM::PeopleControllerConcern
 
   def index
     # @people = current_management.people.reject{|x| x.user == current_user}.paginate(:page => params[:page], :per_page => 10) 
-    @people = current_management.people.joins(:user).where.not({auth_m_users: {id: current_user.id}}).paginate(:page => params[:page], :per_page => 10)
+    @people = current_management.people.includes(:user).where.not({auth_m_users: {id: current_user.id}}).order("last_name").paginate(:page => params[:page], :per_page => 10)
   end
 
   def show

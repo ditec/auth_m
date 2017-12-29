@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency "will_paginate", "~> 3.1.0"
 
   s.add_development_dependency "rails", "~> 5.1.4"
+  s.add_development_dependency "rails-controller-testing", "~> 1.0"
   s.add_development_dependency "mysql2", "~> 0.4.9"
   s.add_development_dependency "rspec-rails", "~> 3.6"
   s.add_development_dependency "shoulda-matchers", "~> 3.1"

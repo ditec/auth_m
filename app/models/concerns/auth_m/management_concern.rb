@@ -30,7 +30,7 @@ module AuthM::ManagementConcern
   end
 
   def users
-    AuthM::User.joins(:person).where(auth_m_people: {management_id: self.id} )
+    AuthM::User.includes(:person).where(auth_m_people: {management_id: self.id} )
   end
 
 

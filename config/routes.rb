@@ -8,7 +8,7 @@ AuthM::Engine.routes.draw do
 
   resources :managements
   
-  get 'change_management', to: 'managements#change'
+  post 'change_management', to: 'managements#change'
 
   resources :people do
     resources :users, only: [:show, :new, :edit, :create, :update, :destroy] do
