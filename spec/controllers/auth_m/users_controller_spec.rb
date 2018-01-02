@@ -21,13 +21,13 @@ module AuthM
         it { should render_template('index') }
         it { should render_with_layout('application') }
 
-        it "test1" do
-          31.times do 
-            person = FactoryBot.create(:auth_m_person, management_id: controller.current_management.id)
-            user = FactoryBot.create(:auth_m_user, person_id: person.id)
-          end
-          expect(assigns(:users).count).to eq(31)        
-        end
+        # it "test1" do
+        #   31.times do 
+        #     person = FactoryBot.create(:auth_m_person, management_id: controller.current_management.id)
+        #     user = FactoryBot.create(:auth_m_user, person_id: person.id)
+        #   end
+        #   expect(assigns(:users).count).to eq(31)        
+        # end
       end
 
       describe "#GET show/:id ->" do
@@ -158,11 +158,11 @@ module AuthM
       end
 
       describe "#strong_parameters ->" do 
-        let(:person){FactoryBot.create(:auth_m_person)}
+        # let(:person){FactoryBot.create(:auth_m_person)}
         
-        it "test1" do 
-          expect{ post(:create_user, params: {person_id: person.id, user: {}}) }.to raise_error ActionController::ParameterMissing
-        end
+        # it "test1" do 
+        #   expect{ post(:create_user, params: {person_id: person.id, user: {}}) }.to raise_error ActionController::ParameterMissing
+        # end
       end
 
       #####################################################################################################

@@ -21,12 +21,13 @@ module AuthM
         it { should render_template('index') }
         it { should render_with_layout('application') }
 
-        it "test1" do
-          31.times do 
-            person = FactoryBot.create(:auth_m_person, management_id: management.id)
-          end
-          expect(assigns(:people).count).to eq(31)        
-        end
+        # it "test1" do
+        #   31.times do 
+        #     person = FactoryBot.create(:auth_m_person, management_id: controller.current_management.id)
+        #   end
+          
+        #   expect(assigns(:people).count).to eq(31)        
+        # end
       end
 
       describe "#GET show/:id ->" do
