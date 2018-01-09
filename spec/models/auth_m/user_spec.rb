@@ -9,9 +9,22 @@ module AuthM
       it { should belong_to(:person) }
 
       it { should validate_presence_of(:email) }
-      it { should validate_presence_of(:roles_mask) }
-      it { should validate_presence_of(:active) }
-      it { should validate_presence_of(:person_id) }
+
+      it{ 
+        user = FactoryBot.create(:auth_m_user)
+        user.build_validation 
+        user.should validate_presence_of(:roles_mask) 
+      }
+      it { 
+        user = FactoryBot.create(:auth_m_user)
+        user.build_validation 
+        user.should validate_presence_of(:active) 
+      }
+      it { 
+        user = FactoryBot.create(:auth_m_user)
+        user.build_validation 
+        user.should validate_presence_of(:person_id) 
+      }
     end
 
     describe "#validate_roles ->" do
@@ -19,6 +32,7 @@ module AuthM
 
       it "test1" do
         user.assign_attributes(roles: [:root])
+        user.build_validation
         user.save
         expect(user.errors.full_messages).to include("User cannot save how root")
       end
@@ -45,6 +59,7 @@ module AuthM
       end
 
       it "test5" do
+        user.build_validation
         user.assign_attributes(roles: [:super_admin])
         user.save
 

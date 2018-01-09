@@ -19,6 +19,7 @@ module AuthM
       build_resource(sign_up_params)
       resource.person_id = @person.id
       resource.active = true 
+      resource.build_validation
       
       resource.save
       yield resource if block_given?
@@ -50,6 +51,7 @@ module AuthM
     def update
       self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
       prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+      resource.build_validation
 
       yield resource if block_given?
       if (resource.person.update(person_params)) && (update_resource(resource, account_update_params))

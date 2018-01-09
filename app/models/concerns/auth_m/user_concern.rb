@@ -34,15 +34,15 @@ module AuthM::UserConcern
   extend ActiveSupport::Concern
   
   included do
-    belongs_to :person
+    belongs_to :person, optional: true
 
     has_many :policies, dependent: :destroy
 
-    validates_presence_of [:roles_mask, :active, :person_id]
+    validates_presence_of [:roles_mask, :active, :person_id], if: Proc.new {|user| @validate == true}
 
-    validate :is_not_root?, :on => [ :create, :update ]
+    validate :is_not_root?, :on => [ :create, :update ], if: Proc.new {|user| @validate == true}
     
-    validates :roles_mask, exclusion: { in: [0] } 
+    validates :roles_mask, exclusion: { in: [0] }, if: Proc.new {|user| @validate == true} 
 
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -68,6 +68,10 @@ module AuthM::UserConcern
     def self.roles
       self.valid_roles - [:root]
     end
+  end
+
+  def build_validation
+    @validate = true
   end
 
   def default_role
