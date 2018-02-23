@@ -4,7 +4,11 @@ AuthM::Engine.routes.draw do
                                                                                 :passwords => 'auth_m/users/passwords',
                                                                                 :registrations => 'auth_m/users/registrations',
                                                                                 :sessions => 'auth_m/users/sessions',
-                                                                                :unlocks => 'auth_m/users/unlocks'}}
+                                                                                :unlocks => 'auth_m/users/unlocks',
+                                                                                :omniauth_callbacks => 'auth_m/users/omniauth_callbacks' }}
+  devise_scope :user do
+    post "custom_sign_up" => "users/omniauth_callbacks" 
+  end
 
   resources :managements
   
@@ -21,5 +25,7 @@ AuthM::Engine.routes.draw do
   resources :users, only: [:index] do
     post :stop_impersonating, on: :collection
   end
+
+  delete 'unlink_account', to: 'linked_accounts#unlink'
 
 end

@@ -88,11 +88,7 @@ module AuthM::UsersControllerConcern
   private
 
     def user_params
-      if params[:user][:password].blank?
-        params[:user].delete(:password)
-        params[:user].delete(:password_confirmation)
-      end
-      params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active)
+      params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active).reject{|_, v| v.blank?}
     end
 
     def create_policies(user)

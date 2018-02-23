@@ -1,0 +1,9 @@
+%div
+  =provider.split("_").first.capitalize
+  - if user.account_linked? provider
+    = link_to "Unlink", unlink_account_path(provider: provider), method: :delete
+  - else
+    -unless current_user != true_user
+      = link_to "Link", send("user_#{provider}_omniauth_authorize_path")
+    -else
+      Unliked

@@ -54,7 +54,8 @@ module AuthM
       resource.build_validation
 
       yield resource if block_given?
-      if (resource.person.update(person_params)) && (update_resource(resource, account_update_params))
+      if update_resource(resource, account_update_params)
+        resource.person.update(person_params)
         if is_flashing_format?
           flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
             :update_needs_confirmation : :updated
@@ -111,7 +112,7 @@ module AuthM
     # end
     private
       def person_params
-        params.require(:person).permit(:first_name, :last_name, :dni)
+        params.require(:person).permit(:first_name, :last_name, :dni).reject{|_, v| v.blank?}
       end
   end
 end

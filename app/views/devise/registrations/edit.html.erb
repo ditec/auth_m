@@ -69,6 +69,12 @@
   </div>
 <% end %>
 
+<h3>Accounts linked</h3>  
+
+<% ["facebook", "google_oauth2", "twitter"].each do |account| %>
+  <%= render partial: "auth_m/users/omniauth_callbacks/index", locals: {user: resource, provider: account} %>
+<%end%>
+
 <h3>Cancel my account</h3>
 
 <p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>

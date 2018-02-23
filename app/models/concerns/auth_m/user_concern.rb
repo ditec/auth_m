@@ -38,6 +38,10 @@ module AuthM::UserConcern
 
     has_many :policies, dependent: :destroy
 
+    has_many :linked_accounts, dependent: :destroy
+
+    delegate :can?, :cannot?, :to => :ability
+
     validates_presence_of [:roles_mask, :active, :person_id], if: Proc.new {|user| @validate == true}
 
     validate :is_not_root?, :on => [ :create, :update ], if: Proc.new {|user| @validate == true}
@@ -47,7 +51,7 @@ module AuthM::UserConcern
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
     devise :invitable, :database_authenticatable, :registerable,
-           :recoverable, :rememberable, :trackable, :validatable
+           :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :twitter]
 
     scope :users, -> { where(roles_mask: AuthM::User.mask_for(:user)) }
     scope :admins, -> { where(roles_mask: AuthM::User.mask_for(:admin)) }
@@ -68,6 +72,25 @@ module AuthM::UserConcern
     def self.roles
       self.valid_roles - [:root]
     end
+
+    def self.from_omniauth(auth)
+      linked_account = AuthM::LinkedAccount.where(uid: auth.uid, provider: auth.provider).first
+      return linked_account.user unless linked_account.nil?
+    end
+
+  end
+
+  def account_linked? provider 
+    self.linked_accounts.where(provider: provider).exists?
+  end
+
+  def link_account_from_omniauth(auth)
+    self.linked_accounts.new(uid: auth.uid, provider: auth.provider)
+    return self.save
+  end
+
+  def ability
+    @ability ||= AuthM::Ability.new(self)
   end
 
   def build_validation

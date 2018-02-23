@@ -25,6 +25,11 @@ Gem::Specification.new do |s|
   s.add_dependency "letter_opener", "~> 1.4"
   s.add_dependency "will_paginate", "~> 3.1.0"
 
+  s.add_dependency "omniauth"
+  s.add_dependency "omniauth-facebook"
+  s.add_dependency "omniauth-google-oauth2"
+  s.add_dependency "omniauth-twitter"
+
   s.add_development_dependency "rails", "~> 5.1.4"
   s.add_development_dependency "rails-controller-testing", "~> 1.0"
   s.add_development_dependency "mysql2", "~> 0.4.9"

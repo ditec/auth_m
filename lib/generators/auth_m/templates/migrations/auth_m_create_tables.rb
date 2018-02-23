@@ -98,5 +98,15 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
     add_index(:auth_m_policies, 'resource_id', :name => 'index_resources_on_policies')
     add_index(:auth_m_policies, 'user_id', :name => 'index_users_on_policies')
 
+    ############################ create table linked accounts ############################
+    create_table :auth_m_linked_accounts do |t|
+      t.references :user, null: false
+      t.string :provider, index: true, null: false
+      t.string :uid, index: true, null: false
+
+      t.timestamps
+    end
+    add_index(:auth_m_linked_accounts, 'user_id', :name => 'index_users_on_plinked_accounts')
+
   end
 end

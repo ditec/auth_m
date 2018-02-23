@@ -37,6 +37,7 @@ module AuthM
       if user.has_role? :admin
         can :manage, AuthM::User, management_id: user.management.id
         can :manage, AuthM::Person, management_id: user.management.id
+        can :unlink, AuthM::LinkedAccount, user_id: user.id
 
         user.management.resources.each do |resource|
           if resource.name.constantize.reflect_on_association(:management)
@@ -56,6 +57,7 @@ module AuthM
           end
         end
         
+        can :unlink, AuthM::LinkedAccount, user_id: user.id
         can :stop_impersonating, AuthM::User
       end
     end

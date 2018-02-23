@@ -22,7 +22,7 @@ module AuthM::PersonConcern
     has_one :user, dependent: :destroy
 
     validates :first_name, :last_name, presence: true, length: { in: 4..250 }
-    validates :dni, uniqueness: true, numericality: { only_integer: true }, length: { in: 6..20 }
+    validates :dni, uniqueness: true, numericality: { only_integer: true }, length: { in: 6..20 }, allow_nil: true
     before_save :capitalize_names
 
   end
