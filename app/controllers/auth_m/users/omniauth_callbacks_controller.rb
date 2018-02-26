@@ -48,7 +48,7 @@ module AuthM
         @user = AuthM::User.new(email: user_params[:email])
 
         if @person.save 
-          @user = @person.build_user(user_params.merge(active: true))
+          @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
           if @user.save 
             @user.linked_accounts.create(uid: session["devise.auth.uid"], provider: session["devise.auth.provider"])
             sign_in_and_redirect @user, event: :authentication

@@ -15,9 +15,14 @@ module AuthM
     def accept_resource
       resource = resource_class.accept_invitation!(update_resource_params)
       resource.update_attribute(:active, true)
+      # resource.update_attribute(:confirmed_at, DateTime.now.to_date)
       ## Report accepting invitation to analytics
       # Analytics.report('invite.accept', resource.id)
       resource
+    end
+
+    def after_accept_path_for(resource)
+      main_app.root_path
     end
   end
 end

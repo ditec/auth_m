@@ -30,7 +30,7 @@ module AuthM::UsersControllerConcern
 
     @person = AuthM::Person.find(params[:person_id])
 
-    invitable? ? @user = AuthM::User.invite!(user_params.merge(person_id: @person.id)) : @user = @person.build_user(user_params.merge(active: true))
+    invitable? ? @user = AuthM::User.invite!(user_params.merge(person_id: @person.id)) : @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
 
     @user.build_validation
 

@@ -46,14 +46,8 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
     end
 
     def after_sign_in_path_for(resource)
-      if current_user.active
-        session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id
-        main_app.root_path
-      else
-        sign_out resource
-        flash[:alert] = "This account is not active.."
-        main_app.root_path
-      end
+      session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id
+      main_app.root_path
     end
 
     def after_sign_out_path_for(resource)
@@ -61,12 +55,9 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
     end
 
     def current_management
-      if session[:management_id].nil?
-        session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id 
-      end
-      
+      session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id if session[:management_id].nil?
       AuthM::Management.find(session[:management_id])
-    end 
+    end  
 
     def set_current_management(id)
       session[:management_id] = id 

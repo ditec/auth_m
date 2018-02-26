@@ -42,7 +42,7 @@ module AuthM::UserConcern
 
     delegate :can?, :cannot?, :to => :ability
 
-    validates_presence_of [:roles_mask, :active, :person_id], if: Proc.new {|user| @validate == true}
+    validates_presence_of [:roles_mask, :person_id], if: Proc.new {|user| @validate == true}
 
     validate :is_not_root?, :on => [ :create, :update ], if: Proc.new {|user| @validate == true}
     
@@ -50,7 +50,7 @@ module AuthM::UserConcern
 
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
-    devise :invitable, :database_authenticatable, :registerable,
+    devise :invitable, :database_authenticatable, :registerable, :confirmable,
            :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :twitter]
 
     scope :users, -> { where(roles_mask: AuthM::User.mask_for(:user)) }

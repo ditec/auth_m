@@ -7,10 +7,10 @@ PATH
       devise_invitable (~> 1.7.0)
       haml-rails (~> 1.0)
       letter_opener (~> 1.4)
-      omniauth
-      omniauth-facebook
-      omniauth-google-oauth2
-      omniauth-twitter
+      omniauth (~> 1.8.1)
+      omniauth-facebook (~> 4.0.0)
+      omniauth-google-oauth2 (~> 0.5.3)
+      omniauth-twitter (~> 1.4.0)
       role_model (~> 0.8)
       will_paginate (~> 3.1.0)
 

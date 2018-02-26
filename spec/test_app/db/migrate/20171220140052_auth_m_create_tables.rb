@@ -78,6 +78,11 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       t.index      :invitation_token, unique: true # for invitable
       t.index      :invited_by_id
 
+      t.string :confirmation_token, index: true
+      t.datetime :confirmed_at
+      t.datetime :confirmation_sent_at
+      # t.string :unconfirmed_email # Only if using reconfirmable
+
       t.timestamps null: false
     end
     add_index(:auth_m_users, 'person_id', :name => 'index_peoples_on_users')

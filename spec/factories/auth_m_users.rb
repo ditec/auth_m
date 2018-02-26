@@ -5,6 +5,7 @@ FactoryBot.define do
     password "12345678"
     roles [:user]
     active true
+    confirmed_at DateTime.now.to_date
     association :person, factory: :auth_m_person
   end
 end

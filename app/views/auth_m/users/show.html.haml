@@ -18,6 +18,10 @@
   %p
     %strong active?:
     = @user.active
+  %p
+    %strong confirmed email?:
+    = !@user.confirmed_at.nil?
+    = " - #{@user.confirmed_at}" if !@user.confirmed_at.nil? 
 
   - unless @user.invitation_sent_at.nil?
     %p

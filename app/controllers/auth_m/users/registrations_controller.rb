@@ -18,7 +18,6 @@ module AuthM
 
       build_resource(sign_up_params)
       resource.person_id = @person.id
-      resource.active = true 
       resource.build_validation
       
       resource.save
@@ -102,14 +101,14 @@ module AuthM
     # end
 
     # The path used after sign up.
-    # def after_sign_up_path_for(resource)
-    #   super(resource)
-    # end
+    def after_sign_up_path_for(resource)
+      main_app.root_path
+    end
 
     # The path used after sign up for inactive accounts.
-    # def after_inactive_sign_up_path_for(resource)
-    #   super(resource)
-    # end
+    def after_inactive_sign_up_path_for(resource)
+      main_app.root_path
+    end
     private
       def person_params
         params.require(:person).permit(:first_name, :last_name, :dni).reject{|_, v| v.blank?}

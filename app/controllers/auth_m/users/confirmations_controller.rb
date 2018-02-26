@@ -15,7 +15,7 @@ module AuthM
     #   super
     # end
 
-    # protected
+    protected
 
     # The path used after resending confirmation instructions.
     # def after_resending_confirmation_instructions_path_for(resource_name)
@@ -23,8 +23,9 @@ module AuthM
     # end
 
     # The path used after confirmation.
-    # def after_confirmation_path_for(resource_name, resource)
-    #   super(resource_name, resource)
-    # end
+      def after_confirmation_path_for(resource_name, resource)
+        resource.update(active: true)
+        super(resource_name, resource)
+      end
   end
 end
