@@ -8,6 +8,7 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
+    AuthM::Management.create :name => "None", :id => 0
 
     ############################ create table resources ############################
     create_table :auth_m_resources do |t|

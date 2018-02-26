@@ -2,6 +2,11 @@
 
 = form_with model: @person, method: :PUT, local: true do |form|
   = render partial: 'form', locals: {form: form}
+  -if current_user.has_role? :root
+    %p
+      = form.label :management_id
+      %br/
+      = form.select :management_id, options_for_select(AuthM::Management.all.collect{ |m| [m.name, m.id] }, @person.management.id)
   %p
     = form.submit
 

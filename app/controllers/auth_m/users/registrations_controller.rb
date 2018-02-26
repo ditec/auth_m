@@ -12,9 +12,7 @@ module AuthM
     # POST /resource
     def create
 
-      @person = AuthM::Person.new(person_params)
-      @person.management_id = 0
-      @person.save
+      @person = AuthM::Person.create(person_params)
 
       build_resource(sign_up_params)
       resource.person_id = @person.id

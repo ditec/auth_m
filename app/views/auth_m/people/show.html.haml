@@ -9,6 +9,9 @@
 %p
   %strong dni:
   = @person.dni
+%p
+  %strong management:
+  = @person.management.name unless @person.management.nil?
 
 -if can? :write, AuthM::Person
   = link_to 'Edit person', edit_person_path(@person)
