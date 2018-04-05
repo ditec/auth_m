@@ -46,7 +46,7 @@ module AuthM::UserConcern
 
     validate :is_not_root?, :on => [ :create, :update ], if: Proc.new {|user| @validate == true}
     
-    validates :roles_mask, exclusion: { in: [0] }, if: Proc.new {|user| @validate == true} 
+    validates :roles_mask, inclusion: { in: [1,2] }, if: Proc.new {|user| @validate == true} 
 
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
