@@ -4,7 +4,11 @@ module AuthM::UsersControllerConcern
   extend ActiveSupport::Concern
   
   included do
-    load_and_authorize_resource
+    load_and_authorize_resource :person, except: [:index, :stop_impersonating]
+    load_and_authorize_resource :user, through: :person, singleton: true, except: [:index, :stop_impersonating]
+    load_and_authorize_resource only: [:index, :stop_impersonating]
+
+    before_action :set_person, except: [:index, :stop_impersonating]
   end
 
   def index
@@ -12,23 +16,18 @@ module AuthM::UsersControllerConcern
   end
 
   def show
-    @person = AuthM::Person.find(params[:person_id])
     @user = @person.user
   end
 
   def new
-    @person = AuthM::Person.find(params[:person_id])
     @user = @person.build_user
   end
 
   def edit
-    @person = AuthM::Person.find(params[:person_id])
     @user = @person.user
   end
 
   def create_user
-
-    @person = AuthM::Person.find(params[:person_id])
 
     invitable? ? @user = AuthM::User.invite!(user_params.merge(person_id: @person.id)) : @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
 
@@ -43,7 +42,6 @@ module AuthM::UsersControllerConcern
   end
   
   def update
-    @person = AuthM::Person.find(params[:person_id])
     @user = @person.user
     
     @user.build_validation
@@ -59,14 +57,13 @@ module AuthM::UsersControllerConcern
   end
 
   def destroy
-    @person = AuthM::Person.find(params[:person_id])
-    @user = @person.user.destroy
+    @user = @person.user
+    @user.destroy
    
     redirect_to @person
   end
 
   def impersonate
-    @person = AuthM::Person.find(params[:person_id])
     @user = @person.user
     impersonate_user(@user)
     redirect_to main_app.root_path
@@ -78,7 +75,6 @@ module AuthM::UsersControllerConcern
   end
 
   def generate_new_password_email 
-    @person = AuthM::Person.find(params[:person_id])
     @user = @person.user
     @user.send_reset_password_instructions 
     flash[:notice] = "Reset password instructions have been sent to #{@user.email}." 
@@ -102,4 +98,9 @@ module AuthM::UsersControllerConcern
     def invitable?
       params[:user][:invitable] == "1" 
     end
+
+    def set_person
+      @person = AuthM::Person.find(params[:person_id])
+    end
+
 end
