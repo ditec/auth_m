@@ -1,0 +1,73 @@
+<h1>User</h1>
+<p>
+  <strong>email:</strong>
+  <%= @user.email %>
+</p>
+<% if can? :read, AuthM::User %>
+  <p>
+    <strong>sign_in_count:</strong>
+    <%= @user.sign_in_count %>
+  </p>
+  <p>
+    <strong>last_sign_in_at:</strong>
+    <%= @user.last_sign_in_at %>
+  </p>
+  <p>
+    <strong>last_sign_in_ip:</strong>
+    <%= @user.last_sign_in_ip %>
+  </p>
+  <p>
+    <strong>role:</strong>
+    <%= @user.role %>
+  </p>
+  <p>
+    <strong>active?:</strong>
+    <%= @user.active %>
+  </p>
+  <p>
+    <strong>confirmed email?:</strong>
+    <%= !@user.confirmed_at.nil? %>
+    <%= " - #{@user.confirmed_at}" if !@user.confirmed_at.nil?  %>
+  </p>
+  <% unless @user.invitation_sent_at.nil? %>
+    <p>
+      <strong>invitation created at:</strong>
+      <%= @user.invitation_created_at %>
+    </p>
+    <p>
+      <strong>invitation sent at:</strong>
+      <%= @user.invitation_sent_at %>
+    </p>
+    <p>
+      <strong>invitation accepted at:</strong>
+      <%= @user.invitation_accepted_at %>
+    </p>
+  <% end %>
+  <% if @user.has_role? :user %>
+    <p>
+      <h3>Policies</h3>
+      <table>
+        <tr>
+          <th>Resources</th>
+          <th>Access</th>
+          <% @user.policies.each do |policy| %>
+            <tr>
+              <td>
+                <%= policy.resource.name %>
+              </td>
+              <td>
+                <%= policy.access %>
+              </td>
+            </tr>
+          <% end %>
+        </tr>
+      </table>
+    </p>
+  <% end %>
+<% end %>
+<% if can? :manage, AuthM::User %>
+  <%= link_to 'Sign in', impersonate_person_user_path(person_id: @person.id, id: @user.id), method: :post %>
+  <%= link_to 'Edit user', edit_person_user_path(person_id: @person.id, id: @user.id) %>
+  <%= link_to 'Destroy user', person_user_path(person_id: @person.id, id: @user.id), method: :delete, data: { confirm: 'Are you sure?' }  %>
+<% end %>
+

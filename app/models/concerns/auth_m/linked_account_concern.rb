@@ -3,7 +3,7 @@
 # Table name: auth_m_linked_accounts
 #
 #  id            :integer          not null, primary key
-#  user          :integer          not null
+#  user          :integer          not null, index: true
 #  provider      :string           not null, index: true
 #  uid           :string           not null, index: true
 #  created_at    :datetime         not null

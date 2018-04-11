@@ -24,6 +24,9 @@
 #  invited_by_type        :string(255)
 #  invited_by_id          :integer
 #  invitations_count      :integer          default(0)
+#  confirmation_token     :string(255)
+#  confirmed_at           :datetime
+#  confirmation_sent_at   :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #

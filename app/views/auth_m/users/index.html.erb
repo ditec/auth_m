@@ -1,0 +1,38 @@
+<h1>Listing users</h1>
+<table>
+  <tr>
+    <th>email</th>
+    <th>sign_in_count</th>
+    <th>last_sign_in_at</th>
+    <th>last_sign_in_ip</th>
+    <th>role</th>
+    <th>active?</th>
+  </tr>
+  <% @users.each do |user| %>
+    <tr>
+      <td>
+        <%= user.email %>
+      </td>
+      <td>
+        <%= user.sign_in_count %>
+      </td>
+      <td>
+        <%= user.last_sign_in_at %>
+      </td>
+      <td>
+        <%= user.last_sign_in_ip %>
+      </td>
+      <td>
+        <%= user.role %>
+      </td>
+      <td>
+        <%= user.active %>
+      </td>
+      <% if can? :read, AuthM::Person %>
+        <td>
+          <%= link_to 'Show', person_path(user.person) unless user.person.nil? %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>

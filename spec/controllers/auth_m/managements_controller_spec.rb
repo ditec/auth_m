@@ -23,7 +23,7 @@ module AuthM
 
         it "test1" do
           FactoryBot.create_list(:auth_m_management, 31)
-          expect(assigns(:managements).count).to eq(32)        
+          expect(assigns(:managements).count).to eq(33)        
         end
       end
 

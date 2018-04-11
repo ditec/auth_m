@@ -5,14 +5,15 @@ module AuthM::ManagementsControllerConcern
   
   included do
     load_and_authorize_resource
+
+    before_action :set_management, except: [:index, :new, :create, :change]
   end
 
   def index
-    @managements = AuthM::Management.all.order('name').paginate(:page => params[:page], :per_page => 10)
+    @managements = AuthM::Management.all.order('id')
   end
 
   def show
-    @management = AuthM::Management.find(params[:id])
   end
 
   def new
@@ -20,7 +21,6 @@ module AuthM::ManagementsControllerConcern
   end
 
   def edit
-    @management = AuthM::Management.find(params[:id])
   end
   
   def create
@@ -36,8 +36,6 @@ module AuthM::ManagementsControllerConcern
   end
 
   def update
-    @management = AuthM::Management.find(params[:id])
-   
     if @management.update(management_params)
 
       destroy_resources @management
@@ -50,8 +48,7 @@ module AuthM::ManagementsControllerConcern
   end
 
   def destroy
-    @management = AuthM::Management.find(params[:id])
-    @management.destroy
+    @management.id == current_management.id ? flash[:alert] = "Management is active" : @management.destroy
    
     redirect_to managements_path
   end
@@ -90,4 +87,9 @@ module AuthM::ManagementsControllerConcern
         end
       end 
     end
+
+    def set_management
+      @management = AuthM::Management.find(params[:id])
+    end
+    
 end

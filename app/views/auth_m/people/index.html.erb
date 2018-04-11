@@ -1,0 +1,41 @@
+<h1>Listing people</h1>
+<table>
+  <tr>
+    <th>first name</th>
+    <th>last name</th>
+    <th>dni</th>
+    <th>has_user?</th>
+  </tr>
+  <% @people.each do |person| %>
+    <tr>
+      <td>
+        <%= person.first_name %>
+      </td>
+      <td>
+        <%= person.last_name %>
+      </td>
+      <td>
+        <%= person.dni %>
+      </td>
+      <td>
+        <%= !(person.user.nil?) %>
+      </td>
+      <% if can? :read, AuthM::Person %>
+        <td>
+          <%= link_to 'Show', person_path(person) %>
+        </td>
+      <% end %>
+      <% if can? :write, AuthM::Person %>
+        <td>
+          <%= link_to 'Edit', edit_person_path(person) %>
+        </td>
+        <td>
+          <%= link_to 'Destroy', person_path(person), method: :delete, data: { confirm: 'Are you sure?' }  %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+<% if can? :write, AuthM::Person %>
+  <%= link_to 'New person', new_person_path %>
+<% end %>

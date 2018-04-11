@@ -1,0 +1,32 @@
+<h1>Person</h1>
+<p>
+  <strong>first_name:</strong>
+  <%= @person.first_name %>
+</p>
+<p>
+  <strong>last_name:</strong>
+  <%= @person.last_name %>
+</p>
+<p>
+  <strong>dni:</strong>
+  <%= @person.dni %>
+</p>
+<p>
+  <strong>management:</strong>
+  <%= @person.management.name unless @person.management.nil? %>
+</p>
+<% if can? :write, AuthM::Person %>
+  <%= link_to 'Edit person', edit_person_path(@person) %>
+<% end %>
+<% if @person.user.nil? %>
+  <br/>
+  <br/>
+  <% if can? :write, AuthM::User %>
+    <%= link_to 'Create user', new_person_user_path(@person) %>
+  <% end %>
+<% else %>
+  <%= render template: "auth_m/users/show", locals: {:@user => @person.user} %>
+<% end %>
+<br/>
+<br/>
+<%= link_to 'Back', people_path %>

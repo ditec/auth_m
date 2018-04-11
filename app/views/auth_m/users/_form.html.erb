@@ -1,0 +1,36 @@
+<% if @user.errors.any? %>
+  <div id="error_explanation">
+    <h2>
+      <%= pluralize(@user.errors.count, "error") %>
+      prohibited
+      this user from being saved:
+    </h2>
+    <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li>
+          <%= msg %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<p>
+  <%= form.label :email %>
+  <br/>
+  <%= form.email_field :email %>
+</p>
+<p>
+  <%= form.label :password %>
+  <br/>
+  <%= form.password_field :password %>
+</p>
+<p>
+  <%= form.label :password_confirmation %>
+  <br/>
+  <%= form.password_field :password_confirmation %>
+</p>
+<p>
+  <%= form.check_box "invitable" %>
+  invite
+</p>
+<%=render partial: 'policies', locals: {form: form}%>

@@ -9,7 +9,6 @@
 #  management_id :integer          default(0), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  city_id       :integer
 #
 
 module AuthM

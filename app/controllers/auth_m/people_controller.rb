@@ -29,5 +29,12 @@ module AuthM
     # def destroy
     #   super
     # end
+
+    # private
+
+    #   def person_params
+    #     super
+    #   end
+
   end
 end

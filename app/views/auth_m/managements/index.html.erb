@@ -1,0 +1,29 @@
+<h1>Listing managements</h1>
+<table>
+  <tr>
+    <th>name</th>
+  </tr>
+  <% @managements.each do |management| %>
+    <tr>
+      <td>
+        <%= management.name %>
+      </td>
+      <% if can? :read, AuthM::Management %>
+        <td>
+          <%= link_to 'Show', management_path(management) %>
+        </td>
+      <% end %>
+      <% if can? :write, AuthM::Management %>
+        <td>
+          <%= link_to 'Edit', edit_management_path(management) %>
+        </td>
+        <td>
+          <%= link_to 'Destroy', management_path(management), method: :delete, data: { confirm: 'Are you sure?' } unless management.id == 0  %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+<% if can? :write, AuthM::Management %>
+  <%= link_to 'New management', new_management_path %>
+<% end %>

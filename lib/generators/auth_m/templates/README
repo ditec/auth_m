@@ -13,8 +13,6 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
 
      config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
       
-     config.action_mailer.delivery_method = :letter_opener
-
    In production, :host should be set to the actual host of your application.
 
 2. Add the following lines in app/views/layouts/application.html.erb.
@@ -32,8 +30,6 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
 4. Add the following lines in app/controllers/application_controller.rb:
 
     # before_action :authenticate_user!
-
-    require 'will_paginate/array'
 
     helper_method :current_management, :user_signed_in?
 

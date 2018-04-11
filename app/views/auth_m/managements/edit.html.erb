@@ -1,0 +1,8 @@
+<h1>Edit management</h1>
+<%= form_with model: @management, method: :PUT, local: true do |form| %>
+  <%= render partial: 'form', locals: {form: form} %>
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>
+<%= link_to 'Back', managements_path %>

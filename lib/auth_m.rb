@@ -1,10 +1,7 @@
 require "devise"
 require 'cancancan'
 require 'role_model'
-require 'haml-rails'
 require 'devise_invitable'
-require 'letter_opener'
-require 'will_paginate'
 
 require 'omniauth'
 require 'omniauth-facebook'

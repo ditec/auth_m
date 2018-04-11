@@ -5,15 +5,16 @@ module AuthM::PeopleControllerConcern
   
   included do
     load_and_authorize_resource
+
+    before_action :set_person, except: [:index, :new, :create]
   end
 
   def index
-    @people = current_management.people.reject{|x| x.user == current_user}.paginate(:page => params[:page], :per_page => 10) 
-    # @people = current_management.people.includes(:user).where.not({auth_m_users: {id: current_user.id}}).order("last_name").paginate(:page => params[:page], :per_page => 10)
+    @people = current_management.people.reject{|x| x.user == current_user}
+    # @people = current_management.people.includes(:user).where.not({auth_m_users: {id: current_user.id}}).order("last_name")
   end
 
   def show
-    @person = AuthM::Person.find(params[:id])
   end
 
   def new
@@ -21,7 +22,6 @@ module AuthM::PeopleControllerConcern
   end
 
   def edit
-    @person = AuthM::Person.find(params[:id])
   end
   
   def create
@@ -36,8 +36,6 @@ module AuthM::PeopleControllerConcern
   end
 
   def update
-    @person = AuthM::Person.find(params[:id])
-   
     if @person.update(person_params)
       redirect_to @person
     else
@@ -46,7 +44,6 @@ module AuthM::PeopleControllerConcern
   end
 
   def destroy
-    @person = AuthM::Person.find(params[:id])
     @person.destroy
    
     redirect_to people_path
@@ -56,6 +53,10 @@ module AuthM::PeopleControllerConcern
 
     def person_params
       params.require(:person).permit(:first_name, :last_name, :dni, :management_id).reject{|_, v| v.blank?}
+    end
+
+    def set_person
+      @person = AuthM::Person.find(params[:id])
     end
 
 end

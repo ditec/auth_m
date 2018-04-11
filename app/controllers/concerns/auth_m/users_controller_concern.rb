@@ -12,7 +12,7 @@ module AuthM::UsersControllerConcern
   end
 
   def index
-    @users = current_management.users.order("email").reject{|x| x == current_user}.paginate(:page => params[:page], :per_page => 10)
+    @users = current_management.users.order("email").reject{|x| x == current_user}
   end
 
   def show

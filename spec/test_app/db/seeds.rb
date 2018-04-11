@@ -8,6 +8,7 @@
 
 AuthM::User.create(email:"root@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:root], active: true, confirmed_at: DateTime.now.to_date).save(validate: false)
 
+management_0 = AuthM::Management.create(id: 0, name: "None")
 management_1 = AuthM::Management.create(name: "Empresa 1")
 management_2 = AuthM::Management.create(name: "Empresa 2")
 

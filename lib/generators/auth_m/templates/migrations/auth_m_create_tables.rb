@@ -13,11 +13,10 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
     ############################ create table resources ############################
     create_table :auth_m_resources do |t|
       t.string :name, null: false, unique: true
-      t.references :management, null: false
+      t.references :management, null: false, index: true
 
       t.timestamps
     end
-    add_index(:auth_m_resources, 'management_id', :name => 'index_managements_on_resources')
 
 
     ############################ create table people ############################
@@ -25,11 +24,10 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       t.string :first_name, null: false, default: ""
       t.string :last_name, null: false, default: ""
       t.string :dni, unique: true
-      t.references :management, null: false, default: 0
+      t.references :management, null: false, default: 0, index: true
 
       t.timestamps
     end
-    add_index(:auth_m_people, 'management_id', :name => 'index_managements_on_people')
 
     ############################ create table users ############################
 
@@ -41,7 +39,7 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       ## 
       t.integer :roles_mask, default: 2, null: false
       t.boolean :active, default: false, null: false
-      t.references :person
+      t.references :person, index: true
 
       ## Recoverable
       t.string   :reset_password_token
@@ -86,7 +84,6 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
 
       t.timestamps null: false
     end
-    add_index(:auth_m_users, 'person_id', :name => 'index_peoples_on_users')
     add_index :auth_m_users, :email,                unique: true
     add_index :auth_m_users, :reset_password_token, unique: true
     # add_index :auth_m_users, :confirmation_token,   unique: true
@@ -95,24 +92,21 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
 
     ############################ create table policies ############################
     create_table :auth_m_policies do |t|
-      t.references :resource
-      t.references :user
+      t.references :resource, index: true
+      t.references :user, index: true
       t.string :access
 
       t.timestamps
     end
-    add_index(:auth_m_policies, 'resource_id', :name => 'index_resources_on_policies')
-    add_index(:auth_m_policies, 'user_id', :name => 'index_users_on_policies')
 
     ############################ create table linked accounts ############################
     create_table :auth_m_linked_accounts do |t|
-      t.references :user, null: false
+      t.references :user, null: false, index: true
       t.string :provider, index: true, null: false
       t.string :uid, index: true, null: false
 
       t.timestamps
     end
-    add_index(:auth_m_linked_accounts, 'user_id', :name => 'index_users_on_plinked_accounts')
 
   end
 end

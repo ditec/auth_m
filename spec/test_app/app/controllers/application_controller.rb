@@ -1,8 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
-  require 'will_paginate/array'
-
   helper_method :current_management, :user_signed_in?
 
   rescue_from CanCan::AccessDenied do |exception|    
