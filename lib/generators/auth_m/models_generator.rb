@@ -4,7 +4,7 @@ module AuthM
 
       source_root File.expand_path('../../../../app', __FILE__)
 
-      def generate_controllers
+      def generate_models
         copy_file "models/auth_m/management.rb", "app/models/auth_m/management.rb"
         copy_file "models/auth_m/policy.rb", "app/models/auth_m/policy.rb"
         copy_file "models/auth_m/resource.rb", "app/models/auth_m/resource.rb"

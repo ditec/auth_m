@@ -4,7 +4,7 @@ module AuthM
 
       source_root File.expand_path('../../../../app', __FILE__)
 
-      def generate_controllers
+      def generate_views
         directory "views", "app/views"
       end
 
