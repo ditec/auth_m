@@ -3,6 +3,7 @@ module AuthM
     include AuthM::AbilityConcern
     
     # def initialize(user)
+    #   user ||= AuthM::User.new
     #   super(user)
 
     #   if user.has_role? :root
