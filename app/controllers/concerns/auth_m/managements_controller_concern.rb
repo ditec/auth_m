@@ -6,11 +6,7 @@ module AuthM::ManagementsControllerConcern
   included do
     load_and_authorize_resource
 
-    before_action :set_management, except: [:index, :new, :create, :change]
-  end
-
-  def index
-    @managements = AuthM::Management.all.order('id')
+    before_action :set_management, except: [:new, :create, :change]
   end
 
   def show
@@ -29,6 +25,7 @@ module AuthM::ManagementsControllerConcern
     if @management.save
 
       create_resources @management
+      set_current_management(@management.id)
       redirect_to @management
     else
       render 'new'
@@ -48,9 +45,10 @@ module AuthM::ManagementsControllerConcern
   end
 
   def destroy
-    @management.id == current_management.id ? flash[:alert] = "Management is active" : @management.destroy
+    @management.destroy
+    set_current_management(AuthM::Management.first.id)
    
-    redirect_to managements_path
+    redirect_to main_app.root_path 
   end
 
   def change    
@@ -89,7 +87,7 @@ module AuthM::ManagementsControllerConcern
     end
 
     def set_management
-      @management = AuthM::Management.find(params[:id])
+      current_management.id == params[:id].to_i ? (@management = AuthM::Management.find(params[:id])) : (redirect_to main_app.root_path)
     end
     
 end

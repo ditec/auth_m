@@ -16,5 +16,5 @@
 </p>
 <% if can? :write, AuthM::Management %>
   <%= link_to 'Edit', edit_management_path(@management) %>
+  <%= link_to 'Destroy', management_path(@management), method: :delete, data: { confirm: 'Are you sure?' } unless @management.id == 0  %>
 <% end %>
-<%= link_to 'Back', managements_path %>

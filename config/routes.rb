@@ -10,7 +10,7 @@ AuthM::Engine.routes.draw do
     post "custom_sign_up" => "users/omniauth_callbacks" 
   end
 
-  resources :managements
+  resources :managements, except: :index
   
   post 'change_management', to: 'managements#change'
 

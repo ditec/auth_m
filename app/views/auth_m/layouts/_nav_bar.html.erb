@@ -5,12 +5,20 @@
     <%= form_tag auth_m.change_management_path(current_management) do%>
       <%= select_tag "management_selector", options_for_select(AuthM::Management.all.collect{ |m| [m.name, m.id] }, current_management.id) %>
       <%= submit_tag "send" %>
+      <%= link_to "new", auth_m.new_management_path %>
     <% end %>
   <% end %>
   <% if current_user != true_user %>
     You (<%= true_user.email %>) are signed in as <%= current_user.email %>
     <%= link_to "Back to admin", auth_m.stop_impersonating_users_path, method: :post %>
-  <% end %>       
+  <% end %>
+  <% unless (current_user.has_role? :root) %>
+    <br>
+    <br>
+  <% end %>
+  <%= link_to('People', auth_m.people_path) if can? :read, AuthM::Person  %>
+  <%= link_to('User', auth_m.users_path) if can? :read, AuthM::User %>
+  <%= link_to('Management', auth_m.management_path(current_management)) if can? :read, AuthM::Management %> 
 <% else %>
   <%= link_to('Register', auth_m.new_user_registration_path)  %>
   <%= link_to('Login', auth_m.new_user_session_path)  %>  
