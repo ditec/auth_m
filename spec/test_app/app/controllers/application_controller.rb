@@ -1,7 +1,11 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  before_action :authenticate_user!
+
+  protect_from_forgery with: :exception  
 
   helper_method :current_management, :user_signed_in?
+
+  rescue_from ActionController::InvalidAuthenticityToken, with: :rescue_422
 
   rescue_from CanCan::AccessDenied do |exception|    
     redirect_to "/401.html"
@@ -29,6 +33,9 @@ class ApplicationController < ActionController::Base
     session[:management_id] = id 
   end
 
-  impersonates :user
+  def rescue_422
+    redirect_to auth_m.new_user_session_path, alert: "Invalid Authenticity Token"
+  end
 
+  impersonates :user
 end

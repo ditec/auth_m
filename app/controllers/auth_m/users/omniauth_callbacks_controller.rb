@@ -81,6 +81,7 @@ module AuthM
           @user = AuthM::User.from_omniauth(request.env["omniauth.auth"])
           unless @user.nil?  
             sign_in_and_redirect @user, event: :authentication
+            set_flash_message(:notice, :success, :kind => provider.split("_").first.capitalize) if is_navigational_format?
           else 
             @user = AuthM::User.new(email:request.env["omniauth.auth"].info.email)
             if provider = :twitter

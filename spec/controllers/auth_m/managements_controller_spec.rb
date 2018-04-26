@@ -12,26 +12,10 @@ module AuthM
                   controller.set_current_management(user.management.id)
                   user}
 
-      describe "#GET index ->" do
-        before :each do
-          get :index
-        end
-
-        it { should respond_with(200) }
-        it { should render_template('index') }
-        it { should render_with_layout('application') }
-
-        it "test1" do
-          FactoryBot.create_list(:auth_m_management, 31)
-          expect(assigns(:managements).count).to eq(33)        
-        end
-      end
-
       describe "#GET show/:id ->" do
-        let(:management){FactoryBot.create(:auth_m_management)}
 
         before :each do
-          get :show, params: { id: management.id }
+          get :show, params: { id: controller.current_management.id }
         end
 
         it { should respond_with(200) }
@@ -39,7 +23,7 @@ module AuthM
         it { should render_with_layout('application') }
 
         it "test1" do
-          expect(assigns(:management)).to eq(management)        
+          expect(assigns(:management)).to eq(controller.current_management)        
         end
       end
 
@@ -58,10 +42,9 @@ module AuthM
       end
 
       describe "#GET edit/:id ->" do
-        let(:management){FactoryBot.create(:auth_m_management)}
 
         before :each do
-          get :edit, params: { id: management.id }
+          get :edit, params: { id: controller.current_management.id}
         end
 
         it { should respond_with(200) }
@@ -69,7 +52,7 @@ module AuthM
         it { should render_with_layout('application') }
 
         it "test1" do
-          expect(assigns(:management)).to eq(management)        
+          expect(assigns(:management)).to eq(controller.current_management)        
         end
       end
 
@@ -102,27 +85,26 @@ module AuthM
       end
 
       describe "#PUT update/:id ->" do
-        let(:management){FactoryBot.create(:auth_m_management)}
 
         context "with valid attributes" do
           before(:each) do
-            put :update, params: {id: management.id, management: {name: "Dummy887"}}
-            management.reload
+            put :update, params: {id: controller.current_management.id, management: {name: "Dummy887"}}
+            controller.current_management.reload
           end
 
           it "test1" do 
-            expect(response).to redirect_to(management)
+            expect(response).to redirect_to(controller.current_management)
           end
 
           it "test2" do 
-            expect(management.name).to eq("Dummy887")
+            expect(controller.current_management.name).to eq("Dummy887")
           end
         end
 
         context "with invalid attributes" do
           before(:each) do
-            put :update, params: {id: management.id, management: {name: nil}}
-            management.reload
+            put :update, params: {id: controller.current_management.id, management: {name: nil}}
+            controller.current_management.reload
           end
 
           it "test1" do 
@@ -130,23 +112,25 @@ module AuthM
           end
 
           it "test2" do 
-            expect(management.name).to_not eq(nil)
+            expect(controller.current_management.name).to_not eq(nil)
           end
         end
       end
 
       describe "#DELETE destroy ->" do
-        let!(:management){FactoryBot.create(:auth_m_management)}
+        before(:each) do
+          post :create, params: {management: FactoryBot.attributes_for(:auth_m_management)}
+        end
 
         it 'test1' do
           expect { 
-            delete :destroy, params:{ id: management.id }
+            delete :destroy, params:{ id: controller.current_management.id }
           }.to change(AuthM::Management,:count).by(-1)
         end
 
         it 'test2' do
-          delete :destroy, params:{ id: management.id }
-          expect(response).to redirect_to(managements_path)
+          delete :destroy, params:{ id: controller.current_management.id }
+          expect(response).to redirect_to("http://test.host/")
         end
       end
 
@@ -174,18 +158,16 @@ module AuthM
       end
 
       describe "#destroy_resources(management) ->" do 
-        let(:management){FactoryBot.create(:auth_m_management, id:5)}
 
         it "test1" do 
-          FactoryBot.create(:auth_m_resource, management_id: management.id)
-          expect{ put :update, params: {id: management.id, management: {name: "Dummy887", resources: [""]}}}
+          FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)
+          expect{ put :update, params: {id: controller.current_management.id, management: {name: "Dummy887", resources: [""]}}}
           .to change(AuthM::Resource,:count).by(-1)
         end
 
       end
 
       describe "#create_resources(management) ->" do 
-        let(:management){FactoryBot.create(:auth_m_management, id:5)}
 
         it "test1" do 
           expect{
@@ -194,8 +176,8 @@ module AuthM
         end
 
         it "test2" do 
-          FactoryBot.create(:auth_m_resource, management_id: management.id)
-          expect{ put :update, params: {id: management.id, management: {name: "Dummy887", resources: ["AuthM::Person"]}}}
+          FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)
+          expect{ put :update, params: {id: controller.current_management.id, management: {name: "Dummy887", resources: ["AuthM::Person"]}}}
           .to change(AuthM::Resource,:count).by(0)
         end
       end
@@ -209,11 +191,7 @@ module AuthM
           before :each do 
             sign_in user2 
           end 
-
-          it "can't access action index" do
-            get :index
-            expect(response).to redirect_to("/401.html")
-          end      
+    
           it "can't access action show" do
             get :show, params: { id: user2.management.id }
             expect(response).to redirect_to("/401.html")

@@ -35,18 +35,13 @@ module AuthM::UserConcern
   
   included do
     belongs_to :person, optional: true
-
     has_many :policies, dependent: :destroy
-
     has_many :linked_accounts, dependent: :destroy
 
     delegate :can?, :cannot?, :to => :ability
 
-    validates_presence_of [:roles_mask, :person_id], if: Proc.new {|user| @validate == true}
-
-    validate :is_not_root?, :on => [ :create, :update ], if: Proc.new {|user| @validate == true}
-    
-    validates :roles_mask, inclusion: { in: [1,2] }, if: Proc.new {|user| @validate == true} 
+    validates_presence_of [:roles_mask, :person_id]
+    validates :roles_mask, inclusion: { in: [1,2] }
 
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -55,6 +50,7 @@ module AuthM::UserConcern
 
     scope :users, -> { where(roles_mask: AuthM::User.mask_for(:user)) }
     scope :admins, -> { where(roles_mask: AuthM::User.mask_for(:admin)) }
+    scope :active, -> { where(:active => true) }
 
     include RoleModel
 
@@ -78,6 +74,10 @@ module AuthM::UserConcern
       return linked_account.user unless linked_account.nil?
     end
 
+    def active_for_authentication?
+      super && self.active
+    end
+
   end
 
   def account_linked? provider 
@@ -91,10 +91,6 @@ module AuthM::UserConcern
 
   def ability
     @ability ||= AuthM::Ability.new(self)
-  end
-
-  def build_validation
-    @validate = true
   end
 
   def default_role
@@ -112,11 +108,5 @@ module AuthM::UserConcern
   def management
     self.person.management unless self.person.nil?
   end
-
-  private 
-  
-    def is_not_root?
-      errors.add(:user, 'cannot save how root') if self.has_role? :root
-    end
 
 end

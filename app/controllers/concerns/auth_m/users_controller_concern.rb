@@ -31,8 +31,6 @@ module AuthM::UsersControllerConcern
 
     invitable? ? @user = AuthM::User.invite!(user_params.merge(person_id: @person.id)) : @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
 
-    @user.build_validation
-
     if @user.save
       create_policies @user if @user.has_role? :user
       redirect_to @person
@@ -44,9 +42,7 @@ module AuthM::UsersControllerConcern
   def update
     @user = @person.user
     
-    @user.build_validation
     if @user.update(user_params)
-
       @user.policies.destroy_all
       create_policies @user if @user.has_role? :user
 

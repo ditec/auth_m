@@ -16,7 +16,6 @@ module AuthM
 
       build_resource(sign_up_params)
       resource.person_id = @person.id
-      resource.build_validation
       
       resource.save
       yield resource if block_given?
@@ -48,7 +47,6 @@ module AuthM
     def update
       self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
       prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
-      resource.build_validation
 
       yield resource if block_given?
       if update_resource(resource, account_update_params)
@@ -69,9 +67,13 @@ module AuthM
     end
 
     # DELETE /resource
-    # def destroy
-    #   super
-    # end
+    def destroy
+      resource.person.destroy
+      Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
+      set_flash_message! :notice, :destroyed
+      yield resource if block_given?
+      respond_with_navigational(resource){ redirect_to after_sign_out_path_for(resource_name) }
+    end
 
     # GET /resource/cancel
     # Forces the session data which is usually expired after sign
@@ -107,9 +109,12 @@ module AuthM
     def after_inactive_sign_up_path_for(resource)
       main_app.root_path
     end
+
     private
-      def person_params
-        params.require(:person).permit(:first_name, :last_name, :dni).reject{|_, v| v.blank?}
-      end
+
+    def person_params
+      params.require(:person).permit(:first_name, :last_name, :dni).reject{|_, v| v.blank?}
+    end
+
   end
 end
