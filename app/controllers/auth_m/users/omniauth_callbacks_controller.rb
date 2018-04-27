@@ -84,7 +84,7 @@ module AuthM
             set_flash_message(:notice, :success, :kind => provider.split("_").first.capitalize) if is_navigational_format?
           else 
             @user = AuthM::User.new(email:request.env["omniauth.auth"].info.email)
-            if provider = :twitter
+            if provider == :twitter
               fullname = request.env["omniauth.auth"].info.name.split(' ')
               first_name, last_name = fullname[0], fullname[1]
             else

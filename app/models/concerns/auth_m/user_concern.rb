@@ -37,6 +37,7 @@ module AuthM::UserConcern
     belongs_to :person, optional: true
     has_many :policies, dependent: :destroy
     has_many :linked_accounts, dependent: :destroy
+    has_many :invitations, :class_name => self.to_s, :as => :invited_by
 
     delegate :can?, :cannot?, :to => :ability
 

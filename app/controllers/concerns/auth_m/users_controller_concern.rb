@@ -29,7 +29,7 @@ module AuthM::UsersControllerConcern
 
   def create_user
 
-    invitable? ? @user = AuthM::User.invite!(user_params.merge(person_id: @person.id)) : @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
+    invitable? ? @user = AuthM::User.invite!(user_params.merge(person_id: @person.id), current_user) : @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
 
     if @user.save
       create_policies @user if @user.has_role? :user

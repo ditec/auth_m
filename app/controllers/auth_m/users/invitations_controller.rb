@@ -5,16 +5,16 @@ module AuthM
 
     # this is called when creating invitation
     # should return an instance of resource class
-    def invite_resource
-      ## skip sending emails on invite
-      super
-    end
+    # def invite_resource
+    #   ## skip sending emails on invite
+    #   super
+    # end
 
     # this is called when accepting invitation
     # should return an instance of resource class
     def accept_resource
       resource = resource_class.accept_invitation!(update_resource_params)
-      resource.update_attribute(:active, true)
+      resource.update_attribute(:active, true) if resource.errors.empty?
       # resource.update_attribute(:confirmed_at, DateTime.now.to_date)
       ## Report accepting invitation to analytics
       # Analytics.report('invite.accept', resource.id)
