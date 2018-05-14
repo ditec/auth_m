@@ -24,7 +24,7 @@
   <p>
     <%= link_to "send email for reset password", generate_new_password_email_person_user_path, method: :post %>
   </p>
-  <%=render partial: 'policies', locals: {form: form}%>
+  <%=render partial: 'policies', locals: {form: form, edit: true}%>
   <p>
     <h3>Active?</h3>
     <table>

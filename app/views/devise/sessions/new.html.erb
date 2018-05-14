@@ -1,6 +1,8 @@
 <h2>Log in</h2>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <%= flash[:recaptcha_error]  %>
+
   <div class="field">
     <%= f.label :email %><br />
     <%= f.email_field :email, autofocus: true %>
@@ -18,9 +20,17 @@
     </div>
   <% end -%>
 
+  <%-if AuthM::Engine.new_session_captcha == true%>
+    <br>
+    <%= recaptcha_tags %> 
+    <br>
+  <% end %>
+
   <div class="actions">
     <%= f.submit "Log in" %>
+    <%#= invisible_recaptcha_tags text: 'Log in' if AuthM::Engine.new_session_captcha == true%>
   </div>
 <% end %>
 
+<br>
 <%= render "devise/shared/links" %>

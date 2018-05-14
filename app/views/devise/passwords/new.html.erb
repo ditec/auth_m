@@ -1,6 +1,7 @@
 <h2>Forgot your password?</h2>
 
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+  <%= flash[:recaptcha_error] %>
   <%= devise_error_messages! %>
 
   <div class="field">
@@ -8,8 +9,15 @@
     <%= f.email_field :email, autofocus: true %>
   </div>
 
+  <%-if AuthM::Engine.new_password_captcha == true%>
+    <br>
+    <%= recaptcha_tags %>
+    <br>
+  <% end %>
+
   <div class="actions">
     <%= f.submit "Send me reset password instructions" %>
+    <%#= invisible_recaptcha_tags text: 'Send me reset password instructions' if AuthM::Engine.new_password_captcha == true%>
   </div>
 <% end %>
 

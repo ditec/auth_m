@@ -1,6 +1,9 @@
 module AuthM
   class Users::RegistrationsController < Devise::RegistrationsController
-    # before_action :configure_sign_up_params, only: [:create]
+    prepend_before_action :check_captcha, only: [:create] if AuthM::Engine.new_registration_captcha == true
+    
+    before_action :configure_sign_up_params, only: [:create]
+
     # before_action :configure_account_update_params, only: [:update]
 
     # GET /resource/sign_up
@@ -11,30 +14,17 @@ module AuthM
 
     # POST /resource
     def create
-
-      @person = AuthM::Person.create(person_params)
-
-      build_resource(sign_up_params)
-      resource.person_id = @person.id
-      
-      resource.save
-      yield resource if block_given?
-      if resource.persisted?
-        if resource.active_for_authentication?
-          set_flash_message! :notice, :signed_up
-          sign_up(resource_name, resource)
-          respond_with resource, location: after_sign_up_path_for(resource)
-        else
-          set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
-          expire_data_after_sign_in!
-          respond_with resource, location: after_inactive_sign_up_path_for(resource)
-        end
+      @person = AuthM::Person.new(person_params)
+      if @person.save
+        params[:user] = params[:user].merge(person_id: @person.id)
+        super
+        create_policies resource if resource.persisted?
+        @person.destroy if ((@person.persisted? ) && !(resource.persisted?))
       else
-        clean_up_passwords resource
-        set_minimum_password_length
-        respond_with resource
+        @person.destroy if @person.persisted?
+        self.resource = resource_class.new sign_up_params
+        render :new
       end
-
     end
 
     # GET /resource/edit
@@ -45,12 +35,13 @@ module AuthM
 
     # PUT /resource
     def update
+      @person = resource.person
+
       self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
       prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
-
+      resource_updated = @person.update(person_params) && update_resource(resource, account_update_params)
       yield resource if block_given?
-      if update_resource(resource, account_update_params)
-        resource.person.update(person_params)
+      if resource_updated
         if is_flashing_format?
           flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
             :update_needs_confirmation : :updated
@@ -61,7 +52,6 @@ module AuthM
       else
         clean_up_passwords resource
         set_minimum_password_length
-        @person = resource.person
         render :edit
       end
     end
@@ -91,9 +81,9 @@ module AuthM
     end
 
     # If you have extra params to permit, append them to the sanitizer.
-    # def configure_sign_up_params
-    #   devise_parameter_sanitizer.permit(:sign_up, keys: [:attribute])
-    # end
+    def configure_sign_up_params
+      devise_parameter_sanitizer.permit(:sign_up, keys: [:person_id])
+    end
 
     # If you have extra params to permit, append them to the sanitizer.
     # def configure_account_update_params
@@ -113,8 +103,22 @@ module AuthM
     private
 
     def person_params
-      params.require(:person).permit(:first_name, :last_name, :dni).reject{|_, v| v.blank?}
+      params.require(:person).permit(:first_name, :last_name, :dni)
     end
+    
+    def check_captcha
+      unless verify_recaptcha
+        self.resource = resource_class.new sign_up_params
+        @person = AuthM::Person.new(person_params)
+        render :new
+      end 
+    end
+
+    def create_policies(user)
+      user.management.resources.each do |resource|
+        user.policies.create!(resource: resource, access: resource.access) if resource.default
+      end 
+    end    
 
   end
 end

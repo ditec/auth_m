@@ -52,7 +52,7 @@ module AuthM::PeopleControllerConcern
   private
 
     def person_params
-      params.require(:person).permit(:first_name, :last_name, :dni, :management_id).reject{|_, v| v.blank?}
+      params.require(:person).permit(:first_name, :last_name, :dni, :management_id)
     end
 
     def set_person

@@ -58,6 +58,20 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
     end
 
     impersonates :user
+
+4. Add the following lines in app/config/secrets.yml:
+
+    FACEBOOK_KEY: -- key --
+    FACEBOOK_SECRET: -- key --
+
+    GOOGLE_KEY: -- key --
+    GOOGLE_SECRET: -- key --
+
+    TWITTER_KEY: -- key --
+    TWITTER_SECRET: -- key --
+
+    RECAPTCHA_SITE_KEY: -- key -- 
+    RECAPTCHA_SECRET_KEY: -- key --
         
 ===============================================================================
 

@@ -24,7 +24,11 @@ module AuthM::ManagementConcern
 
   def has_the_resource_name? resource_name
     self.resources.any? {|h| h.name == resource_name }
-  end
+  end 
+
+  def resource resource_name 
+    self.resources.where(name: resource_name).first
+  end 
 
   def has_the_resource_id? resource_id
     self.resources.any? {|h| h.id == resource_id }

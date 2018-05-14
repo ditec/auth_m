@@ -25,10 +25,12 @@
             </td>
             <td>
               <% AuthM::Policy::USER_ACCESS.each do |access| %>
-                <% policy = @user.has_the_policy? resource.id %>
-                <% unless policy.nil? %>
+                <% policy = @user.has_the_policy? resource.id if edit == true %>
+                <% if resource.default && edit == false %>
+                  <%= form_2.radio_button :"#{resource.id}", access, checked: (access == resource.access)  %>                
+                <% elsif !policy.nil? %>
                   <%= form_2.radio_button :"#{resource.id}", access, checked: (access == policy.access)  %>
-                <% else %>
+                <% else  %>
                   <%= form_2.radio_button :"#{resource.id}", access, checked: (access == "none") %>
                 <% end %>
                 <%= access %>

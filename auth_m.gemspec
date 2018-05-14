@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "role_model", "~> 0.8"
   s.add_dependency "cancancan", "~> 2.1"
   s.add_dependency "devise_invitable", "~> 1.7.0"
+  s.add_dependency "recaptcha"
 
   s.add_dependency "omniauth", "~> 1.8.1"
   s.add_dependency "omniauth-facebook", "~> 4.0.0"

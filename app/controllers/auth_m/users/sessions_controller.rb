@@ -1,6 +1,7 @@
 module AuthM
   class Users::SessionsController < Devise::SessionsController
     # before_action :configure_sign_in_params, only: [:create]
+    prepend_before_action :check_captcha, only: [:create] if AuthM::Engine.new_session_captcha == true
 
     # GET /resource/sign_in
     # def new
@@ -23,5 +24,16 @@ module AuthM
     # def configure_sign_in_params
     #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
     # end
+    private
+    
+    def check_captcha
+      unless verify_recaptcha
+        self.resource = resource_class.new sign_in_params
+        resource.validate # Look for any other validation errors besides Recaptcha
+        set_minimum_password_length
+        respond_with resource
+      end 
+    end
+
   end
 end

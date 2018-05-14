@@ -1,6 +1,7 @@
 <h2>Resend confirmation instructions</h2>
 
 <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+  <%= flash[:recaptcha_error] %>
   <%= devise_error_messages! %>
 
   <div class="field">
@@ -8,8 +9,15 @@
     <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
   </div>
 
+  <%-if AuthM::Engine.new_confirmation_captcha == true%>
+    <br>
+    <%= recaptcha_tags %>
+    <br>
+  <% end %>
+
   <div class="actions">
     <%= f.submit "Resend confirmation instructions" %>
+    <%#= invisible_recaptcha_tags text: 'Resend confirmation instructions' if AuthM::Engine.new_confirmation_captcha == true%>
   </div>
 <% end %>
 

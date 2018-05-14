@@ -21,6 +21,7 @@ module AuthM::PersonConcern
     belongs_to :management, optional: true
     has_one :user, dependent: :destroy
 
+    validate :dni_empty
     validates :first_name, :last_name, presence: true, length: { in: 4..250 }
     validates :dni, uniqueness: true, numericality: { only_integer: true }, length: { in: 6..20 }, allow_nil: true
     before_save :capitalize_names
@@ -28,6 +29,10 @@ module AuthM::PersonConcern
   end
 
   private 
+
+    def dni_empty
+      self.dni = nil if self.dni.blank? 
+    end
 
     def capitalize_names
       self.first_name = self.first_name.capitalize

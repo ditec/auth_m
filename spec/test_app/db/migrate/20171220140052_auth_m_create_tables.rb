@@ -14,6 +14,8 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
     create_table :auth_m_resources do |t|
       t.string :name, null: false, unique: true
       t.references :management, null: false, index: true
+      t.boolean :default, null: false, default: false
+      t.string :access
 
       t.timestamps
     end

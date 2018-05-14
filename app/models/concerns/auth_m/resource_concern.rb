@@ -5,6 +5,8 @@
 #  id            :integer          not null, primary key
 #  name          :string(255)      not null
 #  management_id :integer          not null
+#  default       :boolean          default(FALSE), not null
+#  access        :string(255)      
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #
@@ -21,6 +23,16 @@ module AuthM::ResourceConcern
     validates :name, presence: true, length: { in: 2..250 }, format: { with: /\A[A-Z]/, :message => 'invalid format'}
 
     validate :is_a_valid_resource?, :on => [ :create, :update ]
+
+    before_save :validate_access
+
+    validates :access, inclusion: { in: ['read','manage'] }, if: -> {self.default}
+
+    DEFAULT_ACCESS = [
+      ['read', 'read'],
+      ['manage', 'manage']
+    ]
+
   end
 
   class_methods do
@@ -42,6 +54,10 @@ module AuthM::ResourceConcern
   end
 
   private 
+
+    def validate_access 
+      self.access = nil unless self.default 
+    end 
 
     def is_a_valid_resource?
       errors.add(:resource, 'is invalid') unless AuthM::Resource.exists? self.name

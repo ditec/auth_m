@@ -1,5 +1,7 @@
 module AuthM
   class Users::ConfirmationsController < Devise::ConfirmationsController
+    prepend_before_action :check_captcha, only: [:create] if AuthM::Engine.new_confirmation_captcha == true
+
     # GET /resource/confirmation/new
     # def new
     #   super
@@ -27,5 +29,15 @@ module AuthM
         resource.update(active: true)
         super(resource_name, resource)
       end
+
+    private
+
+    def check_captcha
+      unless verify_recaptcha
+        self.resource = resource_class.new
+        respond_with_navigational(resource) { render :new }
+      end
+    end
+    
   end
 end

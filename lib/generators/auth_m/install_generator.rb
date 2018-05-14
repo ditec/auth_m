@@ -27,6 +27,10 @@ module AuthM
       route "mount AuthM::Engine, at: '/auth_m' \n"
     end
 
+    def create_initializers
+      copy_file "initializers/auth_m.rb", "config/initializers/auth_m.rb"
+    end
+
     def show_readme
       sleep 1
       readme "README"

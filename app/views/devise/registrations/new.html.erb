@@ -1,6 +1,7 @@
 <h2>Sign up</h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <%= flash[:recaptcha_error] %>
 
   <% if @person.errors.any? %>
     <div id="error_explanation">
@@ -53,8 +54,15 @@
     <%= f.password_field :password_confirmation, autocomplete: "off" %>
   </div>
 
+  <%-if AuthM::Engine.new_registration_captcha == true%>
+    <br>
+    <%= recaptcha_tags %>
+    <br>
+  <% end %>
+
   <div class="actions">
     <%= f.submit "Sign up" %>
+    <%#= invisible_recaptcha_tags text: 'Sign up' if AuthM::Engine.new_registration_captcha == true%>
   </div>
 <% end %>
 
