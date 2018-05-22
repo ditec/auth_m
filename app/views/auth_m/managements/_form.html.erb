@@ -21,35 +21,16 @@
 </p>
 <p>
   <h3>Resources</h3>
-  <%= fields_for "resources", [] do |a|%>
-    <%-AuthM::Resource.list.each do |res| %>
-      <%= a.fields_for "#{res.first}" do |b|%>
-        <%= b.label res.first %>
-        <% resource = @management.resource res.first  %>
-        <%- if resource %>
-          <%= b.check_box :select, {checked: true}%>
-        <%else%>
-          <%= b.check_box :select%>
-        <%end%>
-
-        <ul>
-          <li>
-            <%= b.label :default %>
-            <%- if resource && resource.default %>
-              <%= b.check_box :default, {checked: true}%>
-            <%else%>
-              <%= b.check_box :default%>
-            <%end%>
-          </li>
-          <li>
-            <%- if resource && resource.default %>
-              <%=b.select :access, AuthM::Resource::DEFAULT_ACCESS, {selected: resource.access}%>
-            <%else%>
-              <%=b.select :access, AuthM::Resource::DEFAULT_ACCESS%>
-            <%end%>
-          </li>
-        </ul>
-      <% end %>
+  <table>
+    <%= form.collection_check_boxes :resources, AuthM::Resource.list, :first, :last do |b| %>
+      <div class="collection-check-box">
+        <% if @management.has_the_resource_name? b.object.first %>
+          <%= b.check_box({checked: true}) %>
+        <% else %>
+          <%= b.check_box %>
+        <% end %>
+        <%= b.label %>
+      </div>
     <% end %>
-  <%end%>   
+  </table>
 </p>

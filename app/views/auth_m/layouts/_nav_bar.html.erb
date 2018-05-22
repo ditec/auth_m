@@ -5,7 +5,8 @@
     <%= form_tag auth_m.change_management_path(current_management) do%>
       <%= select_tag "management_selector", options_for_select(AuthM::Management.all.collect{ |m| [m.name, m.id] }, current_management.id) %>
       <%= submit_tag "send" %>
-      <%= link_to "new", auth_m.new_management_path %>
+      <%= link_to "new", auth_m.new_management_path if can? :manage, AuthM::Management %>
+      <%= link_to "public users", auth_m.public_users_path if can? :public, AuthM::User %>
     <% end %>
   <% end %>
   <% if current_user != true_user %>

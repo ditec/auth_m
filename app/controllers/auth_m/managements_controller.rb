@@ -2,10 +2,6 @@ module AuthM
   class ManagementsController < ApplicationController
     include AuthM::ManagementsControllerConcern
 
-    # def index
-    #   super
-    # end
-
     # def show
     #   super
     # end

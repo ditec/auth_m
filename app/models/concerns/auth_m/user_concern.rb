@@ -5,7 +5,7 @@
 #  id                     :integer          not null, primary key
 #  email                  :string(255)      default(""), not null
 #  encrypted_password     :string(255)      default(""), not null
-#  roles_mask             :integer          default(2), not null
+#  roles_mask             :integer          default(8), not null
 #  active                 :boolean          default(FALSE), not null
 #  person_id              :integer
 #  reset_password_token   :string(255)
@@ -42,15 +42,15 @@ module AuthM::UserConcern
     delegate :can?, :cannot?, :to => :ability
 
     validates_presence_of [:roles_mask, :person_id]
-    validates :roles_mask, inclusion: { in: [1,2] }
-
+    validates :roles_mask, inclusion: { in: [1,2,8] }
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
     devise :invitable, :database_authenticatable, :registerable, :confirmable,
            :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :twitter]
 
-    scope :users, -> { where(roles_mask: AuthM::User.mask_for(:user)) }
     scope :admins, -> { where(roles_mask: AuthM::User.mask_for(:admin)) }
+    scope :users, -> { where(roles_mask: AuthM::User.mask_for(:user)) }
+    scope :publics, -> { where(roles_mask: AuthM::User.mask_for(:public)) }
     scope :active, -> { where(:active => true) }
 
     include RoleModel
@@ -64,10 +64,10 @@ module AuthM::UserConcern
     # roles later, always append them at the end!
     #roles :admin, :user, :banned, :root
 
-    roles :admin, :user, :root
+    roles :admin, :user, :root, :public
 
     def self.roles
-      self.valid_roles - [:root]
+      self.valid_roles - [:root, :public]
     end
 
     def self.from_omniauth(auth)
@@ -95,7 +95,7 @@ module AuthM::UserConcern
   end
 
   def default_role
-    self.roles = [:user]
+    self.roles = [:public]
   end
 
   def role

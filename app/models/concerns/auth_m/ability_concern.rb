@@ -43,6 +43,7 @@ module AuthM::AbilityConcern
       can :unlink, AuthM::LinkedAccount, user_id: user.id
       can :manage, AuthM::Person, management_id: user.management.id
       can :manage, AuthM::User, person: { management_id: user.management.id }
+      cannot :public, AuthM::User
 
       user.management.resources.each do |resource|
         if resource.name.constantize.reflect_on_association(:management)
@@ -65,6 +66,11 @@ module AuthM::AbilityConcern
       can :unlink, AuthM::LinkedAccount, user_id: user.id
       can :stop_impersonating, AuthM::User
     end
-  end
 
+    if user.has_role? :public
+      can :stop_impersonating, AuthM::User
+      can :unlink, AuthM::LinkedAccount, user_id: user.id
+    end
+
+  end
 end

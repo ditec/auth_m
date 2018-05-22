@@ -12,6 +12,9 @@ module AuthM
     #   end
     # 
     #   if user && (user.has_role? :user)
+    #   end    
+
+    #   if user && (user.has_role? :public)
     #   end
     # end
 

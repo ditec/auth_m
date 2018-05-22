@@ -24,6 +24,7 @@ AuthM::Engine.routes.draw do
 
   resources :users, only: [:index] do
     post :stop_impersonating, on: :collection
+    get :public, on: :collection
   end
 
   delete 'unlink_account', to: 'linked_accounts#unlink'

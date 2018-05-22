@@ -18,7 +18,6 @@ module AuthM
       if @person.save
         params[:user] = params[:user].merge(person_id: @person.id)
         super
-        create_policies resource if resource.persisted?
         @person.destroy if ((@person.persisted? ) && !(resource.persisted?))
       else
         @person.destroy if @person.persisted?
@@ -113,12 +112,5 @@ module AuthM
         render :new
       end 
     end
-
-    def create_policies(user)
-      user.management.resources.each do |resource|
-        user.policies.create!(resource: resource, access: resource.access) if resource.default
-      end 
-    end    
-
   end
 end

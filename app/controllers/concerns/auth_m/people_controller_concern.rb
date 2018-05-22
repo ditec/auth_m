@@ -26,7 +26,7 @@ module AuthM::PeopleControllerConcern
   
   def create
     @person = AuthM::Person.new(person_params)
-    @person.management = current_management
+    @person.management = current_management if current_management
 
     if @person.save
       redirect_to @person
@@ -52,7 +52,7 @@ module AuthM::PeopleControllerConcern
   private
 
     def person_params
-      params.require(:person).permit(:first_name, :last_name, :dni, :management_id)
+      params.require(:person).permit(:first_name, :last_name, :dni)
     end
 
     def set_person

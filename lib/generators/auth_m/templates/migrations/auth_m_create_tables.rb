@@ -8,38 +8,32 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
-    AuthM::Management.create :name => "None", :id => 0
-
     ############################ create table resources ############################
     create_table :auth_m_resources do |t|
       t.string :name, null: false, unique: true
       t.references :management, null: false, index: true
-      t.boolean :default, null: false, default: false
-      t.string :access
 
       t.timestamps
     end
-
 
     ############################ create table people ############################
     create_table :auth_m_people do |t|
       t.string :first_name, null: false, default: ""
       t.string :last_name, null: false, default: ""
       t.string :dni, unique: true
-      t.references :management, null: false, default: 0, index: true
+      t.references :management, index: true
 
       t.timestamps
     end
 
     ############################ create table users ############################
-
     create_table :auth_m_users do |t|
       ## Database authenticatable
       t.string :email,              null: false, default: ""
       t.string :encrypted_password, null: false, default: ""
       
       ## 
-      t.integer :roles_mask, default: 2, null: false
+      t.integer :roles_mask, default: 8, null: false
       t.boolean :active, default: false, null: false
       t.references :person, index: true
 
@@ -90,7 +84,6 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
     add_index :auth_m_users, :reset_password_token, unique: true
     # add_index :auth_m_users, :confirmation_token,   unique: true
     # add_index :auth_m_users, :unlock_token,         unique: true
-
 
     ############################ create table policies ############################
     create_table :auth_m_policies do |t|

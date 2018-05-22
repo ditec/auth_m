@@ -204,25 +204,25 @@ module AuthM
 
         it "test1" do 
           expect{
-            post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", policies: {:"#{resource.id}" => "manage" }}}
+            post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", roles_mask: 2, policies: {:"#{resource.id}" => "manage" }}}
           }.to change(AuthM::Policy,:count).by(1)
         end
 
         it "test2" do 
           resource2 = FactoryBot.create(:auth_m_resource)
           expect{
-            post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", policies: {:"#{resource2.id}" => "manage" }}}
+            post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", roles_mask: 2, policies: {:"#{resource2.id}" => "manage" }}}
           }.to change(AuthM::Policy,:count).by(0)
         end
 
         it "test3" do 
           expect{
-            post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", policies: {:"#{resource.id}" => "none" }}}
+            post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", roles_mask: 2, policies: {:"#{resource.id}" => "none" }}}
           }.to change(AuthM::Policy,:count).by(0)
         end
 
         it "test4" do 
-          post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", policies: {:"#{resource.id}" => "read" }}}
+          post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", roles_mask: 2, policies: {:"#{resource.id}" => "read" }}}
           policy = AuthM::Policy.last
           expect(policy.access).to eq("read")
         end

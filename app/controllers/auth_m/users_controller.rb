@@ -2,6 +2,10 @@ module AuthM
   class UsersController < ApplicationController
     include AuthM::UsersControllerConcern
 
+    # def public
+    #   super
+    # end
+
     # def index
     #   super
     # end

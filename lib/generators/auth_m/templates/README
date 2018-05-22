@@ -36,7 +36,7 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
     end
 
     def after_sign_in_path_for(resource)
-      session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id
+      set_sesssion_management
       main_app.root_path
     end
 
@@ -49,8 +49,7 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
     end
 
     def current_management
-      session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id if session[:management_id].nil?
-      AuthM::Management.find(session[:management_id])
+      AuthM::Management.find(session[:management_id]) unless session[:management_id].nil?
     end 
 
     def set_current_management(id)
@@ -58,6 +57,14 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
     end
 
     impersonates :user
+
+    private 
+
+      def set_sesssion_management 
+        session[:management_id] = AuthM::Management.first.id if current_user.has_role? :root
+        session[:management_id] = current_user.management.id if (current_user.has_role? :admin) || (current_user.has_role? :user)
+        session[:management_id] = nil if current_user.has_role? :public
+      end  
 
 4. Add the following lines in app/config/secrets.yml:
 

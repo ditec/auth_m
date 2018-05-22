@@ -4,11 +4,15 @@ module AuthM::UsersControllerConcern
   extend ActiveSupport::Concern
   
   included do
-    load_and_authorize_resource :person, except: [:index, :stop_impersonating]
-    load_and_authorize_resource :user, through: :person, singleton: true, except: [:index, :stop_impersonating]
-    load_and_authorize_resource only: [:index, :stop_impersonating]
+    load_and_authorize_resource :person, except: [:index, :stop_impersonating, :public]
+    load_and_authorize_resource :user, through: :person, singleton: true, except: [:index, :stop_impersonating, :public]
+    load_and_authorize_resource only: [:index, :stop_impersonating, :public]
 
-    before_action :set_person, except: [:index, :stop_impersonating]
+    before_action :set_person, except: [:index, :stop_impersonating, :public]
+  end
+
+  def public
+    @users = AuthM::User.publics
   end
 
   def index

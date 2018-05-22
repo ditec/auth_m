@@ -19,15 +19,10 @@ module AuthM::ManagementConcern
 
     validates :name, presence: true, length: { in: 4..250 }, uniqueness: true
     before_save :capitalize_name
-    before_destroy :check
   end
 
   def has_the_resource_name? resource_name
     self.resources.any? {|h| h.name == resource_name }
-  end 
-
-  def resource resource_name 
-    self.resources.where(name: resource_name).first
   end 
 
   def has_the_resource_id? resource_id
@@ -43,9 +38,5 @@ module AuthM::ManagementConcern
     def capitalize_name
       self.name = self.name.capitalize
     end
-
-    def check
-      throw(:abort) if self.id == 0
-    end 
   
 end

@@ -35,6 +35,7 @@ module AuthM::ManagementsControllerConcern
   def update
     if @management.update(management_params)
 
+      destroy_resources @management
       create_resources @management
 
       redirect_to @management
@@ -65,22 +66,25 @@ module AuthM::ManagementsControllerConcern
       params.require(:management).permit(:name)
     end
 
-    def create_resources(management)
-      if params[:resources].present?
-        params[:resources].each do |key, hash|
-          resource = management.resource key
-          if hash[:select] == 1.to_s
-            if resource.nil? 
-              management.resources.create!(name: key, default: hash[:default], access: hash[:access])
-            else
-              resource.update(name: key, default: hash[:default], access: hash[:access])
-            end
-          elsif hash[:select] == 0.to_s
-            resource.destroy unless resource.nil? 
-          end
+    def destroy_resources(management)
+      if params[:management][:resources].present?
+        resources = management.resources.collect{|s| s.name} - params[:management][:resources]
+
+        resources.each do |resource|
+          management.resources.find_by(name: resource).destroy
         end
       end
-    end    
+    end
+
+    def create_resources(management)
+      if params[:management][:resources].present?
+        resources = management.resources.collect{|s| s.name} 
+
+        params[:management][:resources].reject { |r| r.empty? }.each do |a|
+          management.resources.create!(name: a) unless resources.include? a
+        end
+      end 
+    end
 
     def set_management
       current_management.id == params[:id].to_i ? (@management = AuthM::Management.find(params[:id])) : (redirect_to main_app.root_path)

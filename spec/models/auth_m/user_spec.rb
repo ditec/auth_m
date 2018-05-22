@@ -55,7 +55,8 @@ module AuthM
     end
 
     describe "#validate_roles ->" do
-      let(:user){FactoryBot.create(:auth_m_user)}
+      let(:user){FactoryBot.create(:auth_m_user, roles: [:user])}
+      let(:public_user){FactoryBot.create(:auth_m_user)}
 
       it "test1" do
         user.assign_attributes(roles: [:root])
@@ -104,11 +105,15 @@ module AuthM
       it "test8" do
         user.assign_attributes(roles: [:root])
 
-        expect { user.default_role }.to change(user, :roles_mask).from(4).to(2)
+        expect { user.default_role }.to change(user, :roles_mask).from(4).to(8)
       end
 
       it "test9" do
         expect(user.role).to eq(:user)
+      end      
+
+      it "test10" do
+        expect(public_user.role).to eq(:public)
       end
     end
 
