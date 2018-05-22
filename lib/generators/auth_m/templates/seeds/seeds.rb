@@ -8,7 +8,6 @@
 
 AuthM::User.create(email:"root@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:root], active: true, confirmed_at: DateTime.now.to_date).save(validate: false)
 
-management_0 = AuthM::Management.create(id: 0, name: "None")
 management_1 = AuthM::Management.create(name: "Empresa 1")
 management_2 = AuthM::Management.create(name: "Empresa 2")
 
@@ -24,4 +23,3 @@ admin_management_2 = person3.create_user(email:"admin2@a.com", password:"asd1234
 user_management_1 = person2.create_user(email:"user1@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:user], active: true, confirmed_at: DateTime.now.to_date)
 user_management_2 = person4.create_user(email:"user2@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:user], active: true, confirmed_at: DateTime.now.to_date)
 user_management_3 = person5.create_user(email:"user3@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:user], active: true, confirmed_at: DateTime.now.to_date)
-
