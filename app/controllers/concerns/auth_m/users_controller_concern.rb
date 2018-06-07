@@ -9,6 +9,7 @@ module AuthM::UsersControllerConcern
     load_and_authorize_resource only: [:index, :stop_impersonating, :public]
 
     before_action :set_person, except: [:index, :stop_impersonating, :public]
+    before_action :check_policies, only: [:create_user, :update]
   end
 
   def public
@@ -36,7 +37,6 @@ module AuthM::UsersControllerConcern
     invitable? ? @user = AuthM::User.invite!(user_params.merge(person_id: @person.id), current_user) : @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
 
     if @user.save
-      create_policies @user if @user.has_role? :user
       redirect_to @person
     else
       render 'new'
@@ -45,11 +45,8 @@ module AuthM::UsersControllerConcern
   
   def update
     @user = @person.user
-    
-    if @user.update(user_params)
-      @user.policies.destroy_all
-      create_policies @user if @user.has_role? :user
 
+    if @user.update(user_params)
       redirect_to @person
     else
       render 'edit'
@@ -84,16 +81,16 @@ module AuthM::UsersControllerConcern
   private
 
     def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active).reject{|_, v| v.blank?}
+      params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active, policies_attributes: [:id, :resource_id, :access, :_destroy]).reject{|_, v| v.blank?}
     end
 
-    def create_policies(user)
-      if params[:user][:policies].present?
-        params[:user][:policies].each do |key, value|
-          user.policies.create!(resource_id: key.to_i, access: value) if !(value == "none") && (user.management.has_the_resource_id? key.to_i)
+    def check_policies
+      if params[:user][:policies_attributes].present?
+        params[:user][:policies_attributes].each do |key, value|
+          params[:user][:policies_attributes][:"#{key}"].merge!(:_destroy => 1) if value[:access] == "none"
         end
-      end 
-    end
+      end
+    end 
 
     def invitable?
       params[:user][:invitable] == "1" 

@@ -52,8 +52,8 @@ module AuthM
     #     super
     #   end
 
-    #   def create_policies(user)
-    #     super(user)
+    #   def check_policies
+    #     super
     #   end
 
     #   def invitable?

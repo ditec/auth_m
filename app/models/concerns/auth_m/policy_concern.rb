@@ -20,8 +20,15 @@ module AuthM::PolicyConcern
     belongs_to :user
 
     USER_ACCESS = ['none','read','manage']
-
+    
+    validate :check, :on => [:create, :update]
     validates :access, inclusion: { in: ['read','manage'] }
   end
+
+  private
+
+    def check
+      errors.add(:error, 'Invalid policy.') if !self.user.management || !(self.user.management.has_the_resource_id? self.resource_id)
+    end
 
 end

@@ -36,13 +36,13 @@ module AuthM
     #     super
     #   end
 
-    #   def destroy_resources(management)
-    #     super(management)
-    #   end
-
-    #   def create_resources(management)
+    #   def check_resources
     #     super(management)
     #   end
     
+    #   def set_management
+    #     super    
+    #   end
+
   end
 end

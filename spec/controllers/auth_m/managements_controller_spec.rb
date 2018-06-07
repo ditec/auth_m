@@ -158,10 +158,11 @@ module AuthM
       end
 
       describe "#destroy_resources(management) ->" do 
+        let(:resource){FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)}
 
         it "test1" do 
-          FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)
-          expect{ put :update, params: {id: controller.current_management.id, management: {name: "Dummy887", resources: [""]}}}
+          resource.reload
+          expect{ put :update, params: {id: controller.current_management.id, management: {name: "Dummy887", resources_attributes: {"0" => {name: "AuthM::Person", id: resource.id, selected: "false"}}}}}
           .to change(AuthM::Resource,:count).by(-1)
         end
 
@@ -170,21 +171,11 @@ module AuthM
       describe "#create_resources(management) ->" do 
         it "test1" do 
           expect{
-            post :create, params: {management: {name: "Dummy664", resources: ["AuthM::Person"]}}
+            put :update, params: {id: controller.current_management.id, management: {name: "Dummy664", resources_attributes: {"0" => {name: "AuthM::Person", selected: "true"}}}}
           }.to change(AuthM::Resource,:count).by(1)
         end
       end
 
-      describe "#update_resources(management) ->" do 
-        let(:resource){FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)}
-
-        it "test1" do 
-          FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)
-          expect{ put :update, params: {id: controller.current_management.id, management: {name: "Dummy887", resources: ["AuthM::Person"]}}}
-          .to change(AuthM::Resource,:count).by(0)
-        end
-
-      end
     end
 
     context do 

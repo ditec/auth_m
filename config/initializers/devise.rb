@@ -6,7 +6,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  config.secret_key = Rails.application.secrets.secret_key_base if Rails.env.production?
+  # config.secret_key = Rails.application.secrets[:secret_key_base]
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
@@ -162,7 +162,7 @@ Devise.setup do |config|
   # Auto-login after the user accepts the invite. If this is false,
   # the user will need to manually log in after accepting the invite.
   # Default: true
-  # config.allow_insecure_sign_in_after_accept = false
+  config.allow_insecure_sign_in_after_accept = false
 
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without

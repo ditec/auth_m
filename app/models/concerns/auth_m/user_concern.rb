@@ -39,10 +39,16 @@ module AuthM::UserConcern
     has_many :linked_accounts, dependent: :destroy
     has_many :invitations, :class_name => self.to_s, :as => :invited_by
 
+    accepts_nested_attributes_for :policies, allow_destroy: true, reject_if: :is_not_user
+
     delegate :can?, :cannot?, :to => :ability
 
+    after_save :check_policies
+
     validates_presence_of [:roles_mask, :person_id]
-    validates :roles_mask, inclusion: { in: [1,2,8] }
+    validates :roles_mask, inclusion: { in: [1,2] }, if: proc { self.management }  
+    validates :roles_mask, inclusion: { in: [8] }, if: proc { !(self.management) }
+
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
     devise :invitable, :database_authenticatable, :registerable, :confirmable,
@@ -78,7 +84,6 @@ module AuthM::UserConcern
     def active_for_authentication?
       super && self.active
     end
-
   end
 
   def account_linked? provider 
@@ -109,5 +114,15 @@ module AuthM::UserConcern
   def management
     self.person.management unless self.person.nil?
   end
+
+  private 
+
+    def is_not_user
+      !(self.has_role? :user)
+    end
+
+    def check_policies
+      self.policies.destroy_all if (self.has_role? :admin) && (self.policies)
+    end 
 
 end

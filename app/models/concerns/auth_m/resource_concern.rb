@@ -18,6 +18,8 @@ module AuthM::ResourceConcern
     belongs_to :management
     has_many :policies, dependent: :destroy
 
+    attr_accessor :selected
+
     validates :name, presence: true, length: { in: 2..250 }, format: { with: /\A[A-Z]/, :message => 'invalid format'}
 
     validate :is_a_valid_resource?, :on => [ :create, :update ]

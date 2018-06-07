@@ -21,16 +21,17 @@
 </p>
 <p>
   <h3>Resources</h3>
-  <table>
-    <%= form.collection_check_boxes :resources, AuthM::Resource.list, :first, :last do |b| %>
-      <div class="collection-check-box">
-        <% if @management.has_the_resource_name? b.object.first %>
-          <%= b.check_box({checked: true}) %>
-        <% else %>
-          <%= b.check_box %>
-        <% end %>
-        <%= b.label %>
-      </div>
-    <% end %>
-  </table>
+  <%-AuthM::Resource.list.each do |resource|%>
+    <%=form.fields_for :resources, @management.resources.build do |field|%>
+      <%=field.hidden_field(:name, :value => resource.first)%>
+      <% if @management.has_the_resource_name? resource.first %>
+        <%=field.hidden_field(:id, :value => @management.resource(resource.first).id)%>
+        <%=field.check_box :selected, {checked: true}, "true", "false" %>
+      <% else %>
+        <%=field.check_box :selected, {}, "true", "false" %>
+      <% end %>
+      <%=field.label resource.first%>
+      <br>
+    <%end%>
+  <%end%>
 </p>

@@ -56,7 +56,9 @@ module AuthM
 
     describe "#validate_roles ->" do
       let(:user){FactoryBot.create(:auth_m_user, roles: [:user])}
-      let(:public_user){FactoryBot.create(:auth_m_user)}
+      let(:person){FactoryBot.create(:auth_m_person, management_id: nil)}
+      let(:public_user){FactoryBot.create(:auth_m_user, roles: [:public], person_id: person.id)}
+      let(:resource){FactoryBot.create(:auth_m_resource, management_id: user.management.id)}
 
       it "test1" do
         user.assign_attributes(roles: [:root])
@@ -72,14 +74,14 @@ module AuthM
       end
 
       it "test3" do 
-        policy = FactoryBot.create(:auth_m_policy, access: "manage", user: user)
+        policy = FactoryBot.create(:auth_m_policy, access: "manage",resource_id: resource.id, user: user)
         ability = AuthM::Ability.new(user)
 
         ability.should be_able_to(:manage, AuthM::Person.new(management_id: user.person.management_id))
       end
 
       it "test4" do 
-        policy = FactoryBot.create(:auth_m_policy, access: "read", user: user)
+        policy = FactoryBot.create(:auth_m_policy, access: "read", resource_id: resource.id, user: user)
         ability = AuthM::Ability.new(user)
 
         ability.should be_able_to(:read, AuthM::Person.new(management_id: user.person.management_id))
@@ -119,16 +121,16 @@ module AuthM
 
     describe "#validate_methods ->" do
       let(:user){FactoryBot.create(:auth_m_user)}
+      let(:resource){FactoryBot.create(:auth_m_resource, management_id: user.management.id)}
 
       it "test1" do 
-        policy = FactoryBot.create(:auth_m_policy, user: user, access: "manage")
+        policy = FactoryBot.create(:auth_m_policy, resource_id: resource.id, user: user, access: "manage")
         expect(user.has_the_policy? policy.resource.id).to be_truthy
       end
 
       it "test2" do 
         user2 = FactoryBot.create(:auth_m_user)
-        policy = FactoryBot.create(:auth_m_policy, access: "manage", user: user2)
-        expect(user.has_the_policy? policy.resource.id).to be_falsey
+        expect {  FactoryBot.create(:auth_m_policy, access: "manage", user: user2) }.to raise_error(ActiveRecord::RecordInvalid)
       end
 
       it "test3" do 

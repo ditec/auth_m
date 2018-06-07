@@ -7,6 +7,7 @@ module AuthM::ManagementsControllerConcern
     load_and_authorize_resource
 
     before_action :set_management, except: [:new, :create, :change]
+    before_action :check_resources, only: [:create, :update]
   end
 
   def show
@@ -23,8 +24,6 @@ module AuthM::ManagementsControllerConcern
     @management = AuthM::Management.new(management_params)
  
     if @management.save
-
-      create_resources @management
       set_current_management(@management.id)
       redirect_to @management
     else
@@ -34,10 +33,6 @@ module AuthM::ManagementsControllerConcern
 
   def update
     if @management.update(management_params)
-
-      destroy_resources @management
-      create_resources @management
-
       redirect_to @management
     else
       render 'edit'
@@ -63,28 +58,16 @@ module AuthM::ManagementsControllerConcern
   private
 
     def management_params
-      params.require(:management).permit(:name)
+      params.require(:management).permit(:name, resources_attributes: [ :name, :id, :selected, :_destroy ])
     end
 
-    def destroy_resources(management)
-      if params[:management][:resources].present?
-        resources = management.resources.collect{|s| s.name} - params[:management][:resources]
-
-        resources.each do |resource|
-          management.resources.find_by(name: resource).destroy
+    def check_resources
+      if params[:management][:resources_attributes].present?
+        params[:management][:resources_attributes].each do |key, value|
+          params[:management][:resources_attributes][:"#{key}"].merge!(:_destroy => 1) if value[:selected] == "false"
         end
       end
-    end
-
-    def create_resources(management)
-      if params[:management][:resources].present?
-        resources = management.resources.collect{|s| s.name} 
-
-        params[:management][:resources].reject { |r| r.empty? }.each do |a|
-          management.resources.create!(name: a) unless resources.include? a
-        end
-      end 
-    end
+    end 
 
     def set_management
       current_management.id == params[:id].to_i ? (@management = AuthM::Management.find(params[:id])) : (redirect_to main_app.root_path)

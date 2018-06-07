@@ -17,6 +17,8 @@ module AuthM::ManagementConcern
     has_many :people, dependent: :destroy
     has_many :resources, dependent: :destroy
 
+    accepts_nested_attributes_for :resources, allow_destroy: true
+
     validates :name, presence: true, length: { in: 4..250 }, uniqueness: true
     before_save :capitalize_name
   end
@@ -28,6 +30,10 @@ module AuthM::ManagementConcern
   def has_the_resource_id? resource_id
     self.resources.any? {|h| h.id == resource_id }
   end
+
+  def resource name 
+    self.resources.where(name: name).first
+  end 
 
   def users
     AuthM::User.includes(:person).where(auth_m_people: {management_id: self.id} )

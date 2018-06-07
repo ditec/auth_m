@@ -11,12 +11,9 @@
   <strong>dni:</strong>
   <%= @person.dni %>
 </p>
-<p>
-  <strong>management:</strong>
-  <%= @person.management.name unless @person.management.nil? %>
-</p>
 <% if can? :write, AuthM::Person %>
-  <%= link_to 'Edit person', edit_person_path(@person) %>
+  <%= link_to 'Edit', edit_person_path(@person) %>
+  <%= link_to 'Destroy', person_path(@person), method: :delete, data: { confirm: 'Are you sure?' } %>
 <% end %>
 <% if @person.user.nil? %>
   <br/>

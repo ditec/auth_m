@@ -67,7 +67,7 @@
 <% end %>
 <% if can? :manage, AuthM::User %>
   <%= link_to 'Sign in', impersonate_person_user_path(@person), method: :post %>
-  <%= link_to 'Edit user', edit_person_user_path(@person) %>
-  <%= link_to 'Destroy user', person_user_path(@person), method: :delete, data: { confirm: 'Are you sure?' }  %>
+  <%= link_to 'Edit', edit_person_user_path(@person) %>
+  <%= link_to 'Destroy', person_user_path(@person), method: :delete, data: { confirm: 'Are you sure?' }  %>
 <% end %>
 

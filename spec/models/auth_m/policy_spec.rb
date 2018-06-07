@@ -18,7 +18,12 @@ module AuthM
     describe "#shoulda_matchers ->" do
       it { should belong_to(:resource) }
       it { should belong_to(:user) }
-      it { should validate_inclusion_of(:access).in_array(['read', 'manage']) }
+      it {
+        user = FactoryBot.create(:auth_m_user)
+        resource = FactoryBot.create(:auth_m_resource, management_id: user.management.id)
+        policy = FactoryBot.create(:auth_m_policy, user_id: user.id, resource_id: resource.id)
+        policy.should validate_inclusion_of(:access).in_array(['read', 'manage']) 
+      }
     end
     
   end
