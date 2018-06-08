@@ -1,1 +1,35 @@
-<%= render template: "auth_m/users/index"%>
+<h1>Public users</h1>
+<table>
+  <tr>
+    <th>last name</th>
+    <th>first name</th>
+    <th>dni</th>
+    <th>user</th>
+    <th>active?</th>
+    
+  </tr>
+  <% @people.each do |person| %>
+    <tr>
+      <td>
+        <%= person.last_name %>
+      </td>
+      <td>
+        <%= person.first_name %>
+      </td>
+      <td>
+        <%= person.dni %>
+      </td>
+      <td>
+        <%= link_to person.user.email, person_path(person) if person.user %>
+      </td>       
+      <td>
+        <%= person.user.active if person.user %>
+      </td>
+      <% if can? :read, AuthM::Person %>
+        <td>
+          <%= link_to 'Show', person_path(person) %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>

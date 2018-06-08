@@ -1,41 +1,42 @@
-<h1>Listing people</h1>
+<h1>Listing users</h1>
 <table>
   <tr>
-    <th>first name</th>
     <th>last name</th>
+    <th>first name</th>
     <th>dni</th>
-    <th>has_user?</th>
+    <th>user</th>
+    <th>role</th>
+    <th>active?</th>
   </tr>
   <% @people.each do |person| %>
     <tr>
       <td>
-        <%= person.first_name %>
+        <%= person.last_name %>
       </td>
       <td>
-        <%= person.last_name %>
+        <%= person.first_name %>
       </td>
       <td>
         <%= person.dni %>
       </td>
       <td>
-        <%= !(person.user.nil?) %>
+        <%= link_to person.user.email, person_path(person) if person.user %>
+      </td>      
+      <td>
+        <%= person.user.role if person.user %>
+      </td>      
+      <td>
+        <%= person.user.active if person.user %>
       </td>
       <% if can? :read, AuthM::Person %>
         <td>
           <%= link_to 'Show', person_path(person) %>
         </td>
       <% end %>
-      <% if can? :write, AuthM::Person %>
-        <td>
-          <%= link_to 'Edit', edit_person_path(person) %>
-        </td>
-        <td>
-          <%= link_to 'Destroy', person_path(person), method: :delete, data: { confirm: 'Are you sure?' }  %>
-        </td>
-      <% end %>
     </tr>
   <% end %>
 </table>
+<br>
 <% if can? :write, AuthM::Person %>
-  <%= link_to 'New person', new_person_path %>
+  <%= link_to 'New user', new_person_path %>
 <% end %>

@@ -12,39 +12,24 @@ module AuthM
                   controller.set_current_management(user.management.id)
                   user}
 
-      describe "#GET index ->" do
+      describe "#GET public ->" do
         before :each do
-          get :index
+          get :public
         end
 
         it { should respond_with(200) }
-        it { should render_template('index') }
-        it { should render_with_layout('application') }
-
-        # it "test1" do
-        #   31.times do 
-        #     person = FactoryBot.create(:auth_m_person, management_id: controller.current_management.id)
-        #     user = FactoryBot.create(:auth_m_user, person_id: person.id)
-        #   end
-        #   expect(assigns(:users).count).to eq(31)        
-        # end
-      end
-
-      describe "#GET show/:id ->" do
-        let(:user2){FactoryBot.create(:auth_m_user)}
-
-        before :each do
-          get :show, params: { person_id: user2.person.id, id: user2.id }
-        end
-
-        it { should respond_with(200) }
-        it { should render_template('show') }
+        it { should render_template('public') }
         it { should render_with_layout('application') }
 
         it "test1" do
-          expect(assigns(:user)).to eq(user2)        
+          31.times do 
+            person = FactoryBot.create(:auth_m_person, management_id: nil)
+            user = FactoryBot.create(:auth_m_user, person_id: person.id, roles: [:public])
+          end
+          expect(assigns(:people).count).to eq(31)        
         end
       end
+
 
       describe "#GET new ->" do
         let(:person){FactoryBot.create(:auth_m_person)}
@@ -264,14 +249,10 @@ module AuthM
             sign_in user 
           end 
 
-          it "can't access action index" do
-            get :index
+          it "can't access action public" do
+            get :public
             expect(response).to redirect_to("/401.html")
-          end      
-          it "can't access action show" do
-            get :show, params: { person_id: user.person.id, id: user.id }
-            expect(response).to redirect_to("/401.html")
-          end      
+          end           
           it "can't access action new" do
             get :new, params: { person_id: user.person.id }
             expect(response).to redirect_to("/401.html")

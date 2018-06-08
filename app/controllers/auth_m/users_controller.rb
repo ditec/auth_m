@@ -6,14 +6,6 @@ module AuthM
     #   super
     # end
 
-    # def index
-    #   super
-    # end
-
-    # def show
-    #   super
-    # end
-
     # def new
     #   super
     # end

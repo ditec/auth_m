@@ -12,16 +12,9 @@ module AuthM::UsersControllerConcern
     before_action :check_policies, only: [:create_user, :update]
   end
 
-  def public
-    @users = AuthM::User.publics
-  end
-
-  def index
-    @users = current_management.users.order("email").reject{|x| x == current_user}
-  end
-
-  def show
-    @user = @person.user
+  def public 
+    # @user = AuthM::User.publics
+    @people = AuthM::Person.where(management_id: nil).order('last_name')
   end
 
   def new

@@ -10,7 +10,7 @@ module AuthM::PeopleControllerConcern
   end
 
   def index
-    @people = current_management.people.reject{|x| x.user == current_user}
+    @people = current_management.people.order('last_name').reject{|x| x.user == current_user}
     # @people = current_management.people.includes(:user).where.not({auth_m_users: {id: current_user.id}}).order("last_name")
   end
 
@@ -46,7 +46,7 @@ module AuthM::PeopleControllerConcern
   def destroy
     @person.destroy
    
-    redirect_to people_path
+    redirect_to(@person.management ? people_path : public_users_path)
   end
 
   private

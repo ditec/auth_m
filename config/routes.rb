@@ -11,22 +11,19 @@ AuthM::Engine.routes.draw do
   end
 
   resources :managements, except: :index
-  
   post 'change_management', to: 'managements#change'
 
   resources :people do
-    resource :user, only: [:show, :new, :edit, :create, :update, :destroy] do
+    resource :user, except: [:index, :show] do
       post :impersonate, on: :member
       post :generate_new_password_email, on: :member
     end
     post 'create_user', to: 'users#create_user'
   end
 
-  resources :users, only: [:index] do
-    post :stop_impersonating, on: :collection
-    get :public, on: :collection
-  end
+  get 'public_users', to: 'users#public'
 
+  post 'stop_impersonating', to: 'users#stop_impersonating'
+  
   delete 'unlink_account', to: 'linked_accounts#unlink'
-
 end
