@@ -60,10 +60,13 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
 
     private 
 
-      def set_sesssion_management 
-        session[:management_id] = AuthM::Management.first.id if current_user.has_role? :root
-        session[:management_id] = current_user.management.id if (current_user.has_role? :admin) || (current_user.has_role? :user)
-        session[:management_id] = nil if current_user.has_role? :public
+      def set_sesssion_management
+        if AuthM::Management.first.nil? || (current_user.has_role? :public)
+          session[:management_id] = nil
+        else
+          session[:management_id] = AuthM::Management.first.id if current_user.has_role? :root
+          session[:management_id] = current_user.management.id if (current_user.has_role? :admin) || (current_user.has_role? :user)
+        end 
       end  
 
 4. Add the following lines in app/config/secrets.yml:

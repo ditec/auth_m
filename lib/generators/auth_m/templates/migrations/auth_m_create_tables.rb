@@ -85,6 +85,8 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
     # add_index :auth_m_users, :confirmation_token,   unique: true
     # add_index :auth_m_users, :unlock_token,         unique: true
 
+    AuthM::User.create(email:"root@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:root], active: true, confirmed_at: DateTime.now.to_date).save(validate: false)
+
     ############################ create table policies ############################
     create_table :auth_m_policies do |t|
       t.references :resource, index: true

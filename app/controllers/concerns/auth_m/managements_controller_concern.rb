@@ -41,7 +41,7 @@ module AuthM::ManagementsControllerConcern
 
   def destroy
     @management.destroy
-    set_current_management(AuthM::Management.first.id)
+    AuthM::Management.first.nil? ? set_current_management(nil) : set_current_management(AuthM::Management.first.id)
    
     redirect_to main_app.root_path 
   end

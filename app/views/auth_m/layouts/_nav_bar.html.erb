@@ -1,10 +1,10 @@
 <% if user_signed_in? %>
   <%= link_to("#{current_user.email}", auth_m.edit_user_registration_path) %>
   <%= link_to('Logout', auth_m.destroy_user_session_path, :method => :delete) %> 
-  <% if (current_user.has_role? :root) && (current_management) %>
+  <% if current_user.has_role? :root %>
     <%= form_tag auth_m.change_management_path(current_management) do%>
-      <%= select_tag "management_selector", options_for_select(AuthM::Management.all.collect{ |m| [m.name, m.id] }, current_management.id) %>
-      <%= submit_tag "send" %>
+      <%= select_tag "management_selector", options_for_select(AuthM::Management.all.collect{ |m| [m.name, m.id] }, current_management.id) if current_management %>
+      <%= submit_tag "send" if current_management%>
       <%= link_to "new", auth_m.new_management_path if can? :manage, AuthM::Management %>
       <%= link_to "public users", auth_m.public_users_path if can? :public, AuthM::User %>
     <% end %>
@@ -17,8 +17,8 @@
     <br>
     <br>
   <% end %>
-  <%= link_to('Users', auth_m.people_path) if can? :read, AuthM::Person  %>
-  <%= link_to('Management', auth_m.management_path(current_management)) if can? :read, AuthM::Management %> 
+  <%= link_to('Users', auth_m.people_path) if can? :read, AuthM::Person if current_management %>
+  <%= link_to('Management', auth_m.management_path(current_management)) if current_management && (can? :read, AuthM::Management) %> 
 <% else %>
   <%= link_to('Register', auth_m.new_user_registration_path)  %>
   <%= link_to('Login', auth_m.new_user_session_path)  %>  

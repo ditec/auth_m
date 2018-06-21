@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    auth_m (0.5.5)
+    auth_m (0.5.6)
       cancancan (~> 2.1)
       devise (~> 4.3)
       devise_invitable (~> 1.7.0)
