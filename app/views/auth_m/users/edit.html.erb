@@ -1,5 +1,5 @@
 <h1>Edit user</h1>
-<%= form_with model: [@person,@user], method: :PUT,  local: true do |form| %>
+<%= form_with model: [@person,@user], :url => person_user_path(@person,@user), method: :PUT,  local: true do |form| %>
   <% if @user.errors.any? %>
     <div id="error_explanation">
       <h2>

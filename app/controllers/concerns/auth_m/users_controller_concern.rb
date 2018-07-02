@@ -30,7 +30,7 @@ module AuthM::UsersControllerConcern
     invitable? ? @user = AuthM::User.invite!(user_params.merge(person_id: @person.id), current_user) : @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
 
     if @user.save
-      redirect_to @person
+      redirect_to person_path(@person)
     else
       render 'new'
     end
@@ -40,7 +40,7 @@ module AuthM::UsersControllerConcern
     @user = @person.user
 
     if @user.update(user_params)
-      redirect_to @person
+      redirect_to person_path(@person)
     else
       render 'edit'
     end
@@ -50,7 +50,7 @@ module AuthM::UsersControllerConcern
     @user = @person.user
     @user.destroy
    
-    redirect_to @person
+    redirect_to person_path(@person)
   end
 
   def impersonate

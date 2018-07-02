@@ -29,7 +29,7 @@ module AuthM::PeopleControllerConcern
     @person.management = current_management if current_management
 
     if @person.save
-      redirect_to @person
+      redirect_to person_path(@person)
     else
       render 'new'
     end
@@ -37,7 +37,7 @@ module AuthM::PeopleControllerConcern
 
   def update
     if @person.update(person_params)
-      redirect_to @person
+      redirect_to person_path(@person)
     else
       render 'edit'
     end

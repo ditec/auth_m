@@ -1,5 +1,5 @@
 <h1>Edit person</h1>
-<%= form_with model: @person, method: :PUT, local: true do |form| %>
+<%= form_with model: @person, :url => person_path(@person), method: :PUT, local: true do |form| %>
   <%= render partial: 'form', locals: {form: form} %>
   <p>
     <%= form.submit %>
