@@ -26,6 +26,10 @@ module AuthM::PersonConcern
     validates :dni, uniqueness: true, numericality: { only_integer: true }, length: { in: 6..20 }, allow_nil: true
     before_save :capitalize_names
 
+    def self.descendants
+      ObjectSpace.each_object(Class).select { |klass| klass < self }
+    end
+
   end
 
   private 

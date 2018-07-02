@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    auth_m (0.5.6)
+    auth_m (0.5.7)
       cancancan (~> 2.1)
       devise (~> 4.3)
       devise_invitable (~> 1.7.0)
@@ -156,7 +156,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (12.3.1)
-    recaptcha (4.8.0)
+    recaptcha (4.9.0)
       json
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)

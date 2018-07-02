@@ -84,6 +84,10 @@ module AuthM::UserConcern
     def active_for_authentication?
       super && self.active
     end
+
+    def self.descendants
+      ObjectSpace.each_object(Class).select { |klass| klass < self }
+    end
   end
 
   def account_linked? provider 

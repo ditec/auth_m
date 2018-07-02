@@ -23,6 +23,10 @@ module AuthM::ResourceConcern
     validates :name, presence: true, length: { in: 2..250 }, format: { with: /\A[A-Z]/, :message => 'invalid format'}
 
     validate :is_a_valid_resource?, :on => [ :create, :update ]
+
+    def self.descendants
+      ObjectSpace.each_object(Class).select { |klass| klass < self }
+    end
   end
 
   class_methods do
@@ -30,11 +34,12 @@ module AuthM::ResourceConcern
     def list
       Rails.application.eager_load!
       array = Array.new
-      ::ApplicationRecord.descendants.each do |model|
-        model_name = model.to_s
-        array << [model_name.singularize,model_name.singularize]
+      (::ApplicationRecord.descendants << "AuthM::Person".constantize).each do |model|
+        array << [model.to_s.singularize,model.to_s.singularize]
+        model.descendants.each do |descendant| 
+          array << [descendant.to_s.singularize,descendant.to_s.singularize]
+        end 
       end
-      array << ["AuthM::Person","AuthM::Person"]
       return array
     end
 

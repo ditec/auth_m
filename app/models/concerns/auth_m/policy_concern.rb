@@ -23,6 +23,11 @@ module AuthM::PolicyConcern
     
     validate :check, :on => [:create, :update]
     validates :access, inclusion: { in: ['read','manage'] }
+
+    def self.descendants
+      ObjectSpace.each_object(Class).select { |klass| klass < self }
+    end
+    
   end
 
   private
