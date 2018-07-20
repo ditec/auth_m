@@ -37,6 +37,7 @@ module AuthM::UserConcern
     belongs_to :person, optional: true
     belongs_to :policy_group, optional: :true
 
+    validate :check_policy_group
     before_destroy :clean_up_custom_policies
 
     has_many :linked_accounts, dependent: :destroy
@@ -129,5 +130,9 @@ module AuthM::UserConcern
     def clean_up_custom_policies
       self.policy_group.destroy! if self.policy_group && (self.policy_group.customized == true)
     end
+
+    def check_policy_group
+      errors.add(:policy_group, "must exist") if (self.has_role? :user) && !self.policy_group.present?
+    end 
 
 end
