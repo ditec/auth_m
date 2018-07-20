@@ -65,16 +65,17 @@ module AuthM
 
       describe "#POST create_user ->" do
         let(:person){FactoryBot.create(:auth_m_person)}
+        let(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: person.management.id)}
 
         context "with valid attributes" do
           it "test1" do
             expect{
-              post :create_user, params: {person_id: person.id, user: FactoryBot.attributes_for(:auth_m_user)}
+              post :create_user, params: {person_id: person.id, policy_group_selector: policy_group.id, user: FactoryBot.attributes_for(:auth_m_user)}
             }.to change(AuthM::User,:count).by(1)
           end
 
           it "test2" do
-            post :create_user, params: {person_id: person.id, user: FactoryBot.attributes_for(:auth_m_user)}
+            post :create_user, params: {person_id: person.id, policy_group_selector: policy_group.id, user: FactoryBot.attributes_for(:auth_m_user)}
             expect(response).to redirect_to AuthM::User.last.person
           end
         end

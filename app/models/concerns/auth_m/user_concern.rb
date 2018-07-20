@@ -37,7 +37,6 @@ module AuthM::UserConcern
     belongs_to :person, optional: true
     belongs_to :policy_group, optional: :true
 
-    validate :check_policy_group
     before_destroy :clean_up_custom_policies
 
     has_many :linked_accounts, dependent: :destroy
@@ -48,6 +47,8 @@ module AuthM::UserConcern
     delegate :can?, :cannot?, :to => :ability
 
     validates_presence_of [:roles_mask, :person_id]
+    validates_presence_of :policy_group, if: -> {self.has_role? :user}
+
     validates :roles_mask, inclusion: { in: [1,2] }, if: proc { self.management }  
     validates :roles_mask, inclusion: { in: [8] }, if: proc { !(self.management) }
 
@@ -130,9 +131,5 @@ module AuthM::UserConcern
     def clean_up_custom_policies
       self.policy_group.destroy! if self.policy_group && (self.policy_group.customized == true)
     end
-
-    def check_policy_group
-      errors.add(:policy_group, "must exist") if (self.has_role? :user) && !self.policy_group.present?
-    end 
 
 end
