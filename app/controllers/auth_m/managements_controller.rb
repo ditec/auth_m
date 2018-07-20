@@ -33,15 +33,11 @@ module AuthM
     # private
 
     #   def management_params
-    #     super
+    #     params.require(:management).permit(:name, resources_attributes: [ :name, :id, :selected, :_destroy ])
     #   end
 
     #   def check_resources
     #     super(management)
-    #   end
-    
-    #   def set_management
-    #     super    
     #   end
 
   end

@@ -1,3 +1,5 @@
+require "jquery-rails"
+
 require "devise"
 require 'cancancan'
 require 'role_model'

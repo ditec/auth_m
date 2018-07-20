@@ -16,6 +16,7 @@ module AuthM::ManagementConcern
   included do
     has_many :people, dependent: :destroy
     has_many :resources, dependent: :destroy
+    has_many :policy_groups, dependent: :destroy
 
     accepts_nested_attributes_for :resources, allow_destroy: true
 

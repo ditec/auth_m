@@ -55,7 +55,7 @@ module AuthM::AbilityConcern
     end
 
     if user.has_role? :user
-      user.policies.each do |policy|
+      user.policy_group.policies.each do |policy|
         if policy.resource.name.constantize.reflect_on_association(:management)
           can :"#{policy.access}", policy.resource.name.constantize, management_id: user.management.id 
         else

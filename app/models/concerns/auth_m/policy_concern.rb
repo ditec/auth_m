@@ -17,7 +17,7 @@ module AuthM::PolicyConcern
   
   included do
     belongs_to :resource
-    belongs_to :user
+    belongs_to :policy_group
 
     USER_ACCESS = ['none','read','manage']
     
@@ -33,7 +33,7 @@ module AuthM::PolicyConcern
   private
 
     def check
-      errors.add(:error, 'Invalid policy.') if !self.user.management || !(self.user.management.has_the_resource_id? self.resource_id)
+      errors.add(:error, 'Invalid policy.') if !self.policy_group.management || !(self.policy_group.management.has_the_resource_id? self.resource_id)
     end
 
 end

@@ -1,0 +1,54 @@
+<% if @policy_group.errors.any? %>
+  <div id="error_explanation">
+    <h2>
+      <%= pluralize(@policy_group.errors.count, "error") %>
+      prohibited
+      this policy_group from being saved:
+    </h2>
+    <ul>
+      <% @policy_group.errors.full_messages.each do |msg| %>
+        <li>
+          <%= msg %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<p>
+  <%= form.label :name %>
+  <br/>
+  <%= form.text_field :name %>
+</p>
+
+<p>
+  <h3>Policies</h3>
+  <table>
+    <tr>
+      <th>Resources</th>
+      <th>Access</th>
+    </tr>
+    <% current_management.resources.each do |resource| %>
+      <%= form.fields_for :policies, @policy_group.policies.build do |pol_field| %>
+        <tr>
+          <td>
+            <%= resource.name %>
+          </td>
+          <td>
+            <%=pol_field.hidden_field(:resource_id, :value => resource.id)%>
+            <% policy = @policy_group.has_the_policy? resource.id %>
+            
+            <% AuthM::Policy::USER_ACCESS.each do |access| %>
+              <% unless policy.nil? %>
+                <%= pol_field.hidden_field(:id, :value => policy.id)%>
+                <%= pol_field.radio_button :access, access, checked: (access == policy.access) %>
+              <% else %>
+                <%= pol_field.radio_button :access, access, checked: (access == "none") %>
+              <% end %>
+              <%= access %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+</p>

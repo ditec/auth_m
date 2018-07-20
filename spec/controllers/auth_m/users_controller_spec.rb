@@ -189,7 +189,7 @@ module AuthM
 
         it "test1" do 
           expect{
-            post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", roles_mask: 2, policies_attributes: {"0"=>{resource_id: resource.id, access: "manage"}}}}
+            post :create_user, params: {person_id: person.id, policy_group_selector: "Customize", user: {email: "dummy@a.com", password: "asd12345", roles_mask: 2, policy_group_attributes: {policies_attributes: {"0"=>{resource_id: resource.id, access: "manage"}}}}}
           }.to change(AuthM::Policy,:count).by(1)
         end
 
@@ -207,33 +207,36 @@ module AuthM
         end
 
         it "test4" do 
-          post :create_user, params: {person_id: person.id, user: {email: "dummy@a.com", password: "asd12345", roles_mask: 2, policies_attributes: {"0"=>{resource_id: resource.id, access: "read"}}}}
+          post :create_user, params: {person_id: person.id, policy_group_selector: "Customize", user: {email: "dummy@a.com", password: "asd12345", roles_mask: 2, policy_group_attributes: {policies_attributes: {"0"=>{resource_id: resource.id, access: "read"}}}}}
           policy = AuthM::Policy.last
           expect(policy.access).to eq("read")
         end
       end  
 
       describe "#destroy_policies(user) ->" do 
-        let(:user2){FactoryBot.create(:auth_m_user)}
-        let(:resource){FactoryBot.create(:auth_m_resource, management_id: user2.management.id)}
-        let(:policy){FactoryBot.create(:auth_m_policy, resource_id: resource.id,  user_id: user2.id)}
+        let(:resource){FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)}
+        let(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: controller.current_management.id, customized: true)}
+        let(:policy){FactoryBot.create(:auth_m_policy, resource_id: resource.id,  policy_group_id: policy_group.id)}
+
+        let(:user2){FactoryBot.create(:auth_m_user, policy_group_id: policy_group.id, person: (FactoryBot.create(:auth_m_person, management_id: controller.current_management.id)))}
 
         it "test1" do 
           policy.reload
           expect{
-            put :update, params: {person_id: user2.person.id, id: user2.id, user: {policies_attributes: {"0"=>{resource_id: resource.id, id: policy.id, access: "none"}}}}
+            put :update, params: {person_id: user2.person.id, id: user2.id, policy_group_selector: "Customize", user: {policy_group_attributes: { id: policy_group.id, policies_attributes: {"0"=>{resource_id: resource.id, id: policy.id, access: "none"}}}}}
           }.to change(AuthM::Policy,:count).by(-1)
         end
       end       
 
 
       describe "#add_policy(user) ->" do 
-        let(:user2){FactoryBot.create(:auth_m_user)}
+        let(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: controller.current_management.id, customized: true)}
+        let(:user2){FactoryBot.create(:auth_m_user, policy_group_id: policy_group.id, person: (FactoryBot.create(:auth_m_person, management_id: controller.current_management.id)) )}
         let(:resource){FactoryBot.create(:auth_m_resource, management_id: user2.management.id)}
 
         it "test1" do 
           expect{
-            put :update, params: {person_id: user2.person.id, id: user2.id, user: {policies_attributes: {"0"=>{resource_id: resource.id, access: "read"}}}}
+            put :update, params: {person_id: user2.person.id, id: user2.id, policy_group_selector: "Customize", user: {policy_group_attributes: { id: policy_group.id, policies_attributes: {"0"=>{resource_id: resource.id, access: "read"}}}}}
           }.to change(AuthM::Policy,:count).by(1)
         end
       end 

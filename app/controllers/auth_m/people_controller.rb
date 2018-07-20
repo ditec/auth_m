@@ -33,7 +33,7 @@ module AuthM
     # private
 
     #   def person_params
-    #     super
+    #     params.require(:person).permit(:first_name, :last_name, :dni)
     #   end
 
   end

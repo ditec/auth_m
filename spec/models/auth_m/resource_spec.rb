@@ -2,9 +2,9 @@
 #
 # Table name: auth_m_resources
 #
-#  id            :integer          not null, primary key
+#  id            :bigint(8)        not null, primary key
 #  name          :string(255)      not null
-#  management_id :integer          not null  
+#  management_id :bigint(8)        not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #

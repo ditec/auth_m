@@ -18,6 +18,9 @@ person5 = management_2.people.create(first_name:"Maria", last_name:"Bueno", dni:
 admin_management_1 = person1.create_user(email:"admin1@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:admin], active: true, confirmed_at: DateTime.now.to_date )
 admin_management_2 = person3.create_user(email:"admin2@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:admin], active: true, confirmed_at: DateTime.now.to_date)
 
-user_management_1 = person2.create_user(email:"user1@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:user], active: true, confirmed_at: DateTime.now.to_date)
-user_management_2 = person4.create_user(email:"user2@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:user], active: true, confirmed_at: DateTime.now.to_date)
-user_management_3 = person5.create_user(email:"user3@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:user], active: true, confirmed_at: DateTime.now.to_date)
+policy_group1 = management_1.policy_groups.create(name: "policies_management_1", customized: false)
+policy_group2 = management_2.policy_groups.create(name: "policies_management_2", customized: false)
+
+user_management_1 = person2.create_user(email:"user1@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:user], active: true, confirmed_at: DateTime.now.to_date, policy_group: policy_group1)
+user_management_2 = person4.create_user(email:"user2@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:user], active: true, confirmed_at: DateTime.now.to_date, policy_group: policy_group2)
+user_management_3 = person5.create_user(email:"user3@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:user], active: true, confirmed_at: DateTime.now.to_date, policy_group: policy_group2)

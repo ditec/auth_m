@@ -1,0 +1,15 @@
+<div id= "policy_group_not_customized">
+  <h3>Policies</h3>
+  <table>
+    <tr>
+      <th>Resources</th>
+      <th>Access</th>
+    </tr>
+    <%@policy_group.policies.each do |policy|%>      
+      <tr>
+        <td><%= policy.resource.name%></td>
+        <td><%= policy.access%></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

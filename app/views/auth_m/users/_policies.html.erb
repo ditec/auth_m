@@ -1,35 +1,21 @@
-<% if !(@user.has_role? :public) || !(@user.persisted?) %>
-  <p>
-    <h3>Role</h3>
-    <table>
-      <tr>
-        <% AuthM::User.roles.each do |role| %>
-          <%= form.radio_button :roles_mask, (AuthM::User.mask_for role), (@user.persisted? ? {} : {:checked => ((AuthM::User.mask_for role) == 2)} ) %>
-          <%= role %>
-        <% end %>
-      </tr>
-    </table>
-  </p>
-<%end%>
-
-<% if (@user.has_role? :user) || !(@user.persisted?) %>
-  <p>
-    <h3>Policies</h3>
-    <table>
-      <tr>
-        <th>Resources</th>
-        <th>Access</th>
-      </tr>
+<p>
+  <h3>Policies</h3>
+  <table>
+    <tr>
+      <th>Resources</th>
+      <th>Access</th>
+    </tr>
+    <%= form.fields_for :policy_group, @policy_group do |pol_field2| %>
       <% current_management.resources.each do |resource| %>
-        <%= form.fields_for :policies, @user.policies.build do |pol_field| %>
+        <%= pol_field2.fields_for :policies, @policy_group.policies.new do |pol_field| %>
           <tr>
             <td>
               <%= resource.name %>
             </td>
             <td>
               <%=pol_field.hidden_field(:resource_id, :value => resource.id)%>
-              <% policy = @user.has_the_policy? resource.id %>
-              
+              <% policy = @user.policy_group.has_the_policy? resource.id %>
+
               <% AuthM::Policy::USER_ACCESS.each do |access| %>
                 <% unless policy.nil? %>
                   <%= pol_field.hidden_field(:id, :value => policy.id)%>
@@ -43,6 +29,6 @@
           </tr>
         <% end %>
       <% end %>
-    </table>
-  </p>
-<% end %>
+    <% end %>
+  </table>
+</p>

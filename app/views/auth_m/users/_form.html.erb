@@ -33,4 +33,32 @@
   <%= form.check_box "invitable" %>
   invite
 </p>
-<%=render partial: 'policies', locals: {form: form}%>
+
+<% if !(@user.has_role? :public) || !(@user.persisted?) %>
+  <p>
+    <h3>Role</h3>
+    <table>
+      <tr>
+        <div class= "roles">
+          <% AuthM::User.roles.each_with_index do |role, index| %>
+            <%= form.radio_button :roles_mask, (AuthM::User.mask_for role), (@user.persisted? ? {} : {:checked => ((AuthM::User.mask_for role) == 2), id: "role#{index}"} ) %>
+            <%= role %>
+          <% end %>
+        </div>
+      </tr>
+    </table>
+  </p>
+<%end%>
+
+<% if (@user.has_role? :user) || !(@user.persisted?) %>
+  <div id= 'div_policy_groups'>
+    <p>
+      <h3>Policies Group</h3>
+      <%= select_tag "policy_group_selector", options_for_select([["Customize", "Customize"]] + current_management.policy_groups.allocable.collect{ |m| [m.name, m.id]}), include_blank: true, id: 'policy_groups'%>
+    </p>
+
+    <div id="policies">
+      <div id="customized_policies" style="display: none;"><%=render partial: 'policies', locals: {form: form}%></div>
+    </div>
+  </div>
+<% end %>

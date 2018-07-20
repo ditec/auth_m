@@ -6,6 +6,7 @@
     <th>dni</th>
     <th>user</th>
     <th>role</th>
+    <th>policies</th>
     <th>active?</th>
   </tr>
   <% @people.each do |person| %>
@@ -24,6 +25,9 @@
       </td>      
       <td>
         <%= person.user.role if person.user %>
+      </td>       
+      <td>
+        <%= person.user.policy_group.name if person.user && (person.user.has_role? :user) && person.user.policy_group %>
       </td>      
       <td>
         <%= person.user.active if person.user %>

@@ -21,9 +21,13 @@ AuthM::Engine.routes.draw do
     post 'create_user', to: 'users#create_user'
   end
 
+  resources :policy_groups
+
   get 'public_users', to: 'users#public'
 
   post 'stop_impersonating', to: 'users#stop_impersonating'
   
   delete 'unlink_account', to: 'linked_accounts#unlink'
+
+  post 'load_policies', to: 'policy_groups#load_policies'
 end

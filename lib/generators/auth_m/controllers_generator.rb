@@ -11,6 +11,7 @@ module AuthM
         copy_file "controllers/auth_m/managements_controller.rb", "app/controllers/auth_m/managements_controller.rb"
         copy_file "controllers/auth_m/people_controller.rb", "app/controllers/auth_m/people_controller.rb"
         copy_file "controllers/auth_m/users_controller.rb", "app/controllers/auth_m/users_controller.rb"
+        copy_file "controllers/auth_m/policy_groups_controller.rb", "app/controllers/auth_m/policy_groups_controller.rb"
       end
       
     end

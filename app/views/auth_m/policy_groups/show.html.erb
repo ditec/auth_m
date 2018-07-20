@@ -1,0 +1,32 @@
+<h1>Policy group</h1>
+<p>
+  <strong>name:</strong>
+  <%= @policy_group.name %>
+</p>
+
+<p>
+  <h3>Policies</h3>
+  <table>
+    <tr>
+      <th>Resources</th>
+      <th>Access</th>
+      <% @policy_group.policies.each do |policy| %>
+        <tr>
+          <td>
+            <%= policy.resource.name %>
+          </td>
+          <td>
+            <%= policy.access %>
+          </td>
+        </tr>
+      <% end %>
+    </tr>
+  </table>
+</p>
+
+<% if can? :write, AuthM::PolicyGroup %>
+  <%= link_to 'Edit', edit_policy_group_path(@policy_group) %>
+  <%= link_to 'Destroy', policy_group_path(@policy_group), method: :delete, data: { confirm: 'Are you sure?' } %>
+<% end %>
+
+<%= link_to 'Back', policy_groups_path %>

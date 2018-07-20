@@ -1,0 +1,5 @@
+$('#policies #policy_group_not_customized').remove();
+
+<%unless @policy_group.nil?%>
+  $('#policies').append("<%= j render(partial: 'policies' ) %>");
+<% end %>

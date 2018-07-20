@@ -43,14 +43,18 @@
       <%= @user.invitation_accepted_at %>
     </p>
   <% end %>
-  <% if @user.has_role? :user %>
+  <% if (@user.has_role? :user) && @user.policy_group %>
+    <p>      
+      <h3>Policy Group</h3>
+      <%= @user.policy_group.name if @user.policy_group %>
+    </p>
     <p>
       <h3>Policies</h3>
       <table>
         <tr>
           <th>Resources</th>
           <th>Access</th>
-          <% @user.policies.each do |policy| %>
+          <% @user.policy_group.policies.each do |policy| %>
             <tr>
               <td>
                 <%= policy.resource.name %>

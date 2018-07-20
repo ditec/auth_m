@@ -35,15 +35,16 @@ module AuthM::UserConcern
   
   included do
     belongs_to :person, optional: true
-    has_many :policies, dependent: :destroy
+    belongs_to :policy_group, optional: :true
+
+    before_destroy :clean_up_custom_policies
+
     has_many :linked_accounts, dependent: :destroy
     has_many :invitations, :class_name => self.to_s, :as => :invited_by
 
-    accepts_nested_attributes_for :policies, allow_destroy: true, reject_if: :is_not_user
+    accepts_nested_attributes_for :policy_group, allow_destroy: true, reject_if: :is_not_user
 
     delegate :can?, :cannot?, :to => :ability
-
-    after_save :check_policies
 
     validates_presence_of [:roles_mask, :person_id]
     validates :roles_mask, inclusion: { in: [1,2] }, if: proc { self.management }  
@@ -125,8 +126,8 @@ module AuthM::UserConcern
       !(self.has_role? :user)
     end
 
-    def check_policies
-      self.policies.destroy_all if (self.has_role? :admin) && (self.policies)
-    end 
+    def clean_up_custom_policies
+      self.policy_group.destroy! if self.policy_group && (self.policy_group.customized == true)
+    end
 
 end

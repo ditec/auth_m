@@ -36,6 +36,7 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       t.integer :roles_mask, default: 8, null: false
       t.boolean :active, default: false, null: false
       t.references :person, index: true
+      t.references :policy_group, index: true
 
       ## Recoverable
       t.string   :reset_password_token
@@ -85,10 +86,20 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
     # add_index :auth_m_users, :confirmation_token,   unique: true
     # add_index :auth_m_users, :unlock_token,         unique: true
 
+    ############################ create table policy groups############################
+     create_table :auth_m_policy_groups do |t|
+
+      t.string :name, null: false
+      t.references :management, index: true
+      t.boolean :customized, default: true
+
+      t.timestamps
+    end
+
     ############################ create table policies ############################
     create_table :auth_m_policies do |t|
       t.references :resource, index: true
-      t.references :user, index: true
+      t.references :policy_group, index: true
       t.string :access
 
       t.timestamps

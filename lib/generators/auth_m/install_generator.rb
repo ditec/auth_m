@@ -31,6 +31,10 @@ module AuthM
       copy_file "initializers/auth_m.rb", "config/initializers/auth_m.rb"
     end
 
+    def generate_js
+      copy_file "../../../../app/assets/javascripts/auth_m/policy_groups.js", "app/assets/javascripts/auth_m/policy_groups.js"
+    end
+
     def show_readme
       sleep 1
       readme "README"

@@ -35,7 +35,20 @@
       </tr>
     </table>
   </p>
-  <%=render partial: 'policies', locals: {form: form}%>
+  <% if @user.has_role? :user %>
+    <p>
+      <h3>Policies Group</h3>
+      <% if @policy_group.customized? %>
+        <%= select_tag "policy_group_selector", options_for_select([["Customize", "Customize"]] + current_management.policy_groups.allocable.collect{ |m| [m.name, m.id]}, "Customize"), include_blank: true, id: 'policy_groups'%>
+      <% else %>
+        <%= select_tag "policy_group_selector", options_for_select([["Customize", "Customize"]] + current_management.policy_groups.allocable.collect{ |m| [m.name, m.id]}, @policy_group.id), include_blank: true, id: 'policy_groups'%>
+      <% end %>
+    </p>
+    <div id="policies">
+      <%= render(partial: 'auth_m/policy_groups/policies') unless @policy_group.customized?%>
+      <div id="customized_policies" style="<%= "display: none;" unless @policy_group.customized? %>"><%=render partial: 'policies', locals: {form: form}%></div>
+    </div>
+  <% end %>
   <p>
     <%= form.submit %>
   </p>
