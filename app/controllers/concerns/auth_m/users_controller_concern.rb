@@ -94,7 +94,9 @@ module AuthM::UsersControllerConcern
           params[:user].delete(:policy_group_attributes)
           params[:user][:policy_group_id] = params[:policy_group_selector]
         end 
-      end
+      else
+        params[:user].delete(:policy_group_attributes)
+      end 
     end
 
     def check_params_update
@@ -118,7 +120,9 @@ module AuthM::UsersControllerConcern
           params[:user].delete(:policy_group_attributes)
           params[:user][:policy_group_id] = params[:policy_group_selector]
         end 
-      end
+      else
+        params[:user].delete(:policy_group_attributes)
+      end 
     end 
 
     def invitable?
