@@ -7,7 +7,7 @@
 #  encrypted_password     :string(255)      default(""), not null
 #  roles_mask             :integer          default(8), not null
 #  active                 :boolean          default(FALSE), not null
-#  person_id              :bigint(8)
+#  management_id          :bigint(8)
 #  policy_group_id        :bigint(8)
 #  reset_password_token   :string(255)
 #  reset_password_sent_at :datetime
@@ -36,7 +36,7 @@ module AuthM
   class User < ApplicationRecord
     include AuthM::UserConcern
     
-    # puts your code here
+    # Your code goes here...
     
   end
 end

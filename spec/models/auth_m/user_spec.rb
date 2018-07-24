@@ -7,7 +7,7 @@
 #  encrypted_password     :string(255)      default(""), not null
 #  roles_mask             :integer          default(8), not null
 #  active                 :boolean          default(FALSE), not null
-#  person_id              :bigint(8)
+#  management_id          :bigint(8)
 #  policy_group_id        :bigint(8)
 #  reset_password_token   :string(255)
 #  reset_password_sent_at :datetime
@@ -39,7 +39,7 @@ module AuthM
   RSpec.describe User, type: :model do
     
     describe "#shoulda_matchers ->" do
-      it { should belong_to(:person) }
+      it { should belong_to(:management) }
       it { should belong_to(:policy_group) }
       it { should accept_nested_attributes_for(:policy_group) }
 
@@ -50,10 +50,6 @@ module AuthM
         user.should validate_presence_of(:roles_mask) 
       }
       
-      it { 
-        user = FactoryBot.create(:auth_m_user)
-        user.should validate_presence_of(:person_id) 
-      }
     end
 
     describe "#validate_roles ->" do
@@ -61,8 +57,8 @@ module AuthM
       let(:resource){FactoryBot.create(:auth_m_resource, management_id: management.id)}
       let(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: management.id)}
 
-      let(:user){FactoryBot.create(:auth_m_user, roles: [:user], policy_group_id: policy_group.id, person: (FactoryBot.create(:auth_m_person, management_id: management.id)))}
-      let(:public_user){FactoryBot.create(:auth_m_user, roles: [:public], person:(FactoryBot.create(:auth_m_person, management_id: nil)))}
+      let(:user){FactoryBot.create(:auth_m_user, roles: [:user], policy_group_id: policy_group.id, management_id: management.id)}
+      let(:public_user){FactoryBot.create(:auth_m_user, roles: [:public], management_id: nil)}
 
       it "test1" do
         user.assign_attributes(roles: [:root])
@@ -74,21 +70,21 @@ module AuthM
         user.assign_attributes(roles: [:admin])
         ability = AuthM::Ability.new(user)
 
-        ability.should be_able_to(:manage, AuthM::Person.new(management_id: user.person.management_id))
+        ability.should be_able_to(:manage, AuthM::User.new(management_id: user.management_id))
       end
 
       it "test3" do 
         policy = FactoryBot.create(:auth_m_policy, access: "manage",resource_id: resource.id, policy_group_id: policy_group.id)
         ability = AuthM::Ability.new(user)
 
-        ability.should be_able_to(:manage, AuthM::Person.new(management_id: user.person.management_id))
+        ability.should be_able_to(:manage, AuthM::User.new(management_id: user.management_id))
       end
 
       it "test4" do 
         policy = FactoryBot.create(:auth_m_policy, access: "read", resource_id: resource.id, policy_group_id: policy_group.id)
         ability = AuthM::Ability.new(user)
 
-        ability.should be_able_to(:read, AuthM::Person.new(management_id: user.person.management_id))
+        ability.should be_able_to(:read, AuthM::User.new(management_id: user.management_id))
       end
 
       it "test5" do
@@ -101,7 +97,7 @@ module AuthM
       it "test6" do 
         ability = AuthM::Ability.new(user)
 
-        ability.should_not be_able_to(:manage, AuthM::Person.new(management_id: user.person.management_id))
+        ability.should_not be_able_to(:manage, AuthM::User.new(management_id: user.management_id))
       end
 
       it "test7" do
@@ -141,7 +137,7 @@ module AuthM
       end
 
       it "test3" do 
-        expect(user.management).to eq(user.person.management)
+        expect(user.management).to eq(user.management)
       end
     end
 

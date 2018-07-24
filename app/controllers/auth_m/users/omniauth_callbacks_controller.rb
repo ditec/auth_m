@@ -44,20 +44,13 @@ module AuthM
 
     def custom_sign_up
       if !(session["devise.auth.uid"].nil?) && !(session["devise.auth.provider"].nil?)
-        @person = AuthM::Person.new(person_params)
-        @user = AuthM::User.new(email: user_params[:email])
+        @user = AuthM::User.new(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
 
-        if @person.save 
-          @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
-          if @user.save 
-            @user.linked_accounts.create(uid: session["devise.auth.uid"], provider: session["devise.auth.provider"])
-            sign_in_and_redirect @user, event: :authentication
-          else 
-            @person.destroy
-            render :edit
-          end
-        else
-          render :edit 
+        if @user.save 
+          @user.linked_accounts.create(uid: session["devise.auth.uid"], provider: session["devise.auth.provider"])
+          sign_in_and_redirect @user, event: :authentication
+        else 
+          render :edit
         end
       else
         failure
@@ -84,23 +77,12 @@ module AuthM
             set_flash_message(:notice, :success, :kind => provider.split("_").first.capitalize) if is_navigational_format?
           else 
             @user = AuthM::User.new(email:request.env["omniauth.auth"].info.email)
-            if provider == :twitter
-              fullname = request.env["omniauth.auth"].info.name.split(' ')
-              first_name, last_name = fullname[0], fullname[1]
-            else
-              first_name, last_name = request.env["omniauth.auth"].info.first_name, request.env["omniauth.auth"].info.last_name
-            end  
-            @person = AuthM::Person.new(first_name: first_name, last_name: last_name)
             session["devise.auth.uid"] = request.env["omniauth.auth"].uid
             session["devise.auth.provider"] = request.env["omniauth.auth"].provider
 
             render :edit
           end
         end
-      end
-
-      def person_params
-        params.require(:person).permit(:first_name, :last_name, :dni).reject{|_, v| v.blank?}
       end
 
       def user_params 

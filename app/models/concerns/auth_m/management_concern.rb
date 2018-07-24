@@ -2,7 +2,7 @@
 #
 # Table name: auth_m_managements
 #
-#  id         :integer          not null, primary key
+#  id         :bigint(8)        not null, primary key
 #  name       :string(255)      default(""), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -14,7 +14,7 @@ module AuthM::ManagementConcern
   extend ActiveSupport::Concern
 
   included do
-    has_many :people, dependent: :destroy
+    has_many :users, dependent: :destroy
     has_many :resources, dependent: :destroy
     has_many :policy_groups, dependent: :destroy
 
@@ -39,10 +39,6 @@ module AuthM::ManagementConcern
   def resource name 
     self.resources.where(name: name).first
   end 
-
-  def users
-    AuthM::User.includes(:person).where(auth_m_people: {management_id: self.id} )
-  end
 
   private 
 

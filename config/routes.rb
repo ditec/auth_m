@@ -13,13 +13,12 @@ AuthM::Engine.routes.draw do
   resources :managements, except: :index
   post 'change_management', to: 'managements#change'
 
-  resources :people do
-    resource :user, except: [:index, :show] do
-      post :impersonate, on: :member
-      post :generate_new_password_email, on: :member
-    end
-    post 'create_user', to: 'users#create_user'
+  resources :users do
+    post :impersonate, on: :member
+    post :generate_new_password_email, on: :member
   end
+  
+  post 'create_user', to: 'users#create_user'
 
   resources :policy_groups
 

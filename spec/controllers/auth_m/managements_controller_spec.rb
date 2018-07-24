@@ -162,7 +162,7 @@ module AuthM
 
         it "test1" do 
           resource.reload
-          expect{ put :update, params: {id: controller.current_management.id, management: {name: "Dummy887", resources_attributes: {"0" => {name: "AuthM::Person", id: resource.id, selected: "false"}}}}}
+          expect{ put :update, params: {id: controller.current_management.id, management: {name: "Dummy887", resources_attributes: {"0" => {name: "AuthM::User", id: resource.id, selected: "false"}}}}}
           .to change(AuthM::Resource,:count).by(-1)
         end
 
@@ -171,7 +171,7 @@ module AuthM
       describe "#create_resources(management) ->" do 
         it "test1" do 
           expect{
-            put :update, params: {id: controller.current_management.id, management: {name: "Dummy664", resources_attributes: {"0" => {name: "AuthM::Person", selected: "true"}}}}
+            put :update, params: {id: controller.current_management.id, management: {name: "Dummy664", resources_attributes: {"0" => {name: "AuthM::User", selected: "true"}}}}
           }.to change(AuthM::Resource,:count).by(1)
         end
       end

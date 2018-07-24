@@ -1,0 +1,34 @@
+<h1>Listing users</h1>
+<table>
+  <tr>
+    <th>user</th>
+    <th>role</th>
+    <th>policies</th>
+    <th>active?</th>
+  </tr>
+  <% @users.each do |user| %>
+    <tr>
+      <td>
+        <%= user.email %>
+      </td>      
+      <td>
+        <%= user.role %>
+      </td>       
+      <td>
+        <%= user.policy_group.name if  (user.has_role? :user) && user.policy_group %>
+      </td>      
+      <td>
+        <%= user.active  %>
+      </td>
+      <% if can? :read, AuthM::User %>
+        <td>
+          <%= link_to 'Show', user_path(user) %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+<br>
+<% if can? :write, AuthM::User %>
+  <%= link_to 'New user', new_user_path %>
+<% end %>

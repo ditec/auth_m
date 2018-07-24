@@ -5,6 +5,10 @@
 </p>
 <% if can? :read, AuthM::User %>
   <p>
+    <strong>registration_created_at:</strong>
+    <%= @user.created_at%>
+  </p>  
+  <p>
     <strong>sign_in_count:</strong>
     <%= @user.sign_in_count %>
   </p>
@@ -70,7 +74,12 @@
   <% end %>
 <% end %>
 <% if can? :manage, AuthM::User %>
-  <%= link_to 'Sign in', auth_m.impersonate_person_user_path(@person), method: :post %>
-  <%= link_to 'Edit', auth_m.edit_person_user_path(@person) %>
-  <%= link_to 'Destroy', auth_m.person_user_path(@person), method: :delete, data: { confirm: 'Are you sure?' }  %>
+  <%= link_to 'Sign in', auth_m.impersonate_user_path(@user), method: :post %>
+  <%= link_to 'Edit', auth_m.edit_user_path(@user) %>
+  <%= link_to 'Destroy', auth_m.user_path(@user), method: :delete, data: { confirm: 'Are you sure?' }  %>
 <% end %>
+
+<br>
+<br>
+
+<%= link_to 'Back',  auth_m.public_users_path if @user.management %>

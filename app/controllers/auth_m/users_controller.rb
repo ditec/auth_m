@@ -2,6 +2,10 @@ module AuthM
   class UsersController < ApplicationController
     include AuthM::UsersControllerConcern
 
+    # def index
+    #   super
+    # end    
+
     # def public
     #   super
     # end
@@ -41,7 +45,7 @@ module AuthM
     # private
 
     #   def user_params
-    #     params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active, :policy_group_id, policy_group_attributes: [:id, :name, :management_id, :customized, policies_attributes: [:id, :resource_id, :access, :_destroy]]).reject{|_, v| v.blank?}
+    #     params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active, :policy_group_id, policy_group_attributes: [:id, :name, :management_id, :customized, policies_attributes: [:id, :resource_id, :access, :_destroy]])
     #   end
 
     #   def check_policies

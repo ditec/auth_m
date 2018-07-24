@@ -14,7 +14,7 @@ module AuthM
   class LinkedAccount < ApplicationRecord
     include AuthM::LinkedAccountConcern
     
-    # puts your code here
+    # Your code goes here...
     
   end
 end

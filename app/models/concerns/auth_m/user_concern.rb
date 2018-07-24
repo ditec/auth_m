@@ -2,12 +2,13 @@
 #
 # Table name: auth_m_users
 #
-#  id                     :integer          not null, primary key
+#  id                     :bigint(8)        not null, primary key
 #  email                  :string(255)      default(""), not null
 #  encrypted_password     :string(255)      default(""), not null
 #  roles_mask             :integer          default(8), not null
 #  active                 :boolean          default(FALSE), not null
-#  person_id              :integer
+#  management_id          :bigint(8)
+#  policy_group_id        :bigint(8)
 #  reset_password_token   :string(255)
 #  reset_password_sent_at :datetime
 #  remember_created_at    :datetime
@@ -22,8 +23,11 @@
 #  invitation_accepted_at :datetime
 #  invitation_limit       :integer
 #  invited_by_type        :string(255)
-#  invited_by_id          :integer
+#  invited_by_id          :bigint(8)
 #  invitations_count      :integer          default(0)
+#  confirmation_token     :string(255)
+#  confirmed_at           :datetime
+#  confirmation_sent_at   :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
@@ -34,7 +38,7 @@ module AuthM::UserConcern
   extend ActiveSupport::Concern
   
   included do
-    belongs_to :person, optional: true
+    belongs_to :management, optional: true
     belongs_to :policy_group, optional: :true
 
     before_destroy :clean_up_custom_policies
@@ -46,7 +50,7 @@ module AuthM::UserConcern
 
     delegate :can?, :cannot?, :to => :ability
 
-    validates_presence_of [:roles_mask, :person_id]
+    validates_presence_of :roles_mask
     validates_presence_of :policy_group, if: -> {self.has_role? :user}
 
     validates :roles_mask, inclusion: { in: [1,2] }, if: proc { self.management }  
@@ -116,10 +120,6 @@ module AuthM::UserConcern
 
   def has_the_policy? resource_id
     self.policies.find_by(resource_id: resource_id)
-  end
-
-  def management
-    self.person.management unless self.person.nil?
   end
 
   private 

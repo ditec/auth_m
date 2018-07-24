@@ -2,37 +2,7 @@
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
 
-  <% if !(@person.nil?) && (@person.errors.any?) %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@person.errors.count, "error") %> prohibited this person from being saved:</h2>
-      <ul>
-      <% @person.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <%= devise_error_messages! %>
-
-  <% unless @person.nil? %>
-    <h4>Person</h4>
-
-    <%= fields_for @person do |a| %>
-      <div class="field">
-        <%= a.label :first_name %><br />
-        <%= a.text_field :first_name, autofocus: true %>
-      </div>
-      <div class="field">
-        <%= a.label :last_name %><br />
-        <%= a.text_field :last_name %>
-      </div>
-      <div class="field">
-        <%= a.label :dni %><br />
-        <%= a.text_field :dni %>
-      </div>
-    <%end%>
-  <%end%>
 
   <h4>User</h4>
 

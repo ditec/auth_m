@@ -17,7 +17,7 @@
     <br>
     <br>
   <% end %>
-  <%= link_to('Users', auth_m.people_path) if can? :read, AuthM::Person if current_management %>
+  <%= link_to('Users', auth_m.users_path) if can? :read, AuthM::User if current_management %>
   <%= link_to('Management', auth_m.management_path(current_management)) if current_management && (can? :read, AuthM::Management) %> 
   <%= link_to('Policy groups', auth_m.policy_groups_path(current_management)) if current_management && (can? :read, AuthM::PolicyGroup) %> 
 <% else %>

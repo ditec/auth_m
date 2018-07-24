@@ -41,8 +41,8 @@ module AuthM::AbilityConcern
 
     if user.has_role? :admin
       can :unlink, AuthM::LinkedAccount, user_id: user.id
-      can :manage, AuthM::Person, management_id: user.management.id
-      can :manage, AuthM::User, person: { management_id: user.management.id }
+      can :manage, AuthM::User, management_id: user.management.id
+      can :manage, AuthM::PolicyGroup, management_id: user.management.id
       cannot :public, AuthM::User
 
       user.management.resources.each do |resource|

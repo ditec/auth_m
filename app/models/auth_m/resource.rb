@@ -13,7 +13,7 @@ module AuthM
   class Resource < ApplicationRecord
     include AuthM::ResourceConcern  
     
-    # puts your code here
+    # Your code goes here...
     
   end
 end

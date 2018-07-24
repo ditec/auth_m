@@ -12,7 +12,7 @@ module AuthM
   class Management < ApplicationRecord
     include AuthM::ManagementConcern
 
-    # puts your code here
+    # Your code goes here...
     
   end
 end

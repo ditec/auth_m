@@ -4,37 +4,37 @@ module AuthM::UsersControllerConcern
   extend ActiveSupport::Concern
   
   included do
-    load_and_authorize_resource :person, except: [:index, :stop_impersonating, :public]
-    load_and_authorize_resource :user, through: :person, singleton: true, except: [:index, :stop_impersonating, :public]
-    load_and_authorize_resource only: [:index, :stop_impersonating, :public]
+    load_and_authorize_resource 
 
-    before_action :set_person, except: [:index, :stop_impersonating, :public]
+    before_action :set_user, except: [:index, :public, :new, :create_user, :stop_impersonating]
 
     before_action :check_params_create, only: [:create_user]
     before_action :check_params_update, only: [:update]
   end
 
+  def index
+    @users = current_management.users
+  end 
+
   def public 
-    # @user = AuthM::User.publics
-    @people = AuthM::Person.where(management_id: nil).order('last_name')
+    @users = AuthM::User.publics
   end
 
   def new
-    @user = @person.build_user
+    @user = AuthM::User.new
     @policy_group = @user.build_policy_group
   end
 
   def edit
-    @user = @person.user
     @policy_group = @user.policy_group if @user.has_role? :user
   end
 
   def create_user
 
-    invitable? ? @user = AuthM::User.invite!(user_params.merge(person_id: @person.id), current_user) : @user = @person.build_user(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
+    invitable? ? @user = AuthM::User.invite!(user_params.merge(management_id: current_management.id), current_user) : @user = current_management.users.new(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
 
     if @user.save
-      redirect_to person_path(@person)
+      redirect_to user_path(@user)
     else
       @policy_group = @user.build_policy_group
       render 'new'
@@ -42,10 +42,9 @@ module AuthM::UsersControllerConcern
   end
   
   def update
-    @user = @person.user
 
     if @user.update(user_params)
-      redirect_to person_path(@person)
+      redirect_to user_path(@user)
     else
       @policy_group = @user.policy_group if @user.has_role? :user
       render 'edit'
@@ -53,14 +52,12 @@ module AuthM::UsersControllerConcern
   end
 
   def destroy
-    @user = @person.user
     @user.destroy
    
-    redirect_to person_path(@person)
+    redirect_to users_path
   end
 
   def impersonate
-    @user = @person.user
     impersonate_user(@user)
     redirect_to main_app.root_path
   end
@@ -71,7 +68,6 @@ module AuthM::UsersControllerConcern
   end
 
   def generate_new_password_email 
-    @user = @person.user
     @user.send_reset_password_instructions 
     flash[:notice] = "Reset password instructions have been sent to #{@user.email}." 
     render :edit
@@ -80,7 +76,12 @@ module AuthM::UsersControllerConcern
   private
 
     def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active, :policy_group_id, policy_group_attributes: [:id, :name, :management_id, :customized, policies_attributes: [:id, :resource_id, :access, :_destroy]]).reject{|_, v| v.blank?}
+      unless params[:user][:password].present? || params[:user][:password_confirmation].present?
+        params[:user].delete(:password)
+        params[:user].delete(:password_confirmation)
+      end
+      params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active, :policy_group_id, policy_group_attributes: [:id, :name, :management_id, :customized, policies_attributes: [:id, :resource_id, :access, :_destroy]])
+
     end
 
     def check_params_create
@@ -116,7 +117,9 @@ module AuthM::UsersControllerConcern
             end
           end
         else
-          AuthM::Person.find(params[:person_id]).user.policy_group.delete if params[:person_id].present? && AuthM::Person.find(params[:person_id]).user && AuthM::Person.find(params[:person_id]).user.policy_group.customized?
+          user = AuthM::User.find(params[:id])
+
+          user.policy_group.delete if !user.nil? && user.policy_group.customized?
           params[:user].delete(:policy_group_attributes)
           params[:user][:policy_group_id] = params[:policy_group_selector]
         end 
@@ -129,8 +132,8 @@ module AuthM::UsersControllerConcern
       params[:user][:invitable] == "1" 
     end
 
-    def set_person
-      @person = AuthM::Person.find(params[:person_id])
+    def set_user
+      @user = AuthM::User.find(params[:id])
     end
 
 end

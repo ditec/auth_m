@@ -2,9 +2,9 @@
 #
 # Table name: auth_m_resources
 #
-#  id            :integer          not null, primary key
+#  id            :bigint(8)        not null, primary key
 #  name          :string(255)      not null
-#  management_id :integer          not null
+#  management_id :bigint(8)        not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #
@@ -34,7 +34,7 @@ module AuthM::ResourceConcern
     def list
       Rails.application.eager_load!
       array = Array.new
-      (::ApplicationRecord.descendants << "AuthM::Person".constantize).each do |model|
+      ::ApplicationRecord.descendants.each do |model|
         array << [model.to_s.singularize,model.to_s.singularize]
         model.descendants.each do |descendant| 
           array << [descendant.to_s.singularize,descendant.to_s.singularize]
@@ -44,7 +44,8 @@ module AuthM::ResourceConcern
     end
 
     def exists? resource
-      self.list.collect{ |a| a.first}.include? resource
+      self.list # for tests :/
+      return self.list.collect{ |a| a.first}.include? resource
     end
   end
 

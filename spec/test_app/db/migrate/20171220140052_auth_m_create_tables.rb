@@ -16,16 +16,6 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
-    ############################ create table people ############################
-    create_table :auth_m_people do |t|
-      t.string :first_name, null: false, default: ""
-      t.string :last_name, null: false, default: ""
-      t.string :dni, unique: true
-      t.references :management, index: true
-
-      t.timestamps
-    end
-
     ############################ create table users ############################
     create_table :auth_m_users do |t|
       ## Database authenticatable
@@ -35,7 +25,7 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       ## 
       t.integer :roles_mask, default: 8, null: false
       t.boolean :active, default: false, null: false
-      t.references :person, index: true
+      t.references :management, index: true
       t.references :policy_group, index: true
 
       ## Recoverable

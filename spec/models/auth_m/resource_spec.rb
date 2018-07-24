@@ -28,20 +28,21 @@ module AuthM
       it { should_not allow_value("9rticles").for(:name) }
     end
 
-    describe "#validate_methods ->" do
+    describe "#validate_methods ->" do    
+
       it "test1" do 
-        expect(AuthM::Resource.list).to include(["AuthM::Person", "AuthM::Person"])
+        expect(AuthM::Resource.list).to include(["AuthM::User", "AuthM::User"])
       end      
 
       it "test2" do 
-        expect(AuthM::Resource.list).to_not include(["AuthM::Articles", "AuthM::Articles"])
+        expect(AuthM::Resource.list).to_not include(["Articles", "Articles"])
       end
 
       it "test3" do 
-        expect(AuthM::Resource.exists? "AuthM::Person").to be_truthy
+        expect(AuthM::Resource.exists? "AuthM::User").to be_truthy
       end
       it "test4" do 
-        expect(AuthM::Resource.exists? "AuthM::Articles").to be_falsey
+        expect(AuthM::Resource.exists? "Articles").to be_falsey
       end
 
       it "test5" do

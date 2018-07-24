@@ -14,7 +14,7 @@ module AuthM
   RSpec.describe Management, type: :model do
 
     describe "#shoulda_matchers ->" do
-      it { should have_many(:people).dependent(:destroy) }
+      it { should have_many(:users).dependent(:destroy) }
       it { should have_many(:resources).dependent(:destroy) }
       
       it { should validate_presence_of(:name) }
@@ -25,7 +25,7 @@ module AuthM
 
     describe "#validate_resources ->" do
       let(:management){FactoryBot.create(:auth_m_management)}
-      let(:resource){FactoryBot.create(:auth_m_resource, management: management)}
+      let(:resource){FactoryBot.create(:auth_m_resource, management_id: management.id)}
 
       it "test1" do
         expect(management.has_the_resource_name? resource.name).to be_truthy
@@ -36,7 +36,7 @@ module AuthM
       end
 
       it "test3" do
-        expect(management.has_the_resource_name? "AuthM::Users").to be_falsey
+        expect(management.has_the_resource_name? "Article").to be_falsey
       end
 
       it "test4" do
@@ -46,7 +46,7 @@ module AuthM
 
     describe "#validate_users ->" do
       let(:management){FactoryBot.create(:auth_m_management)}
-      let(:user){FactoryBot.create(:auth_m_user, person: FactoryBot.create(:auth_m_person, management: management))}
+      let(:user){FactoryBot.create(:auth_m_user, management_id: management.id)}
       let(:user2){FactoryBot.create(:auth_m_user)}
 
       it "test1" do

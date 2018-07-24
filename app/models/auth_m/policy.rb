@@ -14,7 +14,7 @@ module AuthM
   class Policy < ApplicationRecord
     include AuthM::PolicyConcern
 
-    # puts your code here
+    # Your code goes here...
     
   end
 end
