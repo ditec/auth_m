@@ -31,7 +31,7 @@ module AuthM::ResourceConcern
       Rails.application.eager_load!
       array = Array.new
       ::ApplicationRecord.descendants.each do |model|
-        array << [model.to_s.singularize,model.to_s.singularize]
+        array << [model.to_s.singularize,model.to_s.singularize] if (defined? model.ignore_resource?).nil? || (!(defined? model.ignore_resource?).nil? && model.ignore_resource? == false)
       end
       return array
     end
