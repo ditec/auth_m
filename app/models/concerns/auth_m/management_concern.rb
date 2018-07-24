@@ -22,10 +22,6 @@ module AuthM::ManagementConcern
 
     validates :name, presence: true, length: { in: 4..250 }, uniqueness: true
     before_save :capitalize_name
-
-    def self.descendants
-      ObjectSpace.each_object(Class).select { |klass| klass < self }
-    end
   end
 
   def has_the_resource_name? resource_name

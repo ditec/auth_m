@@ -22,12 +22,7 @@ module AuthM::PolicyConcern
     USER_ACCESS = ['none','read','manage']
     
     validate :check, :on => [:create, :update]
-    validates :access, inclusion: { in: ['read','manage'] }
-
-    def self.descendants
-      ObjectSpace.each_object(Class).select { |klass| klass < self }
-    end
-    
+    validates :access, inclusion: { in: ['read','manage'] }    
   end
 
   private
