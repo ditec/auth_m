@@ -12,7 +12,7 @@
 FactoryBot.define do
   factory :auth_m_resource, class: 'AuthM::Resource' do
     sequence(:id){|n| n }
-    name "AuthM::User"
+    name { "AuthM::User" }
     association :management, factory: :auth_m_management
   end
 end

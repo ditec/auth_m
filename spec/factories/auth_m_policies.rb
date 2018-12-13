@@ -15,6 +15,6 @@ FactoryBot.define do
     sequence(:id){|n| n }
     association :resource, factory: :auth_m_resource
     association :policy_group, factory: :auth_m_policy_group
-    access "read"
+    access { "read" }
   end
 end

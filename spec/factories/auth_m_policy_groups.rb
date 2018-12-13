@@ -15,6 +15,6 @@ FactoryBot.define do
      sequence(:id){|n| n }
      sequence(:name){|n| "name_dummy#{n}" }
      association :management, factory: :auth_m_management
-     customized false
+     customized { false }
   end
 end

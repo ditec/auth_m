@@ -19,7 +19,7 @@ module AuthM::PolicyGroupConcern
 
     belongs_to :management
     has_many :policies, dependent: :destroy
-    has_many :users
+    has_many :users, dependent: :restrict_with_error
 
     accepts_nested_attributes_for :policies, allow_destroy: true
 
@@ -40,7 +40,7 @@ module AuthM::PolicyGroupConcern
 
   private 
 
-  def capitalize_name
-    self.name = self.name.capitalize
-  end
+    def capitalize_name
+      self.name = self.name.capitalize
+    end
 end

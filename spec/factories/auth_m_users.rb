@@ -36,10 +36,10 @@ FactoryBot.define do
   factory :auth_m_user, class: 'AuthM::User' do
     sequence(:id){|n| n }
     sequence(:email){|n| "dummy_#{n}@factory.com" }
-    password "12345678"
-    roles_mask 2
-    active true
-    confirmed_at DateTime.now.to_date
+    password { "12345678" }
+    roles_mask { 2 }
+    active { true }
+    confirmed_at { DateTime.now.to_date }
     association :management, factory: :auth_m_management
     association :policy_group, factory: :auth_m_policy_group
   end
