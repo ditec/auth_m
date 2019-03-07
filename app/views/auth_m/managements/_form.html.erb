@@ -24,8 +24,8 @@
   <%-AuthM::Resource.list.each do |resource|%>
     <%=form.fields_for :resources, @management.resources.build do |field|%>
       <%=field.hidden_field(:name, :value => resource.first)%>
-      <% if @management.has_the_resource_name? resource.first %>
-        <%=field.hidden_field(:id, :value => @management.resource(resource.first))%>
+      <% if (@management.has_the_resource_name? resource.first) && !@management.resource(resource.first).nil?%>
+        <%=field.hidden_field(:id, :value => @management.resource(resource.first).id)%>
         <%=field.check_box :selected, {checked: true}, "true", "false" %>
       <% else %>
         <%=field.check_box :selected, {}, "true", "false" %>
