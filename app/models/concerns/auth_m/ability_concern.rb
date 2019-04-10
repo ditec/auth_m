@@ -46,20 +46,24 @@ module AuthM::AbilityConcern
       cannot :public, AuthM::User
 
       user.management.resources.each do |resource|
-        if resource.name.constantize.reflect_on_association(:management)
-          can :manage, resource.name.constantize, management_id: user.management.id
+        model = resource.name.singularize.constantize 
+
+        if model.reflect_on_association(:management)
+          can :manage, model, management_id: user.management.id
         else
-          can :manage, resource.name.constantize
+          can :manage, model
         end
       end
     end
 
     if user.has_role? :user
-      user.policy_group.policies.each do |policy|
-        if policy.resource.name.constantize.reflect_on_association(:management)
-          can :"#{policy.access}", policy.resource.name.constantize, management_id: user.management.id 
+      user.policy_group.policies.each do |policy|  
+        model = policy.resource.name.singularize.constantize 
+
+        if model.reflect_on_association(:management)
+          can :"#{policy.access}", model, management_id: user.management.id
         else
-          can :"#{policy.access}", policy.resource.name.constantize
+          can :"#{policy.access}", model
         end
       end
       

@@ -30,10 +30,13 @@ module AuthM::ResourceConcern
     def list
       Rails.application.eager_load!
       array = Array.new
-      ::ApplicationRecord.descendants.each do |model|
-        array << [model.to_s.singularize,model.to_s.singularize] if (defined? model.ignore_resource?).nil? || (!(defined? model.ignore_resource?).nil? && model.ignore_resource? == false)
+      ApplicationController.descendants.each do |controller|
+        resource = controller.to_s.gsub("Controller", "")
+        unless (resource.singularize.constantize rescue nil) == nil
+          array << [resource, resource] unless (resource.include? "Application") || (resource.include? "Devise")
+        end
       end
-      return array
+      return array.sort_by { |h| -h.first }
     end
 
     def exists? resource
