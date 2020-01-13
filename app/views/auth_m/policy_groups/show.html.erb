@@ -1,4 +1,5 @@
 <h1>Policy group</h1>
+
 <p>
   <strong>name:</strong>
   <%= @policy_group.name %>
@@ -12,21 +13,17 @@
       <th>Access</th>
       <% @policy_group.policies.each do |policy| %>
         <tr>
-          <td>
-            <%= policy.resource.name %>
-          </td>
-          <td>
-            <%= policy.access %>
-          </td>
+          <td><%= policy.branch_resource.name %></td>
+          <td><%= policy.access %></td>
         </tr>
       <% end %>
     </tr>
   </table>
 </p>
 
-<% if can? :write, AuthM::PolicyGroup %>
-  <%= link_to 'Edit', edit_policy_group_path(@policy_group) %>
-  <%= link_to 'Destroy', policy_group_path(@policy_group), method: :delete, data: { confirm: 'Are you sure?' } %>
-<% end %>
+<br>
+<%= link_to 'Edit', edit_policy_group_path(@policy_group) if can? :write, @policy_group%>
+<%= link_to 'Destroy', @policy_group, method: :delete, data: { confirm: 'Are you sure?' } if can? :write, @policy_group %>
 
+<br>
 <%= link_to 'Back', policy_groups_path %>

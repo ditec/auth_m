@@ -3,15 +3,31 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
 
     ############################ create table managements ############################
     create_table :auth_m_managements do |t|
-      t.string :name, null: false, unique: true, default: ""
+      t.string :name, null: false, unique: true
 
       t.timestamps
     end
 
-    ############################ create table resources ############################
-    create_table :auth_m_resources do |t|
-      t.string :name, null: false, unique: true
+    ############################ create table management_resources ############################
+    create_table :auth_m_management_resources do |t|
+      t.string :name, null: false
       t.references :management, null: false, index: true
+
+      t.timestamps
+    end
+
+    ############################ create table branches ############################
+    create_table :auth_m_branches do |t|
+      t.string :name, null: false
+      t.references :management, index: true
+
+      t.timestamps
+    end
+
+    ############################ create table branch_resources ############################
+    create_table :auth_m_branch_resources do |t|
+      t.references :management_resource, null: false, index: true
+      t.references :branch, null: false, index: true
 
       t.timestamps
     end
@@ -19,14 +35,14 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
     ############################ create table users ############################
     create_table :auth_m_users do |t|
       ## Database authenticatable
+      t.string :username,           null: false, unique: true
       t.string :email,              null: false, default: ""
       t.string :encrypted_password, null: false, default: ""
       
       ## 
-      t.integer :roles_mask, default: 8, null: false
-      t.boolean :active, default: false, null: false
+      t.integer :roles_mask, null: false
+      t.boolean :active, default: true
       t.references :management, index: true
-      t.references :policy_group, index: true
 
       ## Recoverable
       t.string   :reset_password_token
@@ -43,9 +59,9 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       t.string   :last_sign_in_ip
 
       ## Confirmable
-      # t.string   :confirmation_token
-      # t.datetime :confirmed_at
-      # t.datetime :confirmation_sent_at
+      t.string :confirmation_token, index: true
+      t.datetime :confirmed_at
+      t.datetime :confirmation_sent_at
       # t.string   :unconfirmed_email # Only if using reconfirmable
 
       ## Lockable
@@ -53,6 +69,7 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       # t.string   :unlock_token # Only if unlock strategy is :email or :both
       # t.datetime :locked_at
 
+      ## Invitable
       t.string     :invitation_token
       t.datetime   :invitation_created_at
       t.datetime   :invitation_sent_at
@@ -64,34 +81,62 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       t.index      :invitation_token, unique: true # for invitable
       t.index      :invited_by_id
 
-      t.string :confirmation_token, index: true
-      t.datetime :confirmed_at
-      t.datetime :confirmation_sent_at
-      # t.string :unconfirmed_email # Only if using reconfirmable
+      ## Password expirable
+      # t.datetime :password_changed_at
+
+      ## Session limitable
+      t.string :unique_session_id
+
+      ## Expirable
+      t.datetime :last_activity_at
+      t.datetime :expired_at
+
+      ## Paranoid verifiable
+      # t.string   :paranoid_verification_code
+      # t.integer  :paranoid_verification_attempt, default: 0
+      # t.datetime :paranoid_verified_at
+
 
       t.timestamps null: false
     end
     add_index :auth_m_users, :email,                unique: true
     add_index :auth_m_users, :reset_password_token, unique: true
+    add_index :auth_m_users, :last_activity_at
+    add_index :auth_m_users, :expired_at
     # add_index :auth_m_users, :confirmation_token,   unique: true
     # add_index :auth_m_users, :unlock_token,         unique: true
+    # add_index :auth_m_users, :password_changed_at
+    # add_index :auth_m_users, :paranoid_verification_code
+    # add_index :auth_m_users, :paranoid_verified_at
 
-    AuthM::User.create(email:"root@a.com", password:"asd12345", password_confirmation:"asd12345", roles: [:root], active: true, confirmed_at: DateTime.now.to_date).save(validate: false)
+    AuthM::User.create(email:"root@a.com", 
+                       username: "root", 
+                       password:"Asd12345", 
+                       password_confirmation:"Asd12345", 
+                       roles: [:root], 
+                       active: true, 
+                       confirmed_at: DateTime.now.to_date).save(validate: false)
 
-    ############################ create table policy groups############################
-     create_table :auth_m_policy_groups do |t|
-
+    ############################ create table policy groups ############################
+    create_table :auth_m_policy_groups do |t|
       t.string :name, null: false
-      t.references :management, index: true
-      t.boolean :customized, default: true
+      t.references :branch, index: true, null: false
+      t.boolean :customized, default: false
 
       t.timestamps
     end
 
+    ############################ create table users_policy_groups ############################
+    create_table :auth_m_policy_groups_users, id: false do |t|
+      t.belongs_to :user, null: false
+      t.belongs_to :policy_group, null: false
+    end
+    add_index :auth_m_policy_groups_users, [:user_id, :policy_group_id]
+
     ############################ create table policies ############################
     create_table :auth_m_policies do |t|
-      t.references :resource, index: true
       t.references :policy_group, index: true
+      t.references :branch_resource, index: true
       t.string :access
 
       t.timestamps

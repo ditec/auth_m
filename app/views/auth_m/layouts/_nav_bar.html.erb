@@ -1,29 +1,64 @@
 <% if user_signed_in? %>
-  <%= link_to("#{current_user.email}", auth_m.edit_user_registration_path) %>
-  <%= link_to('Logout', auth_m.destroy_user_session_path, :method => :delete) %> 
-  <% if current_user.has_role? :root %>
-    <%= form_tag auth_m.change_management_path(current_management) do%>
-      <%= select_tag "management_selector", options_for_select(AuthM::Management.all.collect{ |m| [m.name, m.id] }, current_management.id) if current_management %>
-      <%= submit_tag "send" if current_management%>
-      <%= link_to "new", auth_m.new_management_path if can? :manage, AuthM::Management %>
-      <%= link_to "public users", auth_m.public_users_path if can? :public, AuthM::User %>
-    <% end %>
+  <% unless current_user == true_user %>
+    <p>
+      You (<%= true_user.email %>) are signed in as <%= current_user.email %>
+      <%= link_to "Back to admin", auth_m.stop_impersonating_users_path, method: :post %>
+    </p>
+    <p> Branch: <%= current_branch.name if current_branch.present? %></p>
+    <p>
+      Available Branches:
+      <% if current_management.present? && current_branch.present? && (can? :change, AuthM::Branch) %>
+        <%= current_user.branches(current_management).collect{ |m| m.name }.join(", ")%>
+      <% end %>
+    </p>
+  <% else %>
+    <p>
+      <%= link_to "#{current_user.email}", auth_m.edit_user_registration_path %>
+      <%= link_to 'Logout', auth_m.destroy_user_session_path, :method => :delete %> 
+    </p>
+    <p>
+      <div>
+        <% if !current_management && (can? :new, AuthM::Management) %>
+          <%= link_to "New Management", auth_m.new_management_path %>
+        <% elsif can? :change, current_management %>
+          Management:
+          <%= form_tag auth_m.change_managements_path, id: "management_form", style: "display: inline-block;" do %>
+            <%= select_tag :management_selector, options_for_select(AuthM::Management.all.collect{ |m| [m.name, m.id] }, current_management.id), id: "management_select" %>
+          <% end %>
+          <%= link_to "show", auth_m.management_path(current_management) if can? :show, current_management %> |
+          <%= link_to "new", auth_m.new_management_path if can? :new, AuthM::Management %>
+        <% end %>
+      </div>
+      <div>
+        <% if current_management %>
+          <% if !current_branch && (can? :new, AuthM::Branch)%>
+            <%= link_to "New Branch", auth_m.new_branch_path %>
+          <% else %>
+            Branch:
+            <% if can? :change, AuthM::Branch %>
+              <%= form_tag auth_m.change_branches_path, id: "branch_form", style: "display: inline-block;" do %>
+                <%= select_tag :branch_selector, options_for_select(current_user.branches(current_management).collect{ |m| [m.name, m.id] }, current_branch.id), id: "branch_select"%>
+              <% end %>
+              <%= link_to "show", auth_m.branch_path(current_branch) if can? :show, current_branch %> |
+              <%= link_to "new", auth_m.new_branch_path if can? :new, AuthM::Branch%>
+            <% else %>
+              <%= current_branch.name if current_branch%>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </p>
   <% end %>
-  <% if current_user != true_user %>
-    You (<%= true_user.email %>) are signed in as <%= current_user.email %>
-    <%= link_to "Back to admin", auth_m.stop_impersonating_path, method: :post %>
-  <% end %>
-  <% unless (current_user.has_role? :root) %>
-    <br>
-    <br>
-  <% end %>
-  <%= link_to('Users', auth_m.users_path) if can? :read, AuthM::User if current_management %>
-  <%= link_to('Management', auth_m.management_path(current_management)) if current_management && (can? :read, AuthM::Management) %> 
-  <%= link_to('Policy groups', auth_m.policy_groups_path(current_management)) if current_management && (can? :read, AuthM::PolicyGroup) %> 
+  <p><%= render partial: "auth_m/layouts/alerts"%></p>
+  <p>
+    <%= link_to 'Users', auth_m.users_path if current_management && (can? :read, AuthM::User) %>
+    <%= link_to "Public Users", auth_m.public_users_path if (AuthM::Engine.public_users == true) && (can? :public, AuthM::User) %>
+    <%= link_to 'Policy groups', auth_m.policy_groups_path if current_branch && (can? :read, AuthM::PolicyGroup) %> 
+  </p>
 <% else %>
-  <%= link_to('Register', auth_m.new_user_registration_path)  %>
-  <%= link_to('Login', auth_m.new_user_session_path)  %>  
+  <p>
+    <%= link_to('Register', auth_m.new_user_registration_path) if AuthM::Engine.public_users == true %>
+    <%= link_to('Login', auth_m.new_user_session_path)  %>  
+  </p>
+  <p><%= render partial: "auth_m/layouts/alerts"%></p>
 <% end %>
-
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>

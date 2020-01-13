@@ -1,0 +1,49 @@
+<h3>Policies</h3>
+
+<% if policy_group.present? %>
+  <% unless policy_group.customized? %>
+    <table>
+      <tr>
+        <th>Resources</th>
+        <th>Access</th>
+      </tr>
+      <%policy_group.policies.each do |policy|%>      
+        <tr>
+          <td><%= policy.branch_resource.name%></td>
+          <td><%= policy.access%></td>
+        </tr>
+      <% end %>
+    </table>
+  <% else %>
+    <table>
+      <tr>
+        <th>Resources</th>
+        <th>Access</th>
+      </tr>
+      <%= form_with model: policy_group, local: true, authenticity_token: false do |form| %>
+        <% current_branch.resources.each do |resource| %>
+          <%= form.fields_for :policies, AuthM::Policy.new do |field| %>
+            <tr>
+              <td><%= resource.name %></td>
+              <td>
+                <% policy = policy_group.policies.select{|a| a.branch_resource_id == resource.id}.first %>
+                
+                <%=field.hidden_field(:branch_resource_id, :value => resource.id)%>
+                <%=field.hidden_field(:id, :value => policy.id) unless policy.nil?  %>
+
+                <% AuthM::Policy::USER_ACCESS.each do |access| %>
+                  <% unless policy.nil? %>
+                    <%= field.radio_button :access, access, checked: (access == policy.access) %>
+                  <% else %>
+                    <%= field.radio_button :access, access, checked: (access == "none") %>
+                  <% end %>
+                  <%= access %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+    </table>
+  <% end %>
+<% end %>

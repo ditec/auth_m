@@ -1,20 +1,18 @@
+<h1>Management</h1>
+
 <p>
   <strong>Name:</strong>
   <%= @management.name %>
 </p>
+
 <p>
   <h3>Resources</h3>
-  <table>
+  <ul>
     <% @management.resources.each do |resource| %>
-      <tr>
-        <td>
-          <%= resource.name %>
-        </td>
-      </tr>
+      <li><%= resource.name %></li>
     <% end %>
-  </table>
+  </ul>
 </p>
-<% if can? :write, AuthM::Management %>
-  <%= link_to 'Edit', edit_management_path(@management) %>
-  <%= link_to 'Destroy', management_path(@management), method: :delete, data: { confirm: 'Are you sure?' } unless @management.id == 0  %>
-<% end %>
+
+<%= link_to 'Edit', edit_management_path(@management) if can? :write, @management %>
+<%= link_to 'Destroy', @management, method: :delete, data: { confirm: 'Are you sure?' } if can? :write, @management %>

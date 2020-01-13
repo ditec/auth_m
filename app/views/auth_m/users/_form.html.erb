@@ -1,64 +1,67 @@
-<% if @user.errors.any? %>
-  <div id="error_explanation">
-    <h2>
-      <%= pluralize(@user.errors.count, "error") %>
-      prohibited
-      this user from being saved:
-    </h2>
-    <ul>
-      <% @user.errors.full_messages.each do |msg| %>
-        <li>
-          <%= msg %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-<p>
-  <%= form.label :email %>
-  <br/>
-  <%= form.email_field :email %>
-</p>
-<p>
-  <%= form.label :password %>
-  <br/>
-  <%= form.password_field :password %>
-</p>
-<p>
-  <%= form.label :password_confirmation %>
-  <br/>
-  <%= form.password_field :password_confirmation %>
-</p>
-<p>
-  <%= form.check_box "invitable" %>
-  invite
-</p>
+<%= form_with model: @user, local: true do |form| %>
 
-<% if !(@user.has_role? :public) || !(@user.persisted?) %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@user.errors.count, "error") %>
+        prohibited
+        this user from being saved:
+      </h2>
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
   <p>
-    <h3>Role</h3>
+    <%= form.label :username %>
+    <br/>
+    <%= form.text_field :username %>
+  </p>
+
+  <p>
+    <%= form.label :email %>
+    <br/>
+    <%= form.email_field :email %>
+  </p>
+
+  <% unless @user.persisted? %>
+    <p><%= form.check_box "invitable", id: "check_invitable", checked: true %> invite</p>
+     <div id = 'pass_fields', style = 'display:none;'>
+      <p>
+        <%= form.label :password %>
+        <%= form.password_field :password %>
+      </p>
+      <p>
+        <%= form.label :password_confirmation %>
+        <%= form.password_field :password_confirmation %>
+      </p>
+     </div> 
+  <% end %>
+  
+  <p>
+    <h3>Active?</h3>
     <table>
       <tr>
-        <div class= "roles">
-          <% AuthM::User.roles.each_with_index do |role, index| %>
-            <%= form.radio_button :roles_mask, (AuthM::User.mask_for role), (@user.persisted? ? {} : {:checked => ((AuthM::User.mask_for role) == 2), id: "role#{index}"} ) %>
-            <%= role %>
-          <% end %>
-        </div>
+        <%= form.radio_button :active, 1, checked: @user.active %>
+        activo
+        <%= form.radio_button :active, 0, checked: !@user.active %>
+        inactivo
       </tr>
     </table>
   </p>
-<%end%>
 
-<% if (@user.has_role? :user) || !(@user.persisted?) %>
-  <div id= 'div_policy_groups'>
-    <p>
-      <h3>Policies Group</h3>
-      <%= select_tag "policy_group_selector", options_for_select([["Customize", "Customize"]] + current_management.policy_groups.allocable.collect{ |m| [m.name, m.id]}), include_blank: true, id: 'policy_groups'%>
-    </p>
+  <p>
+    <h3>Policies Group</h3>
+    <p><%= select_tag :policy_group_selector, options_for_select(@option_for_select, @selected), include_blank: true, id: 'policy_group_select'%></p>
 
-    <div id="policies">
-      <div id="customized_policies" style="display: none;"><%=render partial: 'policies', locals: {form: form}%></div>
+    <div id='div_policies'>
+      <%= render template: 'auth_m/policy_groups/policies/index', locals: {policy_group: @policy_group} %>
     </div>
-  </div>
+  </p>
+
+  <p><%= form.submit %></p>
+
 <% end %>

@@ -1,8 +1,8 @@
 class AuthMCreateTables < ActiveRecord::Migration[5.1]
   def change
 
-    ############################ create table managements ############################
-    create_table :auth_m_managements do |t|
+    ############################ create table branches ############################
+    create_table :auth_m_branches do |t|
       t.string :name, null: false, unique: true, default: ""
 
       t.timestamps
@@ -11,7 +11,7 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
     ############################ create table resources ############################
     create_table :auth_m_resources do |t|
       t.string :name, null: false, unique: true
-      t.references :management, null: false, index: true
+      t.references :branch, null: false, index: true
 
       t.timestamps
     end
@@ -25,7 +25,7 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
       ## 
       t.integer :roles_mask, default: 8, null: false
       t.boolean :active, default: false, null: false
-      t.references :management, index: true
+      t.references :branch, index: true
       t.references :policy_group, index: true
 
       ## Recoverable
@@ -80,7 +80,7 @@ class AuthMCreateTables < ActiveRecord::Migration[5.1]
      create_table :auth_m_policy_groups do |t|
 
       t.string :name, null: false
-      t.references :management, index: true
+      t.references :branch, index: true
       t.boolean :customized, default: true
 
       t.timestamps

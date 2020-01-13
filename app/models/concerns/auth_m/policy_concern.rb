@@ -2,12 +2,17 @@
 #
 # Table name: auth_m_policies
 #
-#  id              :bigint(8)        not null, primary key
-#  resource_id     :bigint(8)
-#  policy_group_id :bigint(8)
-#  access          :string(255)
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                 :bigint           not null, primary key
+#  access             :string(255)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  branch_resource_id :bigint
+#  policy_group_id    :bigint
+#
+# Indexes
+#
+#  index_auth_m_policies_on_branch_resource_id  (branch_resource_id)
+#  index_auth_m_policies_on_policy_group_id     (policy_group_id)
 #
 
 require 'active_support/concern'
@@ -16,19 +21,21 @@ module AuthM::PolicyConcern
   extend ActiveSupport::Concern
   
   included do
-    belongs_to :resource
+    belongs_to :branch_resource
     belongs_to :policy_group
+
+    has_one :branch, through: :branch_resource
+    has_one :management, through: :branch
 
     USER_ACCESS = ['none','read','manage']
     
-    validate :check, :on => [:create, :update]
+    validates :branch_resource, presence: true
+    validates :policy_group, presence: true
     validates :access, inclusion: { in: ['read','manage'] }    
   end
 
-  private
-
-    def check
-      errors.add(:error, 'Invalid policy.') if !self.policy_group.management || !(self.policy_group.management.has_the_resource_id? self.resource_id)
-    end
+  def resource 
+    self.branch_resource
+  end
 
 end

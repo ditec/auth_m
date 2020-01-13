@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception  
 
-  helper_method :current_management, :user_signed_in?
+  helper_method :current_branch, :user_signed_in?
 
   rescue_from ActionController::InvalidAuthenticityToken do |exception|   
     redirect_to auth_m.new_user_session_path, alert: "Invalid Authenticity Token"
@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id
+    session[:branch_id] = current_user.branch ? current_user.branch.id : AuthM::Branch.first.id
     main_app.root_path
   end
 
@@ -26,13 +26,13 @@ class ApplicationController < ActionController::Base
     @current_ability ||= AuthM::Ability.new(current_user)
   end
 
-  def current_management
-    session[:management_id] = current_user.management ? current_user.management.id : AuthM::Management.first.id if session[:management_id].nil?
-    AuthM::Management.find(session[:management_id])
+  def current_branch
+    session[:branch_id] = current_user.branch ? current_user.branch.id : AuthM::Branch.first.id if session[:branch_id].nil?
+    AuthM::Branch.find(session[:branch_id])
   end 
 
-  def set_current_management(id)
-    session[:management_id] = id 
+  def set_current_branch(id)
+    session[:branch_id] = id 
   end
 
   impersonates :user

@@ -1,0 +1,18 @@
+<h1>Branch</h1>
+
+<p>
+  <strong>Name:</strong>
+  <%= @branch.name %>
+</p>
+
+<p>
+  <h3>Resources</h3>
+  <ul>
+    <% @branch.resources.each do |resource| %>
+      <li><%= resource.name %></li>
+    <% end %>
+  </ul>
+</p>
+
+<%= link_to 'Edit', edit_branch_path(@branch) if can? :write, @branch %>
+<%= link_to 'Destroy', @branch, method: :delete, data: { confirm: 'Are you sure?' } if can? :write, @branch %>

@@ -1,0 +1,48 @@
+<h1>Edit user</h1>
+<%= form_with model: @user, url: public_user_path(@user), local: true do |form| %>
+
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@user.errors.count, "error") %>
+        prohibited
+        this user from being saved:
+      </h2>
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <p>
+    <%= form.label :username %>
+    <br/>
+    <%= form.text_field :username %>
+  </p>
+  
+  <p>
+    <%= form.label :email %>
+    <br/>
+    <%= form.email_field :email %>
+  </p>
+
+  <p>
+    <h3>Active?</h3>
+    <table>
+      <tr>
+        <%= form.radio_button :active, 1, checked: @user.active %>
+        activo
+        <%= form.radio_button :active, 0, checked: !@user.active %>
+        inactivo
+      </tr>
+    </table>
+  </p>
+
+  <p><%= form.submit %></p>
+
+<% end %>
+
+<br>
+<%= link_to 'Back', public_user_path(@user) %>

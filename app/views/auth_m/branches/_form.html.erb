@@ -1,0 +1,42 @@
+<%= form_with model: @branch, local: true do |form| %>
+    
+  <% if @branch.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@branch.errors.count, "error") %>
+        prohibited
+        this branch from being saved:
+      </h2>
+      <ul>
+        <% @branch.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </p>
+
+  <p>
+    <h3>Resources</h3>
+    <% current_management.resources.each do |resource|%>
+      <%=form.fields_for :branch_resources, @branch.branch_resources.new do |field|%>
+        <%=field.hidden_field(:management_resource_id, :value => resource.id)%>
+        <% if @branch.has_the_resource_id? resource.id %>
+          <%=field.hidden_field(:id, :value => @branch.resource(resource.id).id)%>
+          <%=field.check_box :selected, {checked: true}, "true", "false" %>
+        <% else %>
+          <%=field.check_box :selected, {}, "true", "false" %>
+        <% end %>
+        <%=resource.name%>
+        <br>
+      <%end%>
+    <%end%>
+  </p>
+
+  <p><%= form.submit %></p>
+
+<% end %>

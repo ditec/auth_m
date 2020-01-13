@@ -2,19 +2,13 @@ module AuthM
   class Ability
     include AuthM::AbilityConcern
     
-    # def initialize(user)
-    #   super(user)
-    #
-    #   if user && (user.has_role? :root)
-    #   end
-    #
-    #   if user && (user.has_role? :admin)
-    #   end
+    # def initialize(user, branch)
+    #   super
     # 
-    #   if user && (user.has_role? :user)
+    #   if user.has_role? :user
     #   end    
     #
-    #   if user && (user.has_role? :public)
+    #   if user.has_role? :public
     #   end
     # end
 

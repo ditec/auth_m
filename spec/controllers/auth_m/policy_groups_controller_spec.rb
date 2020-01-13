@@ -8,7 +8,7 @@ module AuthM
       let!(:user){ user = FactoryBot.build(:auth_m_user, roles: [:root])
                   user.save!(:validate => false)
                   sign_in user
-                  controller.set_current_management(user.management.id)
+                  controller.set_current_branch(user.branch.id)
                   user}
 
       describe "#GET index ->" do
@@ -22,7 +22,7 @@ module AuthM
 
         it "test1" do
           31.times do 
-            policy_group = FactoryBot.create(:auth_m_policy_group, management_id: controller.current_management.id)
+            policy_group = FactoryBot.create(:auth_m_policy_group, branch_id: controller.current_branch.id)
           end
           
           expect(assigns(:policy_groups).count).to eq(31)        
@@ -30,7 +30,7 @@ module AuthM
       end
 
       describe "#GET show/:id ->" do
-        let(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: controller.current_management.id)}
+        let(:policy_group){FactoryBot.create(:auth_m_policy_group, branch_id: controller.current_branch.id)}
 
         before :each do
           get :show, params: { id: policy_group.id }
@@ -60,7 +60,7 @@ module AuthM
       end
 
       describe "#GET edit/:id ->" do
-        let(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: controller.current_management.id)}
+        let(:policy_group){FactoryBot.create(:auth_m_policy_group, branch_id: controller.current_branch.id)}
 
         before :each do
           get :edit, params: { id: policy_group.id }
@@ -103,9 +103,9 @@ module AuthM
         end 
 
         context "policies" do 
-          let(:resource1){FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)}
-          let(:resource2){FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)}
-          let(:resource3){FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)}
+          let(:resource1){FactoryBot.create(:auth_m_resource, branch_id: controller.current_branch.id)}
+          let(:resource2){FactoryBot.create(:auth_m_resource, branch_id: controller.current_branch.id)}
+          let(:resource3){FactoryBot.create(:auth_m_resource, branch_id: controller.current_branch.id)}
 
           it "test1" do
             expect{
@@ -116,7 +116,7 @@ module AuthM
       end
 
       describe "#PUT update/:id ->" do
-        let(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: controller.current_management.id)}
+        let(:policy_group){FactoryBot.create(:auth_m_policy_group, branch_id: controller.current_branch.id)}
 
         context "with valid attributes" do
           before(:each) do
@@ -149,8 +149,8 @@ module AuthM
         end
 
         context "policies" do 
-          let(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: controller.current_management.id )}
-          let(:policy){FactoryBot.create(:auth_m_policy, resource: (FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)), policy_group_id: policy_group.id, access: "read")}
+          let(:policy_group){FactoryBot.create(:auth_m_policy_group, branch_id: controller.current_branch.id )}
+          let(:policy){FactoryBot.create(:auth_m_policy, resource: (FactoryBot.create(:auth_m_resource, branch_id: controller.current_branch.id)), policy_group_id: policy_group.id, access: "read")}
 
           it "test1" do
             post :update, params: { id: policy_group.id, policy_group: {policies_attributes: {"0"=>{id: policy.id, resource_id: policy.resource.id, access: "manage"}}}}
@@ -161,7 +161,7 @@ module AuthM
       end
 
       describe "#DELETE destroy ->" do
-        let!(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: controller.current_management.id)}
+        let!(:policy_group){FactoryBot.create(:auth_m_policy_group, branch_id: controller.current_branch.id)}
 
         it 'test1' do
           expect { 
@@ -175,8 +175,8 @@ module AuthM
         end
 
         context "policies" do 
-          let(:policy_group){FactoryBot.create(:auth_m_policy_group, management_id: controller.current_management.id )}
-          let(:policy){FactoryBot.create(:auth_m_policy, resource: (FactoryBot.create(:auth_m_resource, management_id: controller.current_management.id)), policy_group_id: policy_group.id, access: "read")}
+          let(:policy_group){FactoryBot.create(:auth_m_policy_group, branch_id: controller.current_branch.id )}
+          let(:policy){FactoryBot.create(:auth_m_policy, resource: (FactoryBot.create(:auth_m_resource, branch_id: controller.current_branch.id)), policy_group_id: policy_group.id, access: "read")}
 
           it "test1" do
             post :update, params: { id: policy_group.id, policy_group: {policies_attributes: {"0"=>{id: policy.id, resource_id: policy.resource.id, access: "none"}}}}

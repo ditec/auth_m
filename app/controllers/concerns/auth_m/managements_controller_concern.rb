@@ -6,7 +6,6 @@ module AuthM::ManagementsControllerConcern
   included do
     load_and_authorize_resource
 
-    before_action :set_management, except: [:new, :create, :change]
     before_action :check_resources, only: [:create, :update]
   end
 
@@ -14,7 +13,6 @@ module AuthM::ManagementsControllerConcern
   end
 
   def new
-    @management = AuthM::Management.new
   end
 
   def edit
@@ -27,7 +25,7 @@ module AuthM::ManagementsControllerConcern
       set_current_management(@management.id)
       redirect_to @management
     else
-      render 'new'
+      render :new
     end
   end
 
@@ -35,42 +33,35 @@ module AuthM::ManagementsControllerConcern
     if @management.update(management_params)
       redirect_to @management
     else
-      render 'edit'
+      render :edit
     end
   end
 
   def destroy
     @management.destroy
-    AuthM::Management.first.nil? ? set_current_management(nil) : set_current_management(AuthM::Management.first.id)
+    AuthM::Management.first.nil? ?  set_current_management(nil) : set_current_management(AuthM::Management.first.id)
    
     redirect_to main_app.root_path 
   end
 
-  def change    
-    set_current_management(params[:management_selector])    
-    # path = request.referer    
-    path = management_path(current_management) 
-    if path.include? "management"    
-      redirect_to path  
-    end
+  def change
+    set_current_management(params[:management_selector]) if AuthM::Management.exists?(params[:management_selector])
+    redirect_to current_management
   end
+
 
   private
 
     def management_params
-      params.require(:management).permit(:name, resources_attributes: [ :name, :id, :selected, :_destroy ])
+      params.require(:management).permit(:name, management_resources_attributes: [ :name, :id, :selected, :_destroy ])
     end
 
     def check_resources
-      if params[:management][:resources_attributes].present?
-        params[:management][:resources_attributes].each do |key, value|
-          params[:management][:resources_attributes][:"#{key}"].merge!(:_destroy => 1) if value[:selected] == "false"
+      if params[:management][:management_resources_attributes].present?
+        params[:management][:management_resources_attributes].each do |key, value|
+          params[:management][:management_resources_attributes][:"#{key}"].merge!(:_destroy => 1) if value[:selected] == "false"
         end
       end
     end 
 
-    def set_management
-      current_management.id == params[:id].to_i ? (@management = AuthM::Management.find(params[:id])) : (redirect_to main_app.root_path)
-    end
-    
 end

@@ -1,6 +1,7 @@
 module AuthM
   class Users::RegistrationsController < Devise::RegistrationsController
     prepend_before_action :check_captcha, only: [:create] if AuthM::Engine.new_registration_captcha == true
+    prepend_before_action :public_users_disabled, only: [:new, :create] if AuthM::Engine.public_users == false
     
     # before_action :configure_sign_up_params, only: [:create]
     # before_action :configure_account_update_params, only: [:update]
@@ -67,11 +68,15 @@ module AuthM
 
     private
 
-    def check_captcha
-      unless verify_recaptcha
-        self.resource = resource_class.new sign_up_params
-        render :new
-      end 
-    end
+      def check_captcha
+        unless verify_recaptcha
+          self.resource = resource_class.new sign_up_params
+          render :new
+        end 
+      end
+
+      def public_users_disabled
+        redirect_to main_app.root_path, alert: "Registration disabled" and return
+      end
   end
 end

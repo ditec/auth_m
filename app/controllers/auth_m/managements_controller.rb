@@ -1,6 +1,9 @@
 module AuthM
   class ManagementsController < ApplicationController
     include AuthM::ManagementsControllerConcern
+    # load_and_authorize_resource
+
+    # before_action :check_resources, only: [:create, :update]
 
     # def show
     #   super
@@ -26,19 +29,19 @@ module AuthM
     #   super
     # end
 
-    # def change    
+    # def change
     #   super
     # end
+
 
     # private
 
     #   def management_params
-    #     params.require(:management).permit(:name, resources_attributes: [ :name, :id, :selected, :_destroy ])
+    #     super
     #   end
 
     #   def check_resources
-    #     super(management)
-    #   end
-
+    #     super
+    #   end 
   end
 end

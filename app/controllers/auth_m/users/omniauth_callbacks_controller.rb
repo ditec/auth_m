@@ -43,7 +43,7 @@ module AuthM
     # end
 
     def custom_sign_up
-      if !(session["devise.auth.uid"].nil?) && !(session["devise.auth.provider"].nil?)
+      if !(session["devise.auth.uid"].nil?) && !(session["devise.auth.provider"].nil?) && AuthM::Engine.public_users == true
         @user = AuthM::User.new(user_params.merge(active: true, confirmed_at: DateTime.now.to_date))
 
         if @user.save 
@@ -61,16 +61,16 @@ module AuthM
 
       def callback_from(provider)
         provider = provider.to_s
-
+        
         if user_signed_in?
           if current_user.link_account_from_omniauth(request.env["omniauth.auth"])
             flash[:notice] = "Account successfully linked"
           else
-            flash[:notice] = "Account is already linked :O"
+            flash[:notice] = "Account is already linked"
           end
           redirect_to auth_m.edit_user_registration_path(current_user) and return
 
-        else
+        elsif AuthM::Engine.public_users == true
           @user = AuthM::User.from_omniauth(request.env["omniauth.auth"])
           unless @user.nil?  
             sign_in_and_redirect @user, event: :authentication
@@ -82,6 +82,8 @@ module AuthM
 
             render :edit
           end
+        else
+          failure
         end
       end
 

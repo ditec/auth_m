@@ -18,22 +18,23 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 2.4"
 
   s.add_dependency "devise", "~> 4.3"
+  s.add_dependency "devise-security", "~> 0.14.3"
   s.add_dependency "role_model", "~> 0.8"
   s.add_dependency "cancancan", "~> 2.1"
   s.add_dependency "devise_invitable", "~> 1.7.0"
-  s.add_dependency "recaptcha"
-  s.add_dependency "jquery-rails"
+  s.add_dependency "recaptcha", "~> 5.2.1"
 
   s.add_dependency "omniauth", "~> 1.8.1"
   s.add_dependency "omniauth-facebook", "~> 4.0.0"
   s.add_dependency "omniauth-google-oauth2", "~> 0.5.3"
   s.add_dependency "omniauth-twitter", "~> 1.4.0"
+  
+  s.add_dependency "jquery-rails", "~> 4.3.5"
 
-  s.add_development_dependency "rails", "~> 5.1.4"
+  s.add_development_dependency "rails", "~> 5.2.4.1"
   s.add_development_dependency "rails-controller-testing", "~> 1.0"
   s.add_development_dependency "mysql2", "~> 0.4.9"
   s.add_development_dependency "rspec-rails", "~> 3.6"
   s.add_development_dependency "shoulda-matchers", "~> 3.1"
   s.add_development_dependency "factory_bot_rails", "~> 4.0"
-
 end

@@ -7,7 +7,7 @@ module AuthM::AbilityConcern
     include CanCan::Ability
   end
 
-  def initialize(user)
+  def initialize(user, branch)
     # Define abilities for the passed in user here. For example:
     #
     user ||= AuthM::User.new # guest user (not logged in)
@@ -39,31 +39,28 @@ module AuthM::AbilityConcern
       can :manage, :all
     end
 
-    if user.has_role? :admin
-      can :unlink, AuthM::LinkedAccount, user_id: user.id
-      can :manage, AuthM::User, management_id: user.management.id
-      can :manage, AuthM::PolicyGroup, management_id: user.management.id
-      cannot :public, AuthM::User
-
-      user.management.resources.each do |resource|
-        model = resource.name.singularize.constantize 
-
-        if model.reflect_on_association(:management)
-          can :manage, model, management_id: user.management.id
-        else
-          can :manage, model
-        end
-      end
-    end
-
     if user.has_role? :user
-      user.policy_group.policies.each do |policy|  
-        model = policy.resource.name.singularize.constantize 
+      if branch
+        policy_group = user.policy_group(branch)
 
-        if model.reflect_on_association(:management)
-          can :"#{policy.access}", model, management_id: user.management.id
-        else
-          can :"#{policy.access}", model
+        if policy_group
+          policy_group.policies.each do |policy|
+
+            model = build_model(policy.resource.name)
+            controller = build_controller(policy.resource.name) unless model
+
+            if model 
+              if model.reflect_on_association(:branch)
+                can :"#{policy.access}", model, branch_id: branch.id
+              else
+                can :"#{policy.access}", model
+              end
+            elsif controller
+              can :"#{policy.access}", :"#{controller}"
+            end
+          end
+          
+          can :change, AuthM::Branch if user.policy_groups.length > 1
         end
       end
       
@@ -72,9 +69,22 @@ module AuthM::AbilityConcern
     end
 
     if user.has_role? :public
-      can :stop_impersonating, AuthM::User
       can :unlink, AuthM::LinkedAccount, user_id: user.id
     end
-
   end
+
+  private
+
+    def build_model model
+      if model.include?("auth_m_") 
+        model_name = model.split("auth_m_")
+        model = "authM::#{model_name.last.camelcase}" 
+      end
+
+      model.camelcase.singularize.constantize rescue nil
+    end
+
+    def build_controller controller
+      controller.singularize
+    end
 end

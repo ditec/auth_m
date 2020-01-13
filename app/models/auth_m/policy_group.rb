@@ -2,12 +2,16 @@
 #
 # Table name: auth_m_policy_groups
 #
-#  id            :bigint(8)        not null, primary key
-#  name          :string(255)      not null
-#  management_id :bigint(8)
-#  customized    :boolean          default(TRUE)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id         :bigint           not null, primary key
+#  customized :boolean          default(FALSE)
+#  name       :string(255)      not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  branch_id  :bigint           not null
+#
+# Indexes
+#
+#  index_auth_m_policy_groups_on_branch_id  (branch_id)
 #
 
 module AuthM

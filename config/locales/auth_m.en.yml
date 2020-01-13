@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    errors:
+      models:
+        auth_m/policy:
+          attributes:
+            base:
+              invalid_policy: Invalid policy
+        auth_m/management_resource:
+          attributes:
+            base:
+              invalid_resource: Invalid resource
+  recaptcha:
+    errors:
+      verification_failed: 'reCAPTCHA was incorrect, please try again.'
+      recaptcha_unreachable: 'reCAPTCHA verification server error, please try again.'

@@ -1,0 +1,18 @@
+<h1>Public users</h1>
+<table>
+  <tr>
+    <th>username</th>
+    <th>email</th>
+    <th>active?</th>  
+    <th>registration_created_at</th>  
+  </tr>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.username %></td>       
+      <td><%= user.email %></td>       
+      <td><%= user.active %></td>      
+      <td><%= user.created_at %></td>
+      <td><%= link_to 'Show', public_user_path(user) if can? :read, user %></td>
+    </tr>
+  <% end %>
+</table>

@@ -1,8 +1,5 @@
 <h1>Edit Policy group</h1>
-<%= form_with model: @policy_group,  method: :PUT, local: true do |form| %>
-  <%= render partial: 'auth_m/policy_groups/form', locals: {form: form} %>
-  <p>
-    <%= form.submit %>
-  </p>
-<% end %>
+<%= render partial: 'form' %>
+
+<br>
 <%= link_to 'Back', @policy_group %>

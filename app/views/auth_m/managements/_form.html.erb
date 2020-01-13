@@ -1,37 +1,42 @@
-<% if @management.errors.any? %>
-  <div id="error_explanation">
-    <h2>
-      <%= pluralize(@management.errors.count, "error") %>
-      prohibited
-      this management from being saved:
-    </h2>
-    <ul>
-      <% @management.errors.full_messages.each do |msg| %>
-        <li>
-          <%= msg %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-<p>
-  <%= form.label :name %>
-  <br/>
-  <%= form.text_field :name %>
-</p>
-<p>
-  <h3>Resources</h3>
-  <%-AuthM::Resource.list.each do |resource|%>
-    <%=form.fields_for :resources, @management.resources.build do |field|%>
-      <%=field.hidden_field(:name, :value => resource.first)%>
-      <% if (@management.has_the_resource_name? resource.first) && !@management.resource(resource.first).nil?%>
-        <%=field.hidden_field(:id, :value => @management.resource(resource.first).id)%>
-        <%=field.check_box :selected, {checked: true}, "true", "false" %>
-      <% else %>
-        <%=field.check_box :selected, {}, "true", "false" %>
-      <% end %>
-      <%=field.label resource.first%>
-      <br>
+<%= form_with model: @management, local: true do |form| %>
+
+  <% if @management.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@management.errors.count, "error") %>
+        prohibited
+        this branch from being saved:
+      </h2>
+      <ul>
+        <% @management.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </p>
+
+  <p>
+    <h3>Resources</h3>
+    <%-AuthM::ManagementResource.list.each do |resource|%>
+      <%=form.fields_for :management_resources, @management.management_resources.new do |field| %>
+        <%=field.hidden_field(:name, :value => resource)%>
+        <% if (@management.has_the_resource_name? resource) && !@management.resource(resource).nil?%>
+          <%=field.hidden_field(:id, :value => @management.resource(resource).id)%>
+          <%=field.check_box :selected, {checked: true}, "true", "false" %>
+        <% else %>
+          <%=field.check_box :selected, {}, "true", "false" %>
+        <% end %>
+        <%=resource%>
+        <br>
+      <%end%>
     <%end%>
-  <%end%>
-</p>
+  </p>
+
+  <p><%= form.submit %></p>
+
+<% end %>

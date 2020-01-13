@@ -1,12 +1,18 @@
 module AuthM
   class UsersController < ApplicationController
     include AuthM::UsersControllerConcern
+    # authorize_resource 
+
+    # before_action :set_user, only: [:show, :edit, :update, :destroy, :impersonate]
+    # before_action :set_policy_group, only: [:show, :edit]
+    # before_action :check_params, only: [:create, :update]
+    # before_action :option_for_select, only: [:new, :edit]
 
     # def index
     #   super
-    # end    
+    # end 
 
-    # def public
+    # def show
     #   super
     # end
 
@@ -18,10 +24,10 @@ module AuthM
     #   super
     # end
 
-    # def create_user
+    # def create
     #   super
     # end
-
+    
     # def update
     #   super
     # end
@@ -38,17 +44,25 @@ module AuthM
     #   super
     # end
 
-    # def generate_new_password_email 
-    #   super
-    # end
-
     # private
 
-    #   def user_params
-    #     params.require(:user).permit(:email, :password, :password_confirmation, :roles_mask, :active, :policy_group_id, policy_group_attributes: [:id, :name, :management_id, :customized, policies_attributes: [:id, :resource_id, :access, :_destroy]])
+    #   def set_user
+    #     super
     #   end
 
-    #   def check_policies
+    #   def set_policy_group
+    #     super
+    #   end
+
+    #   def create_user_params
+    #     super
+    #   end
+
+    #   def update_user_params
+    #     super
+    #   end
+
+    #   def check_params
     #     super
     #   end
 
@@ -56,5 +70,8 @@ module AuthM
     #     super
     #   end
 
+    #   def option_for_select
+    #     super
+    #   end
   end
 end

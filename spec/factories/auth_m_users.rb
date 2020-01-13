@@ -7,7 +7,7 @@
 #  encrypted_password     :string(255)      default(""), not null
 #  roles_mask             :integer          default(8), not null
 #  active                 :boolean          default(FALSE), not null
-#  management_id          :bigint(8)
+#  branch_id          :bigint(8)
 #  policy_group_id        :bigint(8)
 #  reset_password_token   :string(255)
 #  reset_password_sent_at :datetime
@@ -40,7 +40,7 @@ FactoryBot.define do
     roles_mask { 2 }
     active { true }
     confirmed_at { DateTime.now.to_date }
-    association :management, factory: :auth_m_management
+    association :branch, factory: :auth_m_branch
     association :policy_group, factory: :auth_m_policy_group
   end
 end

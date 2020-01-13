@@ -2,8 +2,8 @@
 #
 # Table name: auth_m_managements
 #
-#  id         :bigint(8)        not null, primary key
-#  name       :string(255)      default(""), not null
+#  id         :bigint           not null, primary key
+#  name       :string(255)      not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -14,27 +14,31 @@ module AuthM::ManagementConcern
   extend ActiveSupport::Concern
 
   included do
+    has_many :management_resources, inverse_of: :management, dependent: :destroy
+    has_many :branches, inverse_of: :management, dependent: :destroy
     has_many :users, dependent: :destroy
-    has_many :resources, dependent: :destroy
-    has_many :policy_groups, dependent: :destroy
 
-    accepts_nested_attributes_for :resources, allow_destroy: true
-
+    accepts_nested_attributes_for :management_resources, allow_destroy: true
+    
     validates :name, presence: true, length: { in: 4..250 }, uniqueness: true
     before_save :capitalize_name
   end
 
   def has_the_resource_name? resource_name
-    self.resources.any? {|h| h.name == resource_name }
+    self.management_resources.any? {|h| h.name == resource_name }
   end 
 
   def has_the_resource_id? resource_id
-    self.resources.any? {|h| h.id == resource_id }
+    self.management_resources.any? {|h| h.id == resource_id }
   end
 
   def resource name 
-    self.resources.where(name: name).first
+    self.management_resources.where(name: name).first if self.has_the_resource_name? name
   end 
+
+  def resources 
+    self.management_resources.order("name ASC")
+  end
 
   private 
 

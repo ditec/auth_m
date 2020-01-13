@@ -1,24 +1,14 @@
 <h1>Listing Policies groups</h1>
+
 <table>
-  <tr>
-    <th>name</th>
-  </tr>
+  <tr><th>name</th></tr>
+  
   <% @policy_groups.each do |policy_group| %>
     <tr>
-      <td>
-        <%= policy_group.name %>
-      </td>
-      <% if can? :read, AuthM::PolicyGroup %>
-        <td>
-          <%= link_to 'Show', policy_group_path(policy_group)  %>
-          <%= link_to 'Edit', edit_policy_group_path(policy_group)  %>
-          <%= link_to 'Destroy', policy_group_path(policy_group), method: :delete, data: { confirm: 'Are you sure?' }  %>
-        </td>
-      <% end %>
+      <td><%= policy_group.name %></td>
+      <td><%= link_to 'Show', policy_group if can? :read, policy_group %></td>
     </tr>
   <% end %>
 </table>
-<br>
-<% if can? :write, AuthM::PolicyGroup %>
-  <%= link_to 'New', new_policy_group_path %>
-<% end %>
+
+<%= link_to 'New', new_policy_group_path if can? :write, AuthM::PolicyGroup %>
