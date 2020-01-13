@@ -152,10 +152,6 @@ module AuthM::UserConcern
     return self.save
   end
 
-  def ability
-    @ability ||= AuthM::Ability.new(self)
-  end
-
   def default_role
     self.roles = [:public]
   end
@@ -175,7 +171,7 @@ module AuthM::UserConcern
     end
 
     def _root?
-      errors.add(:base, "Invalid role") if self.has_role? :root
+      errors.add(:base, :invalid_role) if self.has_role? :root
     end
 
     def _public?

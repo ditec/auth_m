@@ -48,13 +48,9 @@ module AuthM::BranchesControllerConcern
 
   def change
     @branch = current_management.branches.where(id: params[:branch_selector]).first
-
-    unless @branch.nil?
-      set_current_branch(@branch.id)    
-      redirect_to @branch
-    else
-      redirect_to main_app.root_path 
-    end
+    set_current_branch(@branch.id) unless @branch.nil?
+    
+    redirect_to main_app.root_path 
   end
 
   private

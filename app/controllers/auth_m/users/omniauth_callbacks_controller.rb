@@ -32,7 +32,7 @@ module AuthM
 
     # GET|POST /users/auth/twitter/callback
     def failure
-      redirect_to new_user_session_path, notice: "Sorry, We couldn't log you in"
+      redirect_to new_user_session_path, notice: t("users.omniauth_callbacks.login_failed")
     end
 
     # protected
@@ -64,9 +64,9 @@ module AuthM
         
         if user_signed_in?
           if current_user.link_account_from_omniauth(request.env["omniauth.auth"])
-            flash[:notice] = "Account successfully linked"
+            flash[:notice] = t("users.omniauth_callbacks.success")
           else
-            flash[:notice] = "Account is already linked"
+            flash[:notice] = t("users.omniauth_callbacks.failed")
           end
           redirect_to auth_m.edit_user_registration_path(current_user) and return
 

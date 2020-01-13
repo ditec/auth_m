@@ -54,7 +54,7 @@ module AuthM::UsersControllerConcern
       @user.destroy
       redirect_to users_path
     else
-      redirect_to users_path, alert: "User is active"
+      redirect_to users_path, alert: t(".user_active")
     end
   end
 

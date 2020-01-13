@@ -76,7 +76,7 @@ module AuthM
       end
 
       def public_users_disabled
-        redirect_to main_app.root_path, alert: "Registration disabled" and return
+        redirect_to main_app.root_path, alert: t("auth_m.public_users.res_disabled") and return
       end
   end
 end

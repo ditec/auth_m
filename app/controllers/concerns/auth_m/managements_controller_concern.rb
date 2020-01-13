@@ -46,9 +46,9 @@ module AuthM::ManagementsControllerConcern
 
   def change
     set_current_management(params[:management_selector]) if AuthM::Management.exists?(params[:management_selector])
-    redirect_to current_management
-  end
 
+    redirect_to main_app.root_path
+  end
 
   private
 

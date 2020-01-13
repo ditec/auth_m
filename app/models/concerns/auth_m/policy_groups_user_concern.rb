@@ -42,7 +42,7 @@ module AuthM::PolicyGroupsUserConcern
     end
 
     def _management
-      errors.add(:base, "Invalid Management") unless self.user.management.id == self.policy_group.branch.management.id
+      errors.add(:base, :invalid_management) unless self.user.management.id == self.policy_group.branch.management.id
     end
 
     def customized?

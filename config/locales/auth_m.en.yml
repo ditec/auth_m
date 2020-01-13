@@ -2,15 +2,39 @@ en:
   activerecord:
     errors:
       models:
-        auth_m/policy:
+        auth_m/branch_resource:
           attributes:
             base:
-              invalid_policy: Invalid policy
+              invalid_resource: "Invalid resource"
         auth_m/management_resource:
           attributes:
             base:
-              invalid_resource: Invalid resource
+              invalid_resource: "Invalid resource"
+        auth_m/policy_groups_user:
+          attributes:
+            base:
+              invalid_management: "Invalid management"
+        auth_m/user:
+          attributes:
+            base:
+              invalid_role: "Invalid role"
+            username: 
+              invalid: "Invalid"
+  auth_m:
+    linked_accounts:
+      unlink:
+        unlinked: "Account successfully unlinked"
+    public_users:
+      res_disabled: "Registration disabled"
+    users:
+      destroy:
+        user_active: "The user is active"
+  users:
+    omniauth_callbacks:
+      success: "Account successfully linked"
+      failed: "Account is already linked"
+      login_failed: "Sorry, We couldn't log you in"
   recaptcha:
     errors:
-      verification_failed: 'reCAPTCHA was incorrect, please try again.'
-      recaptcha_unreachable: 'reCAPTCHA verification server error, please try again.'
+      verification_failed: "reCAPTCHA was incorrect, please try again"
+      recaptcha_unreachable: "reCAPTCHA verification server error, please try again"
