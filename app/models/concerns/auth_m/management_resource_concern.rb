@@ -39,10 +39,10 @@ module AuthM::ManagementResourceConcern
         array.push(controller) if cancan
       end
 
-      # array.push("auth_m_magements")
-      # array.push("auth_m_branches")
-      # array.push("auth_m_policy_groups")
-      # array.push("auth_m_public_users") if AuthM::Engine.public_users == true
+      array.push("auth_m_branches")
+      array.push("auth_m_magements")
+      array.push("auth_m_policy_groups")
+      array.push("auth_m_public_users") if AuthM::Engine.public_users == true
       array.push("auth_m_users")
 
       array.sort_by { |h| -h.first }
