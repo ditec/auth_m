@@ -8,7 +8,7 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'auth_m', :git => "https://github.com/ditec/auth_m"
+gem 'auth_m', :git => "https://github.com/ditec/auth_m", :tag => 'v0.7.9'
 ```
 
 And then execute:
