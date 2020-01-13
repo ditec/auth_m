@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    auth_m (1.0.2)
+    auth_m (1.0.3)
       cancancan (~> 2.1)
       devise (~> 4.3)
       devise-security (~> 0.14.3)
