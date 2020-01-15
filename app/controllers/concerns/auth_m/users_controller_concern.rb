@@ -6,7 +6,7 @@ module AuthM::UsersControllerConcern
   included do
     authorize_resource 
 
-    before_action :set_user, only: [:show, :edit, :update, :destroy, :impersonate]
+    before_action :set_user, only: [:show, :edit, :update, :destroy, :impersonate, :resend_invitation]
     before_action :set_policy_group, only: [:show, :edit]
     before_action :check_params, only: [:create, :update]
     before_action :option_for_select, only: [:new, :edit]
@@ -68,6 +68,12 @@ module AuthM::UsersControllerConcern
 
     stop_impersonating_user
     redirect_to @user
+  end
+
+  def resend_invitation
+    @user.invite!
+
+    redirect_to @user, notice: t("devise.invitations.send_instructions", email: @user.email)
   end
 
   private

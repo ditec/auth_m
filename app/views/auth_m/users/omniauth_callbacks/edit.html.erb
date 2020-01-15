@@ -8,6 +8,12 @@
   </ul>
   <h4>New User</h4>
   <div>
+    <label for="username">Username</label>
+    <% @user.username ? (username = @user.username) : (username = nil) %>
+    <% username = @user.email.split("@").first if username.nil? && @user.email %>
+    <%= text_field_tag "user[username]", username, required: true %>
+  </div>
+  <div>
     <label for="user_email">Email</label>
     <%= email_field_tag "user[email]",@user.email, required: true %>
   </div>

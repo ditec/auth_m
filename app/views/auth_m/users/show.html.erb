@@ -71,6 +71,7 @@
   </p>
 <% end %>
 
+<%= link_to 'Resend invitation', resend_invitation_user_path(@user), method: :put if (can? :impersonate, @user) && !@user.confirmed_at %>
 <%= link_to 'Sign in', impersonate_user_path(@user), method: :post if can? :impersonate, @user %>
 <%= link_to 'Edit', edit_user_path(@user) if can? :write, @user %>
 <%= link_to 'Destroy', @user, method: :delete, data: { confirm: 'Are you sure?' } if can? :write, @user %>

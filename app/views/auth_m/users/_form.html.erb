@@ -18,13 +18,13 @@
   <p>
     <%= form.label :username %>
     <br/>
-    <%= form.text_field :username %>
+    <%= form.text_field :username, required: true %>
   </p>
 
   <p>
     <%= form.label :email %>
     <br/>
-    <%= form.email_field :email %>
+    <%= form.email_field :email, required: true %>
   </p>
 
   <% unless @user.persisted? %>
@@ -32,11 +32,11 @@
      <div id = 'pass_fields', style = 'display:none;'>
       <p>
         <%= form.label :password %>
-        <%= form.password_field :password %>
+        <%= form.password_field :password, id: "pass" %>
       </p>
       <p>
         <%= form.label :password_confirmation %>
-        <%= form.password_field :password_confirmation %>
+        <%= form.password_field :password_confirmation, id: "pass_confirmation" %>
       </p>
      </div> 
   <% end %>

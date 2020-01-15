@@ -22,25 +22,9 @@ module AuthM
       callback_from :twitter
     end
 
-    # More info at:
-    # https://github.com/plataformatec/devise#omniauth
-
-    # GET|POST /resource/auth/twitter
-    # def passthru
-    #   super
-    # end
-
-    # GET|POST /users/auth/twitter/callback
     def failure
       redirect_to new_user_session_path, notice: t("users.omniauth_callbacks.login_failed")
     end
-
-    # protected
-
-    # The path used when OmniAuth fails
-    # def after_omniauth_failure_path_for(scope)
-    #   super(scope)
-    # end
 
     def custom_sign_up
       if !(session["devise.auth.uid"].nil?) && !(session["devise.auth.provider"].nil?) && AuthM::Engine.public_users == true
@@ -66,29 +50,28 @@ module AuthM
           if current_user.link_account_from_omniauth(request.env["omniauth.auth"])
             flash[:notice] = t("users.omniauth_callbacks.success")
           else
-            flash[:notice] = t("users.omniauth_callbacks.failed")
+            flash[:alert] = current_user.errors.full_messages.join(", ")
           end
-          redirect_to auth_m.edit_user_registration_path(current_user) and return
-
-        elsif AuthM::Engine.public_users == true
+          redirect_to auth_m.edit_user_registration_path(current_user)
+        else
           @user = AuthM::User.from_omniauth(request.env["omniauth.auth"])
-          unless @user.nil?  
+          if @user  
             sign_in_and_redirect @user, event: :authentication
             set_flash_message(:notice, :success, :kind => provider.split("_").first.capitalize) if is_navigational_format?
-          else 
+          elsif AuthM::Engine.public_users == true
             @user = AuthM::User.new(email:request.env["omniauth.auth"].info.email)
             session["devise.auth.uid"] = request.env["omniauth.auth"].uid
             session["devise.auth.provider"] = request.env["omniauth.auth"].provider
 
             render :edit
+          else
+            redirect_to new_user_session_path, alert: t("auth_m.public_users.res_disabled")
           end
-        else
-          failure
         end
       end
 
       def user_params 
-        params.require(:user).permit(:email, :password, :password_confirmation)
+        params.require(:user).permit(:username, :email, :password, :password_confirmation)
       end
   end
 end

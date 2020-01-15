@@ -16,8 +16,12 @@ document.addEventListener("turbolinks:load", function() {
 
   $('#check_invitable').change(function(e) {
     if($(this).is(':checked')){
+      $('#pass').prop('required',false);
+      $('#pass_confirmation').prop('required',false);
       $('#pass_fields').hide();
     }else{
+      $('#pass').prop('required',true);
+      $('#pass_confirmation').prop('required',true);
       $('#pass_fields').show();
     }
   });

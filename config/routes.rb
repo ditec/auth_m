@@ -25,6 +25,7 @@ AuthM::Engine.routes.draw do
   resources :users do
     post :impersonate, on: :member
     post :stop_impersonating, on: :collection
+    put :resend_invitation, on: :member
   end
 
   resources :policy_groups do
