@@ -1,5 +1,5 @@
 # AuthM
-Current Version V1.0.10
+Current Version V1.0.11
 
 ## Usage
 How to use my plugin.

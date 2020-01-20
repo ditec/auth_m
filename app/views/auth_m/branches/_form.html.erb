@@ -23,7 +23,9 @@
   <p>
     <h3>Resources</h3>
     <p>
-      <%= check_box_tag :select_all, true, (current_management.resources.length == @branch.branch_resources.length), id: "select_all" %> Select all
+      <% unless current_management.resources.empty? %>
+        <%= check_box_tag :select_all, true, (current_management.resources.length == @branch.branch_resources.length), id: "select_all" %> Select all
+      <% end %>
     </p>
     <% current_management.resources.each do |resource|%>
       <%=form.fields_for :branch_resources, @branch.branch_resources.new do |field|%>
