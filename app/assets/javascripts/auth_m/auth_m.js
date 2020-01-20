@@ -36,4 +36,14 @@ document.addEventListener("turbolinks:load", function() {
     });
   });
 
+  $("#select_all").click(function() {
+    $("input[type=checkbox]").prop("checked", $(this).prop("checked"));
+  });
+
+  $("input[type=checkbox]").click(function() {
+    if (!$(this).prop("checked")) {
+      $("#select_all").prop("checked", false);
+    }
+  });
+
 });

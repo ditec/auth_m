@@ -22,7 +22,10 @@
 
   <p>
     <h3>Resources</h3>
-    <%-AuthM::ManagementResource.list.each do |resource|%>
+    <p>
+      <%= check_box_tag :select_all, true, (AuthM::ManagementResource.list.length == @management.management_resources.length), id: "select_all" %> Select all
+    </p>
+    <%AuthM::ManagementResource.list.each do |resource|%>
       <%=form.fields_for :management_resources, @management.management_resources.new do |field| %>
         <%=field.hidden_field(:name, :value => resource)%>
         <% if (@management.has_the_resource_name? resource) && !@management.resource(resource).nil?%>
