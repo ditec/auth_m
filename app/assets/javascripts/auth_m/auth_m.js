@@ -29,10 +29,11 @@ document.addEventListener("turbolinks:load", function() {
   $('#policy_group_select').change(function() {
     var selectValue = $(this).val();
 
-    jQuery.ajax({
+    $.ajax({
       type: 'GET', 
       url: "/auth_m/policy_groups/load_policies",
-      data: {policy_selected: selectValue}
+      data: {policy_selected: selectValue},
+      dataType: "script"
     });
   });
 

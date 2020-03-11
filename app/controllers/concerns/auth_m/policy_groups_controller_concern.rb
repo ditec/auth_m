@@ -58,7 +58,7 @@ module AuthM::PolicyGroupsControllerConcern
     end
 
     respond_to do |format|
-      format.js{render template: 'auth_m/policy_groups/policies/load', locals: {policy_group: @policy_group}}
+      format.js {render template: 'auth_m/policy_groups/policies/load', locals: {policy_group: @policy_group}, layout: false}
     end 
   end
 
