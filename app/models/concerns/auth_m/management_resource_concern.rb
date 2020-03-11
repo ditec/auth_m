@@ -35,7 +35,7 @@ module AuthM::ManagementResourceConcern
     def list
       array = Array.new
       Dir[Rails.root.join('app/controllers/*_controller.rb')].map { |path| (path.match(/(\w+)_controller.rb/); $1)}.each do |controller|
-        cancan = (controller.humanize.to_s + 'Controller').constantize._process_action_callbacks.inspect.to_s.include?("cancan")
+        cancan = (controller.camelcase + 'Controller').constantize._process_action_callbacks.inspect.to_s.include?("cancan")
         array.push(controller) if cancan
       end
 
