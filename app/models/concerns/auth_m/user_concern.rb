@@ -133,13 +133,11 @@ module AuthM::UserConcern
     self.policy_groups.where(branch_id: branch.id).first
   end
 
-  def branches(management)
-    if management
-      if self.has_role? :root 
-        management.branches
-      else
-        self.policy_groups.includes(:branch).where(auth_m_branches: {management_id: management.id}).collect(&:branch)
-      end
+  def branches(management = nil)
+    if self.has_role? :root 
+      management.branches if management
+    else
+      self.policy_groups.includes(:branch).where(auth_m_branches: {management_id: self.management_id}).collect(&:branch)
     end
   end
 

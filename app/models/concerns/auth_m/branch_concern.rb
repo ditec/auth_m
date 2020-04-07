@@ -42,6 +42,10 @@ module AuthM::BranchConcern
     self.branch_resources.includes(:management_resource).order("auth_m_management_resources.name ASC")
   end
 
+  def users
+    AuthM::User.where(roles_mask: AuthM::User.mask_for([:root])) + self.policy_groups.includes(:users).where(auth_m_users: {management_id: self.management_id}).collect(&:users)
+  end
+
   private 
 
     def capitalize_name
