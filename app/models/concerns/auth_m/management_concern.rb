@@ -20,7 +20,8 @@ module AuthM::ManagementConcern
 
     accepts_nested_attributes_for :management_resources, allow_destroy: true
     
-    validates :name, presence: true, length: { in: 4..250 }, uniqueness: true
+    validates :name, presence: true, length: { in: 4..250 }
+    validates :name, uniqueness: true, on: :create
     before_save :capitalize_name
   end
 
