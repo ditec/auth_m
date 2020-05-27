@@ -26,7 +26,7 @@ module AuthM::BranchConcern
 
     accepts_nested_attributes_for :branch_resources, allow_destroy: true
 
-    validates :name, presence: true, length: { in: 4..250 }, uniqueness: {scope: :management_id}
+    validates :name, presence: true, length: { maximum: 254 }, uniqueness: {scope: :management_id}
     before_save :capitalize_name
   end
 

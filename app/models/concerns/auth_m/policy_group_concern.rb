@@ -27,7 +27,7 @@ module AuthM::PolicyGroupConcern
 
     accepts_nested_attributes_for :policies, allow_destroy: true
 
-    validates :name, presence: true, length: { in: 2..254 }
+    validates :name, presence: true, length: { maximum: 254 }
     validates :branch, presence: true
     validates :customized, inclusion: { in: [true, false] }
 

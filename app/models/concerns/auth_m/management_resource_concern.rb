@@ -24,7 +24,7 @@ module AuthM::ManagementResourceConcern
 
     attr_accessor :selected
 
-    validates :name, presence: true, length: { in: 2..254 }
+    validates :name, presence: true, length: { maximum: 254 }
     validates :management, presence: true
 
     validate :is_a_valid_resource?, :on => [ :create, :update ]

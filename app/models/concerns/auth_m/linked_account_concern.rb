@@ -25,8 +25,8 @@ module AuthM::LinkedAccountConcern
     belongs_to :user
     
     validates :user, presence: true
-    validates :provider, presence: true, length: {in: 2..254}
-    validates :uid, uniqueness: true, presence: true, length: {in: 2..254}
+    validates :provider, presence: true, length: {maximum: 254}
+    validates :uid, uniqueness: true, presence: true, length: {maximum: 254}
   end
 
 end
