@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    auth_m (1.0.16)
+    auth_m (1.0.17)
       cancancan (~> 3.0)
       devise (~> 4.7)
       devise-security (~> 0.14)
@@ -175,7 +175,7 @@ GEM
     rake (13.0.1)
     recaptcha (5.5.0)
       json
-    responders (3.0.0)
+    responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
     role_model (0.8.2)
