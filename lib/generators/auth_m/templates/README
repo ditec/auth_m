@@ -21,14 +21,11 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
     <%= render partial: "auth_m/layouts/nav_bar"%>
 
 3. Add the following lines in app/assets/javascripts/application.js
-
+    //= require jquery3
+    //= require jquery_ujs
     //= require auth_m
 
-4. Add the following lines in app/assets/stylesheets/application.css
-
-    *= require auth_m
-
-5. Add the following lines in app/controllers/application_controller.rb:
+4. Add the following lines in app/controllers/application_controller.rb:
 
     before_action :authenticate_user!
 
@@ -109,7 +106,7 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
         devise_parameter_sanitizer.permit :account_update, keys: added_attrs
       end
 
-6. Add the following lines in app/config/secrets.yml:
+5. Add the following lines in app/config/credentials.yml.enc:
 
     FACEBOOK_KEY: -- key --
     FACEBOOK_SECRET: -- key --
@@ -123,7 +120,7 @@ Ensure you have defined root_url to *something* in your config/routes.rb.
     RECAPTCHA_SITE_KEY: -- key -- 
     RECAPTCHA_SECRET_KEY: -- key --
         
-7 (OPTIONAL). Add the following lines in app/db/seeds.rb:
+6 (OPTIONAL). Add the following lines in app/db/seeds.rb:
 
     AuthM::Engine.load_seed
 
