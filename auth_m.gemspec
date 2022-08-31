@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency "devise_invitable", "~> 2.0"
   s.add_dependency "recaptcha", "~> 5.3"
 
-  s.add_dependency "omniauth", "~> 1.9"
+  s.add_dependency "omniauth", ">= 1.9", "< 3.0"
   s.add_dependency "omniauth-facebook", "~> 5.0"
   s.add_dependency "omniauth-google-oauth2", "~> 0.8"
   s.add_dependency "omniauth-twitter", "~> 1.4"
